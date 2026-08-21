@@ -1,9 +1,10 @@
 import esqueciSenhaStyle from "@/styles/esqueciSenhaStyle";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
     Image,
     ImageBackground,
+    Modal,
     Pressable,
     ScrollView,
     Text,
@@ -12,7 +13,9 @@ import {
 } from "react-native";
 
 export default function EsqueciSenha() {
+  const { perfil } = useLocalSearchParams<{ perfil?: string }>();
   const [email, setEmail] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View style={esqueciSenhaStyle.container}>
@@ -69,7 +72,10 @@ export default function EsqueciSenha() {
             />
           </View>
 
-          <Pressable style={esqueciSenhaStyle.sendButton}>
+          <Pressable
+            style={esqueciSenhaStyle.sendButton}
+            onPress={() => setModalVisible(true)}
+          >
             <Text style={esqueciSenhaStyle.sendButtonText}>Enviar link</Text>
           </Pressable>
 
@@ -93,6 +99,38 @@ export default function EsqueciSenha() {
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={esqueciSenhaStyle.modalOverlay}>
+          <View style={esqueciSenhaStyle.modalCard}>
+            <Text style={esqueciSenhaStyle.modalTitle}>Enviar link</Text>
+            <Text style={esqueciSenhaStyle.modalText}>
+              Caso este e-mail esteja cadastrado em nosso sistema, você
+              receberá um link de redefinição por e-mail.
+            </Text>
+            <Text style={esqueciSenhaStyle.modalValidity}>
+              Validade do link (10 minutos).
+            </Text>
+            <Pressable
+              style={esqueciSenhaStyle.modalButton}
+              onPress={() => {
+                setModalVisible(false);
+                router.navigate({
+                  pathname: "/redefinir-senha",
+                  params: { perfil },
+                });
+              }}
+            >
+              <Text style={esqueciSenhaStyle.modalButtonText}>OK</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

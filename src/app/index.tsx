@@ -1,5 +1,5 @@
 import loginStyle from "@/styles/loginStyle";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import {
   Image,
   ImageBackground,
@@ -62,14 +62,15 @@ export default function Index() {
                 </Text>
               </View>
             </View>
-            <Link href="/login-atleta" asChild>
-              <Pressable style={loginStyle.cardButton}>
-                <Text style={loginStyle.cardButtonText}>
-                  Entrar como Atleta
-                </Text>
-                <Text style={loginStyle.cardButtonArrow}>›</Text>
-              </Pressable>
-            </Link>
+            <Pressable
+              style={loginStyle.cardButton}
+              onPress={() => router.navigate("/login-atleta")}
+            >
+              <Text style={loginStyle.cardButtonText}>
+                Entrar como Atleta
+              </Text>
+              <Text style={loginStyle.cardButtonArrow}>›</Text>
+            </Pressable>
           </View>
 
           <View style={loginStyle.card}>
@@ -86,14 +87,15 @@ export default function Index() {
                 </Text>
               </View>
             </View>
-            <Link href="/login-responsavel" asChild>
-              <Pressable style={loginStyle.cardButton}>
-                <Text style={loginStyle.cardButtonText}>
-                  Entrar como Responsável
-                </Text>
-                <Text style={loginStyle.cardButtonArrow}>›</Text>
-              </Pressable>
-            </Link>
+            <Pressable
+              style={loginStyle.cardButton}
+              onPress={() => router.navigate("/login-responsavel")}
+            >
+              <Text style={loginStyle.cardButtonText}>
+                Entrar como Responsável
+              </Text>
+              <Text style={loginStyle.cardButtonArrow}>›</Text>
+            </Pressable>
           </View>
 
           <View style={loginStyle.firstAccessRow}>

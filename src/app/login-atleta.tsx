@@ -1,5 +1,5 @@
 import loginAtletaStyle from "@/styles/loginAtletaStyle";
-import { Link } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
     Image,
@@ -94,37 +94,46 @@ export default function LoginAtleta() {
             </Pressable>
           </View>
 
-          <Link href="/esqueci-senha" asChild>
-            <Pressable>
-              <Text style={loginAtletaStyle.forgotPasswordText}>
-                Esqueci minha senha
-              </Text>
-            </Pressable>
-          </Link>
+          <Pressable
+            onPress={() =>
+              router.navigate({
+                pathname: "/esqueci-senha",
+                params: { perfil: "atleta" },
+              })
+            }
+          >
+            <Text style={loginAtletaStyle.forgotPasswordText}>
+              Esqueci minha senha
+            </Text>
+          </Pressable>
 
-          <Pressable style={loginAtletaStyle.enterButton}>
+          <Pressable
+            style={loginAtletaStyle.enterButton}
+            onPress={() => router.navigate("/home")}
+          >
             <Text style={loginAtletaStyle.enterButtonText}>Entrar</Text>
           </Pressable>
 
-          <Link href="/" asChild>
-            <Pressable style={loginAtletaStyle.inviteCard}>
-              <Text style={loginAtletaStyle.inviteChevron}>‹</Text>
-              <Image
-                source={require("@/assets/images/img/userModoClaro.png")}
-                style={loginAtletaStyle.inviteIcon}
-                resizeMode="contain"
-              />
-              <View style={loginAtletaStyle.inviteTextCol}>
-                <Text style={loginAtletaStyle.inviteTitle}>
-                  Ainda não possui acesso?
-                </Text>
-                <Text style={loginAtletaStyle.inviteDescription}>
-                  Realize sua matrícula através do formulário disponível na tela
-                  inicial
-                </Text>
-              </View>
-            </Pressable>
-          </Link>
+          <Pressable
+            style={loginAtletaStyle.inviteCard}
+            onPress={() => router.navigate("/")}
+          >
+            <Text style={loginAtletaStyle.inviteChevron}>‹</Text>
+            <Image
+              source={require("@/assets/images/img/userModoClaro.png")}
+              style={loginAtletaStyle.inviteIcon}
+              resizeMode="contain"
+            />
+            <View style={loginAtletaStyle.inviteTextCol}>
+              <Text style={loginAtletaStyle.inviteTitle}>
+                Ainda não possui acesso?
+              </Text>
+              <Text style={loginAtletaStyle.inviteDescription}>
+                Realize sua matrícula através do formulário disponível na tela
+                inicial
+              </Text>
+            </View>
+          </Pressable>
         </View>
       </ScrollView>
     </View>

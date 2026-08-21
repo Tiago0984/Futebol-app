@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const esqueciSenhaStyle = StyleSheet.create({
+const redefinirSenhaStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#111111",
@@ -88,8 +88,41 @@ const esqueciSenhaStyle = StyleSheet.create({
     color: "#111111",
     height: "100%",
   },
+  eyeIcon: {
+    width: 20,
+    height: 20,
+    marginLeft: 12,
+  },
 
-  sendButton: {
+  requirementsCard: {
+    borderWidth: 1,
+    borderColor: "#333333",
+    borderRadius: 14,
+    padding: 14,
+    marginBottom: 20,
+  },
+  requirementsTitle: {
+    fontSize: 13.5,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginBottom: 10,
+  },
+  requirementRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  requirementIcon: {
+    width: 14,
+    height: 14,
+    marginRight: 10,
+  },
+  requirementText: {
+    fontSize: 12.5,
+    color: "#B0B0B0",
+  },
+
+  saveButton: {
     backgroundColor: "#D71920",
     borderRadius: 30,
     height: 48,
@@ -97,7 +130,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 18,
   },
-  sendButtonText: {
+  saveButtonText: {
     fontSize: 15,
     fontWeight: "700",
     color: "#FFFFFF",
@@ -109,73 +142,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontSize: 13.5,
     fontWeight: "700",
     color: "#D71920",
-    marginBottom: 18,
-  },
-
-  noticeCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#333333",
-    borderRadius: 14,
-    padding: 14,
-  },
-  noticeIcon: {
-    width: 35,
-    height: 35,
-    marginRight: 12,
-  },
-  noticeText: {
-    flex: 1,
-    fontSize: 12,
-    lineHeight: 17,
-    color: "#B0B0B0",
-  },
-
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 24,
-  },
-  modalCard: {
-    width: "100%",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 22,
-  },
-  modalTitle: {
-    fontSize: 17,
-    fontWeight: "800",
-    color: "#111111",
-    marginBottom: 12,
-  },
-  modalText: {
-    fontSize: 13.5,
-    lineHeight: 19,
-    color: "#555555",
-    marginBottom: 14,
-  },
-  modalValidity: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#111111",
-    marginBottom: 20,
-  },
-  modalButton: {
-    backgroundColor: "#D71920",
-    borderRadius: 30,
-    height: 48,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  modalButtonText: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#FFFFFF",
-    letterSpacing: 0.3,
   },
 });
 
-export default esqueciSenhaStyle;
+export default redefinirSenhaStyle;
