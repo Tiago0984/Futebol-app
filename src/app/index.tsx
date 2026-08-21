@@ -1,98 +1,114 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import loginStyle from "@/styles/loginStyle";
+import { Link } from "expo-router";
+import {
+  Image,
+  ImageBackground,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+export default function Index() {
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
+    <View style={loginStyle.container}>
+      <ScrollView
+        contentContainerStyle={loginStyle.scrollContent}
+        bounces={false}
+      >
+        <ImageBackground
+          source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
+          style={loginStyle.hero}
+          resizeMode="cover"
+        >
+          <View style={loginStyle.heroOverlay} />
+          <View style={loginStyle.heroContent}>
+            <Image
+              source={require("@/assets/images/img/logo/logo-aacj.png")}
+              style={loginStyle.logo}
+              resizeMode="contain"
+            />
+            <Text style={loginStyle.kicker}>CENTRO DE FORMAÇÃO</Text>
+            <Text style={loginStyle.kickerBold}>DE ATLETAS</Text>
+            <View style={loginStyle.dividerRow}>
+              <View style={loginStyle.dividerLine} />
+              <Text style={loginStyle.dividerText}>desde 2001</Text>
+              <View style={loginStyle.dividerLine} />
+            </View>
+            <Text style={loginStyle.welcomeTitle}>Bem-Vindo(a) à AACJ</Text>
+            <Text style={loginStyle.welcomeSubtitle}>
+              Associação Atlética Cohab Juscelino
+            </Text>
+          </View>
+        </ImageBackground>
+
+        <View style={loginStyle.body}>
+          <Text style={loginStyle.chooseProfile}>
+            Escolha seu perfil para continuar
+          </Text>
+
+          <View style={loginStyle.card}>
+            <View style={loginStyle.cardTopRow}>
+              <Image
+                source={require("@/assets/images/img/atletaVermelho.png")}
+                style={loginStyle.cardIcon}
+                tintColor="#D71920"
+                resizeMode="contain"
+              />
+              <View style={loginStyle.cardTextCol}>
+                <Text style={loginStyle.cardTitle}>Atleta</Text>
+                <Text style={loginStyle.cardDescription}>
+                  Consulte seus treinos, campeonatos, frequência e desempenho.
+                </Text>
+              </View>
+            </View>
+            <Link href="/login-atleta" asChild>
+              <Pressable style={loginStyle.cardButton}>
+                <Text style={loginStyle.cardButtonText}>
+                  Entrar como Atleta
+                </Text>
+                <Text style={loginStyle.cardButtonArrow}>›</Text>
+              </Pressable>
+            </Link>
+          </View>
+
+          <View style={loginStyle.card}>
+            <View style={loginStyle.cardTopRow}>
+              <Image
+                source={require("@/assets/images/img/responsavelVermelho.png")}
+                style={loginStyle.cardIcon}
+                resizeMode="contain"
+              />
+              <View style={loginStyle.cardTextCol}>
+                <Text style={loginStyle.cardTitle}>Responsável</Text>
+                <Text style={loginStyle.cardDescription}>
+                  Acompanhe frequência, evolução e comunicados do atleta.
+                </Text>
+              </View>
+            </View>
+            <Link href="/login-responsavel" asChild>
+              <Pressable style={loginStyle.cardButton}>
+                <Text style={loginStyle.cardButtonText}>
+                  Entrar como Responsável
+                </Text>
+                <Text style={loginStyle.cardButtonArrow}>›</Text>
+              </Pressable>
+            </Link>
+          </View>
+
+          <View style={loginStyle.firstAccessRow}>
+            <View style={loginStyle.firstAccessLine} />
+            <Text style={loginStyle.firstAccessText}>Primeiro acesso?</Text>
+            <View style={loginStyle.firstAccessLine} />
+          </View>
+
+          <View style={loginStyle.footerLinksRow}>
+            <Text style={loginStyle.footerLink}>Fazer matricula</Text>
+            <Text style={loginStyle.footerDot}>•</Text>
+            <Text style={loginStyle.footerLink}>Conheça a AACJ</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
-  },
-});

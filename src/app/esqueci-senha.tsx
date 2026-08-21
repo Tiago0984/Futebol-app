@@ -1,0 +1,98 @@
+import esqueciSenhaStyle from "@/styles/esqueciSenhaStyle";
+import { router } from "expo-router";
+import { useState } from "react";
+import {
+    Image,
+    ImageBackground,
+    Pressable,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
+
+export default function EsqueciSenha() {
+  const [email, setEmail] = useState("");
+
+  return (
+    <View style={esqueciSenhaStyle.container}>
+      <ScrollView
+        contentContainerStyle={esqueciSenhaStyle.scrollContent}
+        bounces={false}
+      >
+        <ImageBackground
+          source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
+          style={esqueciSenhaStyle.hero}
+          resizeMode="cover"
+        >
+          <View style={esqueciSenhaStyle.heroOverlay} />
+          <View style={esqueciSenhaStyle.heroContent}>
+            <Image
+              source={require("@/assets/images/img/logo/logo-aacj.png")}
+              style={esqueciSenhaStyle.logo}
+              resizeMode="contain"
+            />
+            <Text style={esqueciSenhaStyle.title}>Esqueceu sua senha?</Text>
+            <Text style={esqueciSenhaStyle.subtitle}>
+              Informe o e-mail utilizado no seu cadastro e enviaremos um link
+              para redefinir sua senha
+            </Text>
+            <View style={esqueciSenhaStyle.badge}>
+              <Image
+                source={require("@/assets/images/img/cadeadoBranco.png")}
+                style={esqueciSenhaStyle.badgeIcon}
+                resizeMode="contain"
+              />
+              <Text style={esqueciSenhaStyle.badgeText}>
+                Recuperação de acesso
+              </Text>
+            </View>
+          </View>
+        </ImageBackground>
+
+        <View style={esqueciSenhaStyle.body}>
+          <View style={esqueciSenhaStyle.inputWrapper}>
+            <Image
+              source={require("@/assets/images/img/emailModoEscuro.png")}
+              style={esqueciSenhaStyle.inputIcon}
+              tintColor="#000000"
+              resizeMode="contain"
+            />
+            <TextInput
+              style={esqueciSenhaStyle.input}
+              placeholder="Digite seu e-mail"
+              placeholderTextColor="#8D8D8D"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+          </View>
+
+          <Pressable style={esqueciSenhaStyle.sendButton}>
+            <Text style={esqueciSenhaStyle.sendButtonText}>Enviar link</Text>
+          </Pressable>
+
+          <Pressable onPress={() => router.back()}>
+            <Text style={esqueciSenhaStyle.backToLoginText}>
+              ← Voltar ao Login
+            </Text>
+          </Pressable>
+
+          <View style={esqueciSenhaStyle.noticeCard}>
+            <Image
+              source={require("@/assets/images/img/atencaoBranco.png")}
+              style={esqueciSenhaStyle.noticeIcon}
+              resizeMode="contain"
+            />
+            <Text style={esqueciSenhaStyle.noticeText}>
+              Utilize o e-mail cadastrado junto à AACJ. Se você ainda não possui
+              acesso ao aplicativo, realize sua matrícula pela tela inicial ou
+              entre em contato com a instituição.
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
