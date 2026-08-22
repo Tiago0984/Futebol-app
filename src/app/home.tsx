@@ -1,13 +1,28 @@
 import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
+import menuInferiorStyle from "@/styles/menuInferiorStyle";
+import { router } from "expo-router";
+import { useEffect, useRef } from "react";
 import {
+  Animated,
   Image,
+  Pressable,
   ScrollView,
   Text,
   View,
 } from "react-native";
 
 export default function Home() {
+  const indicadorAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(indicadorAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [indicadorAnim]);
+
   return (
     <View style={fundoStyle.container}>
       <Image
@@ -67,7 +82,7 @@ export default function Home() {
             </View>
             <View style={homeStyle.avatarCircle}>
               <Image
-                source={require("@/assets/images/img/userPreto.png")}
+                source={require("@/assets/images/img/perfilPreto.png")}
                 style={homeStyle.avatarIcon}
                 resizeMode="contain"
               />
@@ -122,7 +137,10 @@ export default function Home() {
         <View style={homeStyle.quickAccessSection}>
           <Text style={homeStyle.sectionTitle}>Acesso rápido</Text>
           <View style={homeStyle.quickAccessRow}>
-            <View style={homeStyle.quickAccessItem}>
+            <Pressable
+              style={homeStyle.quickAccessItem}
+              onPress={() => router.navigate("/agenda")}
+            >
               <View style={homeStyle.quickAccessIconCircle}>
                 <Image
                   source={require("@/assets/images/img/agendaCinza.png")}
@@ -131,7 +149,7 @@ export default function Home() {
                 />
               </View>
               <Text style={homeStyle.quickAccessLabel}>Agenda</Text>
-            </View>
+            </Pressable>
             <View style={homeStyle.quickAccessItem}>
               <View style={homeStyle.quickAccessIconCircle}>
                 <Image
@@ -214,51 +232,67 @@ export default function Home() {
         </View>
       </ScrollView>
 
-      <View style={homeStyle.tabBar}>
-        <View style={homeStyle.tabItem}>
-          <View style={[homeStyle.tabIndicator, homeStyle.tabIndicatorActive]} />
+      <View style={menuInferiorStyle.tabBar}>
+        <View style={menuInferiorStyle.tabItem}>
+          <Animated.View
+            style={[
+              menuInferiorStyle.tabIndicator,
+              menuInferiorStyle.tabIndicatorActive,
+              {
+                opacity: indicadorAnim,
+                transform: [{ scaleX: indicadorAnim }],
+              },
+            ]}
+          />
           <Image
             source={require("@/assets/images/img/homeVermelha.png")}
-            style={homeStyle.tabIcon}
+            style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={homeStyle.tabLabelActive}>Home</Text>
+          <Text style={menuInferiorStyle.tabLabelActive}>Home</Text>
         </View>
-        <View style={homeStyle.tabItem}>
-          <View style={homeStyle.tabIndicator} />
+        <Pressable
+          style={menuInferiorStyle.tabItem}
+          onPress={() => router.navigate("/agenda")}
+        >
+          <View style={menuInferiorStyle.tabIndicator} />
           <Image
             source={require("@/assets/images/img/agendaBranca.png")}
-            style={homeStyle.tabIcon}
+            style={menuInferiorStyle.tabIcon}
+            tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={homeStyle.tabLabel}>Agenda</Text>
-        </View>
-        <View style={homeStyle.tabItem}>
-          <View style={homeStyle.tabIndicator} />
+          <Text style={menuInferiorStyle.tabLabel}>Agenda</Text>
+        </Pressable>
+        <View style={menuInferiorStyle.tabItem}>
+          <View style={menuInferiorStyle.tabIndicator} />
           <Image
             source={require("@/assets/images/img/campeonatosbranco.png")}
-            style={homeStyle.tabIcon}
+            style={menuInferiorStyle.tabIcon}
+            tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={homeStyle.tabLabel}>Campeonatos</Text>
+          <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
         </View>
-        <View style={homeStyle.tabItem}>
-          <View style={homeStyle.tabIndicator} />
+        <View style={menuInferiorStyle.tabItem}>
+          <View style={menuInferiorStyle.tabIndicator} />
           <Image
             source={require("@/assets/images/img/desempenhoBranco.png")}
-            style={homeStyle.tabIcon}
+            style={menuInferiorStyle.tabIcon}
+            tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={homeStyle.tabLabel}>Desempenho</Text>
+          <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
         </View>
-        <View style={homeStyle.tabItem}>
-          <View style={homeStyle.tabIndicator} />
+        <View style={menuInferiorStyle.tabItem}>
+          <View style={menuInferiorStyle.tabIndicator} />
           <Image
             source={require("@/assets/images/img/perfilbranco.png")}
-            style={homeStyle.tabIcon}
+            style={menuInferiorStyle.tabIcon}
+            tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={homeStyle.tabLabel}>Usuário</Text>
+          <Text style={menuInferiorStyle.tabLabel}>Usuário</Text>
         </View>
       </View>
     </View>

@@ -3,10 +3,17 @@ import { StyleSheet } from "react-native";
 export const variaveis = {
 
     vermelho: "#D71920",
-    preto: "#00000000",
-    cinza: "#88888888",
+    laranja: "#FF8800",
+    preto: "#111111",
+    cinza: "#888888",
     branco: "#ffffff",
+    branco70: "#FFFFFFB3",
+    branco30: "#FFFFFF4D",
     verde: "#169D5D",
-    verdeclaro: "#DDFFEE"
+    verdeclaro: "#DDFFEE",
+    pastel: "#FFEDDD",
+    rosa: "#EFE3FF",
+    azulclaro: "#DBEBFF",
+    vermelho20: "#D7192033",
 
 }

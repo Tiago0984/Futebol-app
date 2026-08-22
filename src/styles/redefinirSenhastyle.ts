@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 
+import { variaveis } from "./variaveis";
+
 const redefinirSenhaStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111111",
+    backgroundColor: variaveis.preto,
   },
   scrollContent: {
     flexGrow: 1,
@@ -32,12 +34,12 @@ const redefinirSenhaStyle = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 13,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
     textAlign: "center",
     marginTop: 4,
     marginBottom: 12,
@@ -45,7 +47,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
     height: 34,
@@ -58,7 +60,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   badgeText: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
 
   body: {
@@ -71,7 +73,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: variaveis.branco,
     borderRadius: 12,
     height: 50,
     paddingHorizontal: 16,
@@ -85,7 +87,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 14,
-    color: "#111111",
+    color: variaveis.preto,
     height: "100%",
   },
   eyeIcon: {
@@ -96,7 +98,7 @@ const redefinirSenhaStyle = StyleSheet.create({
 
   requirementsCard: {
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: variaveis.cinza,
     borderRadius: 14,
     padding: 14,
     marginBottom: 20,
@@ -104,7 +106,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   requirementsTitle: {
     fontSize: 13.5,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     marginBottom: 10,
   },
   requirementRow: {
@@ -119,11 +121,11 @@ const redefinirSenhaStyle = StyleSheet.create({
   },
   requirementText: {
     fontSize: 12.5,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
   },
 
   saveButton: {
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     height: 48,
     alignItems: "center",
@@ -133,7 +135,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   saveButtonText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     letterSpacing: 0.3,
   },
 
@@ -141,7 +143,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     alignSelf: "center",
     fontSize: 13.5,
     fontWeight: "700",
-    color: "#D71920",
+    color: variaveis.vermelho,
   },
 });
 

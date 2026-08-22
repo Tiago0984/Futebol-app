@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 
+import { variaveis } from "./variaveis";
+
 const loginResponsavelStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111111",
+    backgroundColor: variaveis.preto,
   },
   scrollContent: {
     flexGrow: 1,
@@ -31,18 +33,18 @@ const loginResponsavelStyle = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
   subtitle: {
     fontSize: 13,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
     marginTop: 4,
     marginBottom: 12,
   },
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
     height: 34,
@@ -55,7 +57,7 @@ const loginResponsavelStyle = StyleSheet.create({
   badgeText: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
 
   body: {
@@ -68,7 +70,7 @@ const loginResponsavelStyle = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: variaveis.branco,
     borderRadius: 12,
     height: 50,
     paddingHorizontal: 16,
@@ -82,7 +84,7 @@ const loginResponsavelStyle = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 14,
-    color: "#111111",
+    color: variaveis.preto,
     height: "100%",
   },
   eyeIcon: {
@@ -95,12 +97,12 @@ const loginResponsavelStyle = StyleSheet.create({
     alignSelf: "flex-end",
     fontSize: 12.5,
     fontWeight: "600",
-    color: "#D71920",
+    color: variaveis.vermelho,
     marginBottom: 16,
   },
 
   enterButton: {
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     height: 48,
     alignItems: "center",
@@ -110,7 +112,7 @@ const loginResponsavelStyle = StyleSheet.create({
   enterButtonText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     letterSpacing: 0.3,
   },
 
@@ -118,14 +120,14 @@ const loginResponsavelStyle = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: variaveis.cinza,
     borderRadius: 14,
     padding: 14,
   },
   inviteChevron: {
     fontSize: 22,
     fontWeight: "600",
-    color: "#555555",
+    color: variaveis.cinza,
     marginRight: 10,
   },
   inviteIcon: {
@@ -139,13 +141,13 @@ const loginResponsavelStyle = StyleSheet.create({
   inviteTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     marginBottom: 4,
   },
   inviteDescription: {
     fontSize: 12,
     lineHeight: 17,
-    color: "#8D8D8D",
+    color: variaveis.cinza,
   },
 });
 

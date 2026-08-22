@@ -18,12 +18,12 @@ const homeStyle = StyleSheet.create({
   },
   greeting: {
     fontSize: 14,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
   },
   greetingName: {
     fontSize: 28,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     marginTop: 2,
   },
   headerIconsRow: {
@@ -41,7 +41,7 @@ const homeStyle = StyleSheet.create({
     position: "absolute",
     top: -5,
     right: -6,
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 8,
     minWidth: 16,
     height: 16,
@@ -52,7 +52,7 @@ const homeStyle = StyleSheet.create({
   notificationBadgeText: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
 
   headerBottomRow: {
@@ -76,11 +76,11 @@ const homeStyle = StyleSheet.create({
   categoriaText: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
   centroTexto: {
     fontSize: 14,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
     marginTop: 10,
   },
   centroDestaqueRow: {
@@ -91,28 +91,28 @@ const homeStyle = StyleSheet.create({
   centroLine: {
     width: 18,
     height: 2,
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
   },
   centroDestaqueText: {
     fontSize: 14,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
     marginHorizontal: 8,
   },
   avatarCircle: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    backgroundColor: "#FFFFFF",
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    backgroundColor: variaveis.branco,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarIcon: {
-    width: 30,
-    height: 30,
+    width: 50,
+    height: 50,
   },
 
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: variaveis.branco,
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 22,
@@ -120,7 +120,7 @@ const homeStyle = StyleSheet.create({
   },
   cardLabel: {
     fontSize: 12,
-    color: "#8D8D8D",
+    color: variaveis.cinza,
     marginBottom: 12,
   },
   cardMainRow: {
@@ -138,7 +138,7 @@ const homeStyle = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: "800",
-    color: "#111111",
+    color: variaveis.preto,
     marginBottom: 6,
   },
   cardInfoRow: {
@@ -153,18 +153,18 @@ const homeStyle = StyleSheet.create({
   },
   cardInfoText: {
     fontSize: 12.5,
-    color: "#777777",
+    color: variaveis.cinza,
   },
   cardInfoDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     marginHorizontal: 8,
   },
   cardDivider: {
     height: 1,
-    backgroundColor: "#EAEAEA",
+    backgroundColor: variaveis.branco,
     marginVertical: 14,
   },
   cardFooterRow: {
@@ -175,7 +175,7 @@ const homeStyle = StyleSheet.create({
   confirmedPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#DDFFEE",
+    backgroundColor: variaveis.verdeclaro,
     borderRadius: 20,
     paddingHorizontal: 12,
     height: 26,
@@ -193,18 +193,18 @@ const homeStyle = StyleSheet.create({
   detailsLink: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#D71920",
+    color: variaveis.vermelho,
   },
 
   sectionTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
   sectionLink: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#D71920",
+    color: variaveis.vermelho,
   },
 
   quickAccessSection: {
@@ -234,7 +234,7 @@ const homeStyle = StyleSheet.create({
   },
   quickAccessLabel: {
     fontSize: 12,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
     marginTop: 8,
     textAlign: "center",
   },
@@ -254,7 +254,7 @@ const homeStyle = StyleSheet.create({
   activityDate: {
     fontSize: 12.5,
     fontWeight: "700",
-    color: "#D71920",
+    color: variaveis.vermelho,
     marginBottom: 6,
   },
   activityRow: {
@@ -268,58 +268,21 @@ const homeStyle = StyleSheet.create({
   activityTitle: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
   activitySubtitle: {
     fontSize: 12.5,
-    color: "#8D8D8D",
+    color: variaveis.cinza,
     marginTop: 2,
   },
   activityTime: {
     fontSize: 13,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
   },
   activityDivider: {
     height: 1,
     backgroundColor: "rgba(255,255,255,0.1)",
     marginTop: 16,
-  },
-
-  tabBar: {
-    flexDirection: "row",
-    backgroundColor: "#0A0A0A",
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.08)",
-    paddingBottom: 22,
-  },
-  tabItem: {
-    flex: 1,
-    alignItems: "center",
-  },
-  tabIndicator: {
-    width: 36,
-    height: 3,
-    borderRadius: 2,
-    backgroundColor: "transparent",
-    marginBottom: 8,
-  },
-  tabIndicatorActive: {
-    backgroundColor: "#D71920",
-  },
-  tabIcon: {
-    width: 22,
-    height: 22,
-  },
-  tabLabel: {
-    fontSize: 11,
-    color: "#ffffff",
-    marginTop: 4,
-  },
-  tabLabelActive: {
-    fontSize: 11,
-    fontWeight: "700",
-    color: "#D71920",
-    marginTop: 4,
   },
 });
 

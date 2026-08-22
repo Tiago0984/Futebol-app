@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 
+import { variaveis } from "./variaveis";
+
 const esqueciSenhaStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111111",
+    backgroundColor: variaveis.preto,
   },
   scrollContent: {
     flexGrow: 1,
@@ -32,12 +34,12 @@ const esqueciSenhaStyle = StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 13,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
     textAlign: "center",
     marginTop: 4,
     marginBottom: 12,
@@ -45,7 +47,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
     height: 34,
@@ -58,7 +60,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   badgeText: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
 
   body: {
@@ -71,7 +73,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: variaveis.branco,
     borderRadius: 12,
     height: 50,
     paddingHorizontal: 16,
@@ -85,12 +87,12 @@ const esqueciSenhaStyle = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 14,
-    color: "#111111",
+    color: variaveis.preto,
     height: "100%",
   },
 
   sendButton: {
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     height: 48,
     alignItems: "center",
@@ -100,7 +102,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   sendButtonText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     letterSpacing: 0.3,
   },
 
@@ -108,7 +110,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     alignSelf: "center",
     fontSize: 13.5,
     fontWeight: "700",
-    color: "#D71920",
+    color: variaveis.vermelho,
     marginBottom: 18,
   },
 
@@ -116,7 +118,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#333333",
+    borderColor: variaveis.cinza,
     borderRadius: 14,
     padding: 14,
   },
@@ -129,7 +131,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     flex: 1,
     fontSize: 12,
     lineHeight: 17,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
   },
 
   modalOverlay: {
@@ -141,30 +143,30 @@ const esqueciSenhaStyle = StyleSheet.create({
   },
   modalCard: {
     width: "100%",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: variaveis.branco,
     borderRadius: 16,
     padding: 22,
   },
   modalTitle: {
     fontSize: 17,
     fontWeight: "800",
-    color: "#111111",
+    color: variaveis.preto,
     marginBottom: 12,
   },
   modalText: {
     fontSize: 13.5,
     lineHeight: 19,
-    color: "#555555",
+    color: variaveis.cinza,
     marginBottom: 14,
   },
   modalValidity: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111111",
+    color: variaveis.preto,
     marginBottom: 20,
   },
   modalButton: {
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     height: 48,
     alignItems: "center",
@@ -173,7 +175,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   modalButtonText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     letterSpacing: 0.3,
   },
 });

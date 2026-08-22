@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 
+import { variaveis } from "./variaveis";
+
 const loginStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111111",
+    backgroundColor: variaveis.preto,
   },
   scrollContent: {
     flexGrow: 1,
@@ -32,12 +34,12 @@ const loginStyle = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 2,
     fontWeight: "600",
-    color: "#DDDDDD",
+    color: variaveis.branco,
   },
   kickerBold: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     letterSpacing: 1,
     marginTop: 2,
   },
@@ -50,23 +52,23 @@ const loginStyle = StyleSheet.create({
   dividerLine: {
     width: 22,
     height: 1,
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
   },
   dividerText: {
     fontSize: 11,
     fontWeight: "700",
-    color: "#D71920",
+    color: variaveis.vermelho,
     letterSpacing: 1,
     marginHorizontal: 8,
   },
   welcomeTitle: {
     fontSize: 21,
     fontWeight: "800",
-    color: "#FFFFFF",
+    color: variaveis.branco,
   },
   welcomeSubtitle: {
     fontSize: 12,
-    color: "#B0B0B0",
+    color: variaveis.cinza,
     marginTop: 4,
   },
 
@@ -79,13 +81,13 @@ const loginStyle = StyleSheet.create({
   chooseProfile: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     textAlign: "center",
     marginBottom: 16,
   },
 
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: variaveis.branco,
     borderRadius: 16,
     padding: 18,
     marginBottom: 16,
@@ -107,16 +109,16 @@ const loginStyle = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#111111",
+    color: variaveis.preto,
     marginBottom: 4,
   },
   cardDescription: {
     fontSize: 12.5,
     lineHeight: 18,
-    color: "#888888",
+    color: variaveis.cinza,
   },
   cardButton: {
-    backgroundColor: "#D71920",
+    backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     height: 46,
     flexDirection: "row",
@@ -126,13 +128,13 @@ const loginStyle = StyleSheet.create({
   cardButtonText: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     letterSpacing: 0.3,
   },
   cardButtonArrow: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.branco,
     marginLeft: 8,
   },
 
@@ -145,11 +147,11 @@ const loginStyle = StyleSheet.create({
   firstAccessLine: {
     flex: 1,
     height: 1,
-    backgroundColor: "#333333",
+    backgroundColor: variaveis.cinza,
   },
   firstAccessText: {
     fontSize: 12,
-    color: "#8D8D8D",
+    color: variaveis.cinza,
     marginHorizontal: 10,
   },
 
@@ -161,11 +163,11 @@ const loginStyle = StyleSheet.create({
   footerLink: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#D71920",
+    color: variaveis.vermelho,
   },
   footerDot: {
     fontSize: 13,
-    color: "#ffffff",
+    color: variaveis.branco,
     marginHorizontal: 30,
   },
 });

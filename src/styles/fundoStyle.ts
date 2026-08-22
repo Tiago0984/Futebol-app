@@ -1,9 +1,11 @@
 import { StyleSheet } from "react-native";
 
+import { variaveis } from "./variaveis";
+
 const fundoStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111111",
+    backgroundColor: variaveis.preto,
     overflow: "hidden",
   },
   backgroundImage: {
