@@ -1,19 +1,8 @@
 import { StyleSheet } from "react-native";
 
+import { variaveis } from "./variaveis";
+
 const homeStyle = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#111111",
-    overflow: "hidden",
-  },
-  backgroundImage: {
-    ...StyleSheet.absoluteFill,
-    transform: [{ translateX: -40 }, { translateY: 5 }, { scale: 0.7 }],
-  },
-  backgroundOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: "rgba(0,0,0,0.2)",
-  },
   scrollContent: {
     paddingBottom: 24,
   },
@@ -186,7 +175,7 @@ const homeStyle = StyleSheet.create({
   confirmedPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#7DC673",
+    backgroundColor: "#DDFFEE",
     borderRadius: 20,
     paddingHorizontal: 12,
     height: 26,
@@ -199,7 +188,7 @@ const homeStyle = StyleSheet.create({
   confirmedText: {
     fontSize: 12,
     fontWeight: "700",
-    color: "#FFFFFF",
+    color: variaveis.verde,
   },
   detailsLink: {
     fontSize: 13,
@@ -323,7 +312,7 @@ const homeStyle = StyleSheet.create({
   },
   tabLabel: {
     fontSize: 11,
-    color: "#8D8D8D",
+    color: "#ffffff",
     marginTop: 4,
   },
   tabLabelActive: {

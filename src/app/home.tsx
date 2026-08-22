@@ -1,3 +1,4 @@
+import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
 import {
   Image,
@@ -8,13 +9,13 @@ import {
 
 export default function Home() {
   return (
-    <View style={homeStyle.container}>
+    <View style={fundoStyle.container}>
       <Image
         source={require("@/assets/images/img/background-aacj-app1.png")}
-        style={homeStyle.backgroundImage}
+        style={fundoStyle.backgroundImage}
         resizeMode="cover"
       />
-      <View style={homeStyle.backgroundOverlay} />
+      <View style={fundoStyle.backgroundOverlay} />
 
       <ScrollView
         style={{ flex: 1 }}
@@ -86,7 +87,7 @@ export default function Home() {
               <Text style={homeStyle.cardTitle}>Treino Técnico</Text>
               <View style={homeStyle.cardInfoRow}>
                 <Image
-                  source={require("@/assets/images/img/agendaCinza.png")}
+                  source={require("@/assets/images/img/agendaPreta.png")}
                   style={homeStyle.cardInfoIcon}
                   resizeMode="contain"
                 />
