@@ -1,5 +1,5 @@
 import agendaStyle from "@/styles/agendaStyle";
-import fundoStyle from "@/styles/fundoStyle";
+import fundoStyle, { getBackgroundImageStyle } from "@/styles/fundoStyle";
 import menuInferiorStyle from "@/styles/menuInferiorStyle";
 import { variaveis } from "@/styles/variaveis";
 import { router } from "expo-router";
@@ -10,6 +10,7 @@ import {
   Pressable,
   ScrollView,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 
@@ -28,6 +29,7 @@ const filtros = ["Todos", "Treinos", "Campeonatos", "Avaliações", "Reuniões"]
 export default function Agenda() {
   const [filtroAtivo, setFiltroAtivo] = useState("Todos");
   const indicadorAnim = useRef(new Animated.Value(0)).current;
+  const { width, height } = useWindowDimensions();
 
   useEffect(() => {
     Animated.timing(indicadorAnim, {
@@ -41,7 +43,7 @@ export default function Agenda() {
     <View style={fundoStyle.container}>
       <Image
         source={require("@/assets/images/img/background-aacj-app1.png")}
-        style={fundoStyle.backgroundImage}
+        style={getBackgroundImageStyle(width, height)}
         resizeMode="cover"
       />
       <View style={fundoStyle.backgroundOverlay} />
