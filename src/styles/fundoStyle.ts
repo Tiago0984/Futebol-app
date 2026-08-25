@@ -8,7 +8,7 @@ import { variaveis } from "./variaveis";
 // abaixo do que o "cover" já preenche) e deslocamos (pan) só dentro da
 // margem que esse zoom cria. Como o deslocamento nunca ultrapassa essa
 // margem, a imagem nunca deixa vão, em nenhum tamanho/proporção de tela.
-const ZOOM = 1.05;
+const ZOOM = 1;
 // 0 = centralizado, 1 = desloca até o limite seguro. Negativo inverte o lado.
 const PAN_X = 0.6; // desloca a imagem pra esquerda
 const PAN_Y = 0.6; // desloca a imagem pra cima
