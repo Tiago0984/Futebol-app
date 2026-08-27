@@ -10,21 +10,19 @@ const redefinirSenhaStyle = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
   },
-
-  hero: {
-    width: "100%",
-    height: 270,
-  },
-  heroOverlay: {
+  backgroundImage: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: "rgba(10,10,10,0.6)",
+    width: "100%",
+    height: "100%",
+  },
+  gradient: {
+    ...StyleSheet.absoluteFill,
   },
   heroContent: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 24,
-    paddingHorizontal: 32,
+    paddingTop: 20,
   },
   logo: {
     width: 100,
@@ -32,17 +30,16 @@ const redefinirSenhaStyle = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "800",
+    fontSize: 25,
+    fontWeight: "bold",
     color: variaveis.branco,
-    textAlign: "center",
+    letterSpacing: 2.5,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: variaveis.cinza,
-    textAlign: "center",
-    marginTop: 4,
-    marginBottom: 12,
+    fontWeight: "bold",
+    letterSpacing: 0.5,
   },
   badge: {
     flexDirection: "row",
@@ -50,16 +47,17 @@ const redefinirSenhaStyle = StyleSheet.create({
     backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
-    height: 34,
+    height: 30,
+    marginTop: 20,
   },
   badgeIcon: {
     width: 15,
     height: 15,
-    marginRight: 8,
+    marginRight: 10,
   },
   badgeText: {
-    fontSize: 13,
-    fontWeight: "700",
+    fontSize: 12,
+    fontWeight: "bold",
     color: variaveis.branco,
   },
 
@@ -67,35 +65,36 @@ const redefinirSenhaStyle = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 50,
   },
 
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: variaveis.branco,
-    borderRadius: 12,
+    borderRadius: 10,
     height: 50,
     paddingHorizontal: 16,
-    marginBottom: 12,
+    marginBottom: 20,
   },
   inputIcon: {
-    width: 18,
-    height: 18,
-    marginRight: 12,
+    width: 20,
+    height: 20,
+    marginRight: 10,
   },
   input: {
     flex: 1,
     fontSize: 14,
     color: variaveis.preto,
     height: "100%",
+    ...({ outlineStyle: "none" } as any)
   },
   eyeIcon: {
     width: 20,
     height: 20,
     marginLeft: 12,
   },
-
+  
   requirementsCard: {
     borderWidth: 1,
     borderColor: variaveis.cinza,
@@ -126,7 +125,7 @@ const redefinirSenhaStyle = StyleSheet.create({
 
   saveButton: {
     backgroundColor: variaveis.vermelho,
-    borderRadius: 30,
+    borderRadius: 10,
     height: 48,
     alignItems: "center",
     justifyContent: "center",
@@ -134,9 +133,9 @@ const redefinirSenhaStyle = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: variaveis.branco,
-    letterSpacing: 0.3,
+    letterSpacing: 1.5,
   },
 
   backToLoginText: {

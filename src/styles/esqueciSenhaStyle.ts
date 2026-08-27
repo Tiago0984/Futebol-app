@@ -89,6 +89,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontSize: 14,
     color: variaveis.preto,
     height: "100%",
+    ...({ outlineStyle: "none" } as any)
   },
   sendButton: {
     backgroundColor: variaveis.vermelho,

@@ -87,6 +87,7 @@ const loginResponsavelStyle = StyleSheet.create({
     fontSize: 14,
     color: variaveis.preto,
     height: "100%",
+    ...({ outlineStyle: "none" } as any)
   },
   eyeIcon: {
     width: 20,
@@ -105,7 +106,7 @@ const loginResponsavelStyle = StyleSheet.create({
 
   enterButton: {
     backgroundColor: variaveis.vermelho,
-    borderRadius: 30,
+    borderRadius: 10,
     height: 48,
     alignItems: "center",
     justifyContent: "center",

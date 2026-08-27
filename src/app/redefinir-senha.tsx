@@ -1,5 +1,6 @@
 import redefinirSenhaStyle from "@/styles/redefinirSenhastyle";
 import { router, useLocalSearchParams } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import {
   Image,
@@ -20,36 +21,48 @@ export default function RedefinirSenha() {
 
   return (
     <View style={redefinirSenhaStyle.container}>
+      <Image
+        source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
+        style={redefinirSenhaStyle.backgroundImage}
+        resizeMode="cover"
+      />
+      <LinearGradient
+        colors={[
+          "rgba(17, 17, 17, 0.00)",
+          "rgba(17, 17, 17, 0.15)",
+          "rgba(17, 17, 17, 0.70)",
+          "rgba(17, 17, 17, 1.00)",
+        ]}
+        locations={[0, 0.25, 0.55, 0.78]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={redefinirSenhaStyle.gradient}
+      />
+
       <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={redefinirSenhaStyle.scrollContent}
         bounces={false}
       >
-        <ImageBackground
-          source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
-          style={redefinirSenhaStyle.hero}
-          resizeMode="cover"
-        >
-          <View style={redefinirSenhaStyle.heroOverlay} />
-          <View style={redefinirSenhaStyle.heroContent}>
+        <View style={redefinirSenhaStyle.heroContent}>
+          <Image
+            source={require("@/assets/images/img/logo/logo-aacj.png")}
+            style={redefinirSenhaStyle.logo}
+            resizeMode="contain"
+          />
+          <Text style={redefinirSenhaStyle.title}>Redefinir senha</Text>
+          <Text style={redefinirSenhaStyle.subtitle}>
+            Escolha uma nova senha para continuar utilizando o aplicativo
+          </Text>
+          <View style={redefinirSenhaStyle.badge}>
             <Image
-              source={require("@/assets/images/img/logo/logo-aacj.png")}
-              style={redefinirSenhaStyle.logo}
+              source={require("@/assets/images/img/ferramenta.png")}
+              style={redefinirSenhaStyle.badgeIcon}
               resizeMode="contain"
             />
-            <Text style={redefinirSenhaStyle.title}>Redefinir senha</Text>
-            <Text style={redefinirSenhaStyle.subtitle}>
-              Escolha uma nova senha para continuar utilizando o aplicativo
-            </Text>
-            <View style={redefinirSenhaStyle.badge}>
-              <Image
-                source={require("@/assets/images/img/ferramenta.png")}
-                style={redefinirSenhaStyle.badgeIcon}
-                resizeMode="contain"
-              />
-              <Text style={redefinirSenhaStyle.badgeText}>Nova senha</Text>
-            </View>
+            <Text style={redefinirSenhaStyle.badgeText}>Nova senha</Text>
           </View>
-        </ImageBackground>
+        </View>
 
         <View style={redefinirSenhaStyle.body}>
           <View style={redefinirSenhaStyle.inputWrapper}>
@@ -153,7 +166,9 @@ export default function RedefinirSenha() {
           <Pressable
             onPress={() =>
               router.navigate(
-                perfil === "responsavel" ? "/login-responsavel" : "/login-atleta"
+                perfil === "responsavel"
+                  ? "/login-responsavel"
+                  : "/login-atleta",
               )
             }
           >

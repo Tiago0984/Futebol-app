@@ -65,6 +65,7 @@ const indexStyle = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     color: variaveis.branco,
+    letterSpacing: 0.5,
   },
   welcomeSubtitle: {
     fontSize: 12,
