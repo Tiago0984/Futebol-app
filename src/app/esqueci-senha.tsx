@@ -1,9 +1,9 @@
 import esqueciSenhaStyle from "@/styles/esqueciSenhaStyle";
+import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
     Image,
-    ImageBackground,
     Modal,
     Pressable,
     ScrollView,
@@ -19,39 +19,51 @@ export default function EsqueciSenha() {
 
   return (
     <View style={esqueciSenhaStyle.container}>
+      <Image
+        source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
+        style={esqueciSenhaStyle.backgroundImage}
+        resizeMode="cover"
+      />
+      <LinearGradient
+        colors={[
+          "rgba(17, 17, 17, 0.00)",
+          "rgba(17, 17, 17, 0.15)",
+          "rgba(17, 17, 17, 0.70)",
+          "rgba(17, 17, 17, 1.00)",
+        ]}
+        locations={[0, 0.25, 0.55, 0.78]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={esqueciSenhaStyle.gradient}
+      />
+
       <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={esqueciSenhaStyle.scrollContent}
         bounces={false}
       >
-        <ImageBackground
-          source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
-          style={esqueciSenhaStyle.hero}
-          resizeMode="cover"
-        >
-          <View style={esqueciSenhaStyle.heroOverlay} />
-          <View style={esqueciSenhaStyle.heroContent}>
+        <View style={esqueciSenhaStyle.heroContent}>
+          <Image
+            source={require("@/assets/images/img/logo/logo-aacj.png")}
+            style={esqueciSenhaStyle.logo}
+            resizeMode="contain"
+          />
+          <Text style={esqueciSenhaStyle.title}>Esqueceu sua senha?</Text>
+          <Text style={esqueciSenhaStyle.subtitle}>
+            Informe o e-mail utilizado no seu cadastro e{"\n"}enviaremos um link
+            para redefinir sua senha
+          </Text>
+          <View style={esqueciSenhaStyle.badge}>
             <Image
-              source={require("@/assets/images/img/logo/logo-aacj.png")}
-              style={esqueciSenhaStyle.logo}
+              source={require("@/assets/images/img/cadeadoBranco.png")}
+              style={esqueciSenhaStyle.badgeIcon}
               resizeMode="contain"
             />
-            <Text style={esqueciSenhaStyle.title}>Esqueceu sua senha?</Text>
-            <Text style={esqueciSenhaStyle.subtitle}>
-              Informe o e-mail utilizado no seu cadastro e enviaremos um link
-              para redefinir sua senha
+            <Text style={esqueciSenhaStyle.badgeText}>
+              Recuperação de acesso
             </Text>
-            <View style={esqueciSenhaStyle.badge}>
-              <Image
-                source={require("@/assets/images/img/cadeadoBranco.png")}
-                style={esqueciSenhaStyle.badgeIcon}
-                resizeMode="contain"
-              />
-              <Text style={esqueciSenhaStyle.badgeText}>
-                Recuperação de acesso
-              </Text>
-            </View>
           </View>
-        </ImageBackground>
+        </View>
 
         <View style={esqueciSenhaStyle.body}>
           <View style={esqueciSenhaStyle.inputWrapper}>

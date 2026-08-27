@@ -10,7 +10,8 @@ const fundoStyle = StyleSheet.create({
   },
   backgroundImage: {
     ...StyleSheet.absoluteFill,
-    transform: [{ translateX: -70 }, { translateY: -75 }, { scale: 0.7 }],
+    width: "100%",
+    height: "100%",
   },
   backgroundOverlay: {
     ...StyleSheet.absoluteFill,

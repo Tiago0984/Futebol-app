@@ -6,24 +6,24 @@ const loginResponsavelStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: variaveis.preto,
+    overflow: "hidden",
   },
   scrollContent: {
     flexGrow: 1,
   },
 
-  hero: {
-    width: "100%",
-    height: 270,
-  },
-  heroOverlay: {
+  backgroundImage: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: "rgba(10,10,10,0.6)",
+    width: "100%",
+    height: "100%",
+  },
+  gradient: {
+    ...StyleSheet.absoluteFill,
   },
   heroContent: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 24,
+    paddingTop: 64,
+    paddingBottom: 24,
   },
   logo: {
     width: 100,
@@ -31,15 +31,15 @@ const loginResponsavelStyle = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "800",
+    fontSize: 25,
+    fontWeight: "bold",
     color: variaveis.branco,
+    letterSpacing: 2.5,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: variaveis.cinza,
-    marginTop: 4,
-    marginBottom: 12,
+    letterSpacing: 0.5,
   },
   badge: {
     flexDirection: "row",
@@ -47,16 +47,17 @@ const loginResponsavelStyle = StyleSheet.create({
     backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
-    height: 34,
+    height: 30,
+    marginTop: 20,
   },
   badgeIcon: {
     width: 15,
     height: 15,
-    marginRight: 8,
+    marginRight: 10,
   },
   badgeText: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: variaveis.branco,
   },
 
@@ -71,15 +72,15 @@ const loginResponsavelStyle = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: variaveis.branco,
-    borderRadius: 12,
+    borderRadius: 10,
     height: 50,
     paddingHorizontal: 16,
-    marginBottom: 12,
+    marginBottom: 20,
   },
   inputIcon: {
-    width: 18,
-    height: 18,
-    marginRight: 12,
+    width: 20,
+    height: 20,
+    marginRight: 10,
   },
   input: {
     flex: 1,
@@ -99,6 +100,7 @@ const loginResponsavelStyle = StyleSheet.create({
     fontWeight: "600",
     color: variaveis.vermelho,
     marginBottom: 16,
+    textDecorationLine: 'underline',
   },
 
   enterButton: {
@@ -113,7 +115,7 @@ const loginResponsavelStyle = StyleSheet.create({
     fontSize: 15,
     fontWeight: "700",
     color: variaveis.branco,
-    letterSpacing: 0.3,
+    letterSpacing: 1.5,
   },
 
   inviteCard: {

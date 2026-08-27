@@ -1,14 +1,15 @@
 import loginAtletaStyle from "@/styles/loginAtletaStyle";
+import { variaveis } from "@/styles/variaveis";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-    Image,
-    ImageBackground,
-    Pressable,
-    ScrollView,
-    Text,
-    TextInput,
-    View,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 
 export default function LoginAtleta() {
@@ -18,36 +19,50 @@ export default function LoginAtleta() {
 
   return (
     <View style={loginAtletaStyle.container}>
+      <Image
+        source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
+        style={loginAtletaStyle.backgroundImage}
+        resizeMode="cover"
+      />
+      <LinearGradient
+        colors={[
+          "rgba(17, 17, 17, 0.00)",
+          "rgba(17, 17, 17, 0.15)",
+          "rgba(17, 17, 17, 0.70)",
+          "rgba(17, 17, 17, 1.00)",
+        ]}
+        locations={[0, 0.25, 0.55, 0.78]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={loginAtletaStyle.gradient}
+      />
+
       <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={loginAtletaStyle.scrollContent}
         bounces={false}
       >
-        <ImageBackground
-          source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
-          style={loginAtletaStyle.hero}
-          resizeMode="cover"
-        >
-          <View style={loginAtletaStyle.heroOverlay} />
-          <View style={loginAtletaStyle.heroContent}>
+        <View style={loginAtletaStyle.heroContent}>
+          <Image
+            source={require("@/assets/images/img/logo/logo-aacj.png")}
+            style={loginAtletaStyle.logo}
+            resizeMode="contain"
+          />
+          <Text style={loginAtletaStyle.title}>Área do Atleta</Text>
+          <Text style={loginAtletaStyle.subtitle}>
+            Continue sua jornada no futebol
+          </Text>
+          
+          <View style={loginAtletaStyle.badge}>
             <Image
-              source={require("@/assets/images/img/logo/logo-aacj.png")}
-              style={loginAtletaStyle.logo}
+              source={require("@/assets/images/img/atletaCinza.png")}
+              style={loginAtletaStyle.badgeIcon}
+              tintColor={variaveis.branco}
               resizeMode="contain"
             />
-            <Text style={loginAtletaStyle.title}>Área do Atleta</Text>
-            <Text style={loginAtletaStyle.subtitle}>
-              Continue sua jornada no futebol
-            </Text>
-            <View style={loginAtletaStyle.badge}>
-              <Image
-                source={require("@/assets/images/img/atletaCinza.png")}
-                style={loginAtletaStyle.badgeIcon}
-                resizeMode="contain"
-              />
-              <Text style={loginAtletaStyle.badgeText}>Área do Atleta</Text>
-            </View>
+            <Text style={loginAtletaStyle.badgeText}>Área do Atleta</Text>
           </View>
-        </ImageBackground>
+        </View>
 
         <View style={loginAtletaStyle.body}>
           <View style={loginAtletaStyle.inputWrapper}>

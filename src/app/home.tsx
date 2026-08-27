@@ -26,9 +26,9 @@ export default function Home() {
   return (
     <View style={fundoStyle.container}>
       <Image
-        source={require("@/assets/images/img/background-aacj-app1.png")}
+        source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}
-        resizeMode="cover"
+        resizeMode="contain"
       />
       <View style={fundoStyle.backgroundOverlay} />
 

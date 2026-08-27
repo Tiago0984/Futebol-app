@@ -6,24 +6,24 @@ const esqueciSenhaStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: variaveis.preto,
+    overflow: "hidden",
   },
   scrollContent: {
     flexGrow: 1,
   },
 
-  hero: {
-    width: "100%",
-    height: 270,
-  },
-  heroOverlay: {
+  backgroundImage: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: "rgba(10,10,10,0.6)",
+    width: "100%",
+    height: "100%",
+  },
+  gradient: {
+    ...StyleSheet.absoluteFill,
   },
   heroContent: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 24,
+    paddingTop: 64,
+    paddingBottom: 24,
     paddingHorizontal: 32,
   },
   logo: {
@@ -32,17 +32,17 @@ const esqueciSenhaStyle = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "800",
+    fontSize: 25,
+    fontWeight: "bold",
     color: variaveis.branco,
     textAlign: "center",
+    letterSpacing: 2.5,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: variaveis.cinza,
     textAlign: "center",
-    marginTop: 4,
-    marginBottom: 12,
+    letterSpacing: 0.5,
   },
   badge: {
     flexDirection: "row",
@@ -50,7 +50,8 @@ const esqueciSenhaStyle = StyleSheet.create({
     backgroundColor: variaveis.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
-    height: 34,
+    height: 30,
+    marginTop: 20,
   },
   badgeIcon: {
     width: 15,
@@ -58,7 +59,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     marginRight: 8,
   },
   badgeText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "700",
     color: variaveis.branco,
   },
@@ -69,7 +70,6 @@ const esqueciSenhaStyle = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
   },
-
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
@@ -80,8 +80,8 @@ const esqueciSenhaStyle = StyleSheet.create({
     marginBottom: 12,
   },
   inputIcon: {
-    width: 18,
-    height: 18,
+    width: 20,
+    height: 20,
     marginRight: 12,
   },
   input: {
@@ -90,14 +90,14 @@ const esqueciSenhaStyle = StyleSheet.create({
     color: variaveis.preto,
     height: "100%",
   },
-
   sendButton: {
     backgroundColor: variaveis.vermelho,
-    borderRadius: 30,
-    height: 48,
+    borderRadius: 10,
+    height: 55,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 18,
+    marginTop: 30,
+    marginBottom: 25,
   },
   sendButtonText: {
     fontSize: 15,

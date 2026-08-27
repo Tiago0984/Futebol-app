@@ -2,28 +2,28 @@ import { StyleSheet } from "react-native";
 
 import { variaveis } from "./variaveis";
 
-const loginStyle = StyleSheet.create({
+const indexStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: variaveis.preto,
+    overflow: "hidden",
   },
   scrollContent: {
     flexGrow: 1,
   },
 
-  hero: {
-    width: "100%",
-    height: 330,
-  },
-  heroOverlay: {
+  backgroundImage: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: "rgba(10,10,10,0.55)",
+    width: "100%",
+    height: "100%",
+  },
+  gradient: {
+    ...StyleSheet.absoluteFill,
   },
   heroContent: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 24,
+    paddingTop: 64,
+    paddingBottom: 20,
   },
   logo: {
     width: 100,
@@ -50,45 +50,46 @@ const loginStyle = StyleSheet.create({
     marginBottom: 18,
   },
   dividerLine: {
-    width: 22,
+    width: 50,
     height: 1,
     backgroundColor: variaveis.vermelho,
   },
   dividerText: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: variaveis.vermelho,
     letterSpacing: 1,
     marginHorizontal: 8,
   },
   welcomeTitle: {
-    fontSize: 21,
-    fontWeight: "800",
+    fontSize: 25,
+    fontWeight: "bold",
     color: variaveis.branco,
   },
   welcomeSubtitle: {
     fontSize: 12,
     color: variaveis.cinza,
-    marginTop: 4,
+    fontWeight: "bold",
+    letterSpacing: 0.5
   },
 
   body: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 22,
-    paddingBottom: 28,
+    paddingTop: 20,
+    paddingBottom: 30,
   },
   chooseProfile: {
-    fontSize: 15,
-    fontWeight: "700",
+    fontSize: 13,
+    fontWeight: "bold",
     color: variaveis.branco,
     textAlign: "center",
-    marginBottom: 16,
+    marginBottom: 20,
   },
 
   card: {
     backgroundColor: variaveis.branco,
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 18,
     marginBottom: 16,
   },
@@ -98,8 +99,8 @@ const loginStyle = StyleSheet.create({
     marginBottom: 16,
   },
   cardIcon: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     marginRight: 14,
     marginTop: 2,
   },
@@ -108,34 +109,38 @@ const loginStyle = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "bold",
     color: variaveis.preto,
-    marginBottom: 4,
+    marginBottom: 5,
   },
   cardDescription: {
-    fontSize: 12.5,
+    fontSize: 12,
     lineHeight: 18,
     color: variaveis.cinza,
   },
   cardButton: {
     backgroundColor: variaveis.vermelho,
-    borderRadius: 30,
+    borderRadius: 14,
     height: 46,
-    flexDirection: "row",
-    alignItems: "center",
     justifyContent: "center",
+    position: "relative",
   },
   cardButtonText: {
-    fontSize: 14,
-    fontWeight: "700",
+    fontSize: 10,
+    fontWeight: "bold",
     color: variaveis.branco,
-    letterSpacing: 0.3,
+    letterSpacing: 0.8,
+    textAlign: "center",
   },
   cardButtonArrow: {
-    fontSize: 16,
-    fontWeight: "700",
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    right: 20,
+    fontSize: 20,
+    fontWeight: "bold",
     color: variaveis.branco,
-    marginLeft: 8,
+    lineHeight: 46,
   },
 
   firstAccessRow: {
@@ -172,4 +177,4 @@ const loginStyle = StyleSheet.create({
   },
 });
 
-export default loginStyle;
+export default indexStyle;

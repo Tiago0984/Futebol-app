@@ -1,9 +1,10 @@
 import loginResponsavelStyle from "@/styles/loginResponsavelStyle";
+import { variaveis } from "@/styles/variaveis";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
   Image,
-  ImageBackground,
   Pressable,
   ScrollView,
   Text,
@@ -18,38 +19,51 @@ export default function LoginResponsavel() {
 
   return (
     <View style={loginResponsavelStyle.container}>
+      <Image
+        source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
+        style={loginResponsavelStyle.backgroundImage}
+        resizeMode="cover"
+      />
+      <LinearGradient
+        colors={[
+          "rgba(17, 17, 17, 0.00)",
+          "rgba(17, 17, 17, 0.15)",
+          "rgba(17, 17, 17, 0.70)",
+          "rgba(17, 17, 17, 1.00)",
+        ]}
+        locations={[0, 0.25, 0.55, 0.78]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={loginResponsavelStyle.gradient}
+      />
+
       <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={loginResponsavelStyle.scrollContent}
         bounces={false}
       >
-        <ImageBackground
-          source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
-          style={loginResponsavelStyle.hero}
-          resizeMode="cover"
-        >
-          <View style={loginResponsavelStyle.heroOverlay} />
-          <View style={loginResponsavelStyle.heroContent}>
+        <View style={loginResponsavelStyle.heroContent}>
+          <Image
+            source={require("@/assets/images/img/logo/logo-aacj.png")}
+            style={loginResponsavelStyle.logo}
+            resizeMode="contain"
+          />
+          <Text style={loginResponsavelStyle.title}>Área do Responsável</Text>
+          <Text style={loginResponsavelStyle.subtitle}>
+            Acompanhe toda a evolução do seu atleta
+          </Text>
+          <View style={loginResponsavelStyle.badge}>
             <Image
-              source={require("@/assets/images/img/logo/logo-aacj.png")}
-              style={loginResponsavelStyle.logo}
+              source={require("@/assets/images/img/groupModoClaro.png")}
+              style={loginResponsavelStyle.badgeIcon}
+              tintColor={variaveis.branco}
               resizeMode="contain"
             />
-            <Text style={loginResponsavelStyle.title}>Área do Responsável</Text>
-            <Text style={loginResponsavelStyle.subtitle}>
-              Acompanhe toda a evolução do seu atleta
+            <Text style={loginResponsavelStyle.badgeText}>
+              Área do Responsável
             </Text>
-            <View style={loginResponsavelStyle.badge}>
-              <Image
-                source={require("@/assets/images/img/groupModoClaro.png")}
-                style={loginResponsavelStyle.badgeIcon}
-                resizeMode="contain"
-              />
-              <Text style={loginResponsavelStyle.badgeText}>
-                Área do Responsável
-              </Text>
-            </View>
           </View>
-        </ImageBackground>
+        </View>
 
         <View style={loginResponsavelStyle.body}>
           <View style={loginResponsavelStyle.inputWrapper}>

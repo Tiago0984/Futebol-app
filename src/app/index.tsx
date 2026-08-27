@@ -1,113 +1,118 @@
-import loginStyle from "@/styles/loginStyle";
+import indexStyle from "@/styles/indexStyle";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import {
-  Image,
-  ImageBackground,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 export default function Index() {
   return (
-    <View style={loginStyle.container}>
+    <View style={indexStyle.container}>
+      <Image
+        source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
+        style={indexStyle.backgroundImage}
+        resizeMode="cover"
+      />
+      <LinearGradient
+        colors={[
+          "rgba(17, 17, 17, 0.00)",
+          "rgba(17, 17, 17, 0.15)",
+          "rgba(17, 17, 17, 0.70)",
+          "rgba(17, 17, 17, 1.00)",
+        ]}
+        locations={[0, 0.25, 0.55, 0.78]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={indexStyle.gradient}
+      />
+
       <ScrollView
-        contentContainerStyle={loginStyle.scrollContent}
+        style={{ flex: 1 }}
+        contentContainerStyle={indexStyle.scrollContent}
         bounces={false}
       >
-        <ImageBackground
-          source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
-          style={loginStyle.hero}
-          resizeMode="cover"
-        >
-          <View style={loginStyle.heroOverlay} />
-          <View style={loginStyle.heroContent}>
-            <Image
-              source={require("@/assets/images/img/logo/logo-aacj.png")}
-              style={loginStyle.logo}
-              resizeMode="contain"
-            />
-            <Text style={loginStyle.kicker}>CENTRO DE FORMAÇÃO</Text>
-            <Text style={loginStyle.kickerBold}>DE ATLETAS</Text>
-            <View style={loginStyle.dividerRow}>
-              <View style={loginStyle.dividerLine} />
-              <Text style={loginStyle.dividerText}>desde 2001</Text>
-              <View style={loginStyle.dividerLine} />
-            </View>
-            <Text style={loginStyle.welcomeTitle}>Bem-Vindo(a) à AACJ</Text>
-            <Text style={loginStyle.welcomeSubtitle}>
-              Associação Atlética Cohab Juscelino
-            </Text>
+        <View style={indexStyle.heroContent}>
+          <Image
+            source={require("@/assets/images/img/logo/logo-aacj.png")}
+            style={indexStyle.logo}
+            resizeMode="contain"
+          />
+          <Text style={indexStyle.kicker}>CENTRO DE FORMAÇÃO</Text>
+          <Text style={indexStyle.kickerBold}>DE ATLETAS</Text>
+          <View style={indexStyle.dividerRow}>
+            <View style={indexStyle.dividerLine} />
+            <Text style={indexStyle.dividerText}>desde 2001</Text>
+            <View style={indexStyle.dividerLine} />
           </View>
-        </ImageBackground>
+          <Text style={indexStyle.welcomeTitle}>Bem-Vindo(a) à AACJ</Text>
+          <Text style={indexStyle.welcomeSubtitle}>
+            Associação Atlética Cohab Juscelino
+          </Text>
+        </View>
 
-        <View style={loginStyle.body}>
-          <Text style={loginStyle.chooseProfile}>
+        <View style={indexStyle.body}>
+          <Text style={indexStyle.chooseProfile}>
             Escolha seu perfil para continuar
           </Text>
 
-          <View style={loginStyle.card}>
-            <View style={loginStyle.cardTopRow}>
+          <View style={indexStyle.card}>
+            <View style={indexStyle.cardTopRow}>
               <Image
                 source={require("@/assets/images/img/atletaVermelho.png")}
-                style={loginStyle.cardIcon}
+                style={indexStyle.cardIcon}
                 tintColor="#D71920"
                 resizeMode="contain"
               />
-              <View style={loginStyle.cardTextCol}>
-                <Text style={loginStyle.cardTitle}>Atleta</Text>
-                <Text style={loginStyle.cardDescription}>
-                  Consulte seus treinos, campeonatos, frequência e desempenho.
+              <View style={indexStyle.cardTextCol}>
+                <Text style={indexStyle.cardTitle}>Atleta</Text>
+                <Text style={indexStyle.cardDescription}>
+                  Consulte seus treinos,{"\n"}campeonatos, frequência e desempenho.
                 </Text>
               </View>
             </View>
             <Pressable
-              style={loginStyle.cardButton}
+              style={indexStyle.cardButton}
               onPress={() => router.navigate("/login-atleta")}
             >
-              <Text style={loginStyle.cardButtonText}>
-                Entrar como Atleta
-              </Text>
-              <Text style={loginStyle.cardButtonArrow}>›</Text>
+              <Text style={indexStyle.cardButtonText}>Entrar como Atleta</Text>
+              <Text style={indexStyle.cardButtonArrow}>›</Text>
             </Pressable>
           </View>
 
-          <View style={loginStyle.card}>
-            <View style={loginStyle.cardTopRow}>
+          <View style={indexStyle.card}>
+            <View style={indexStyle.cardTopRow}>
               <Image
                 source={require("@/assets/images/img/responsavelVermelho.png")}
-                style={loginStyle.cardIcon}
+                style={indexStyle.cardIcon}
+                tintColor="#D71920"
                 resizeMode="contain"
               />
-              <View style={loginStyle.cardTextCol}>
-                <Text style={loginStyle.cardTitle}>Responsável</Text>
-                <Text style={loginStyle.cardDescription}>
+              <View style={indexStyle.cardTextCol}>
+                <Text style={indexStyle.cardTitle}>Responsável</Text>
+                <Text style={indexStyle.cardDescription}>
                   Acompanhe frequência, evolução e comunicados do atleta.
                 </Text>
               </View>
             </View>
             <Pressable
-              style={loginStyle.cardButton}
+              style={indexStyle.cardButton}
               onPress={() => router.navigate("/login-responsavel")}
             >
-              <Text style={loginStyle.cardButtonText}>
+              <Text style={indexStyle.cardButtonText}>
                 Entrar como Responsável
               </Text>
-              <Text style={loginStyle.cardButtonArrow}>›</Text>
+              <Text style={indexStyle.cardButtonArrow}>›</Text>
             </Pressable>
           </View>
 
-          <View style={loginStyle.firstAccessRow}>
-            <View style={loginStyle.firstAccessLine} />
-            <Text style={loginStyle.firstAccessText}>Primeiro acesso?</Text>
-            <View style={loginStyle.firstAccessLine} />
+          <View style={indexStyle.firstAccessRow}>
+            <View style={indexStyle.firstAccessLine} />
+            <Text style={indexStyle.firstAccessText}>Primeiro acesso?</Text>
+            <View style={indexStyle.firstAccessLine} />
           </View>
 
-          <View style={loginStyle.footerLinksRow}>
-            <Text style={loginStyle.footerLink}>Fazer matricula</Text>
-            <Text style={loginStyle.footerDot}>•</Text>
-            <Text style={loginStyle.footerLink}>Conheça a AACJ</Text>
+          <View style={indexStyle.footerLinksRow}>
+            <Text style={indexStyle.footerLink}>Fazer matricula</Text>
+            <Text style={indexStyle.footerDot}>•</Text>
+            <Text style={indexStyle.footerLink}>Conheça a AACJ</Text>
           </View>
         </View>
       </ScrollView>
