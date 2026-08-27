@@ -17,3 +17,8 @@ export const variaveis = {
     vermelho20: "#D7192033",
 
 }
+
+export const fontes = {
+    comum: " ",
+    negrito: " ",
+}

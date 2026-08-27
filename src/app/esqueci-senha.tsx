@@ -132,10 +132,9 @@ export default function EsqueciSenha() {
               style={esqueciSenhaStyle.modalButton}
               onPress={() => {
                 setModalVisible(false);
-                router.navigate({
-                  pathname: "/redefinir-senha",
-                  params: { perfil },
-                });
+                router.navigate(
+                  perfil === "responsavel" ? "/login-responsavel" : "/login-atleta"
+                );
               }}
             >
               <Text style={esqueciSenhaStyle.modalButtonText}>OK</Text>
