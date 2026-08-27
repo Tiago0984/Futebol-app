@@ -39,7 +39,7 @@ export default function Home() {
         <View style={homeStyle.header}>
           <View style={homeStyle.headerTopRow}>
             <View>
-              <Text style={homeStyle.greeting}>Bom dia</Text>
+              <Text style={homeStyle.greeting}>Bom dia,</Text>
               <Text style={homeStyle.greetingName}>Atleta</Text>
             </View>
             <View style={homeStyle.headerIconsRow}>

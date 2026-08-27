@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Oswald_700Bold } from "@expo-google-fonts/oswald"
 
 export const variaveis = {
 
@@ -19,6 +19,9 @@ export const variaveis = {
 }
 
 export const fontes = {
-    comum: " ",
-    negrito: " ",
+    OpenSans_Bold: "OpenSans_700Bold",
+    OpenSans_Regular: "OpenSans_400Regular",
+    OpenSans_SemiBold: "OpenSans_600SemiBold",
+    Oswald_Regular: "Oswald_400Regular",
+    Oswald_Bold: "Oswald_700Bold",
 }

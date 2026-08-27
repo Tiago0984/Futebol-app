@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const homeStyle = StyleSheet.create({
   scrollContent: {
@@ -9,7 +9,7 @@ const homeStyle = StyleSheet.create({
 
   header: {
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 30,
   },
   headerTopRow: {
     flexDirection: "row",
@@ -17,11 +17,13 @@ const homeStyle = StyleSheet.create({
     alignItems: "flex-start",
   },
   greeting: {
-    fontSize: 14,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 20,
     color: variaveis.cinza,
   },
   greetingName: {
-    fontSize: 28,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 30,
     fontWeight: "800",
     color: variaveis.branco,
     marginTop: 2,
@@ -50,6 +52,7 @@ const homeStyle = StyleSheet.create({
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
     color: variaveis.branco,
@@ -59,7 +62,7 @@ const homeStyle = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 18,
+    marginTop: 10,
   },
   headerInfoCol: {
     flex: 1,
@@ -69,18 +72,20 @@ const homeStyle = StyleSheet.create({
     alignItems: "center",
   },
   categoriaIcon: {
-    width: 16,
-    height: 16,
-    marginRight: 8,
+    width: 20,
+    height: 20,
+    marginRight: 5,
   },
   categoriaText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
     color: variaveis.branco,
   },
   centroTexto: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
-    color: variaveis.cinza,
+    color: variaveis.branco,
     marginTop: 10,
   },
   centroDestaqueRow: {
@@ -89,14 +94,15 @@ const homeStyle = StyleSheet.create({
     marginTop: 4,
   },
   centroLine: {
-    width: 18,
-    height: 2,
+    width: 30,
+    height: 1,
     backgroundColor: variaveis.vermelho,
   },
   centroDestaqueText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
-    color: variaveis.cinza,
-    marginHorizontal: 8,
+    color: variaveis.branco,
+    marginHorizontal: 6,
   },
   avatarCircle: {
     width: 80,
@@ -115,7 +121,7 @@ const homeStyle = StyleSheet.create({
     backgroundColor: variaveis.branco,
     borderRadius: 18,
     marginHorizontal: 20,
-    marginTop: 22,
+    marginTop: 30,
     padding: 18,
   },
   cardLabel: {
