@@ -125,6 +125,7 @@ const homeStyle = StyleSheet.create({
     padding: 18,
   },
   cardLabel: {
+    fontFamily: fontes.OpenSans_Bold, 
     fontSize: 12,
     color: variaveis.cinza,
     marginBottom: 12,
@@ -134,15 +135,16 @@ const homeStyle = StyleSheet.create({
     alignItems: "center",
   },
   cardIcon: {
-    width: 34,
-    height: 34,
+    width: 50,
+    height: 50,
     marginRight: 14,
   },
   cardTextCol: {
     flex: 1,
   },
   cardTitle: {
-    fontSize: 16,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 20,
     fontWeight: "800",
     color: variaveis.preto,
     marginBottom: 6,
@@ -155,10 +157,11 @@ const homeStyle = StyleSheet.create({
   cardInfoIcon: {
     width: 13,
     height: 13,
-    marginRight: 6,
+    marginRight: 5,
   },
   cardInfoText: {
-    fontSize: 12.5,
+    fontFamily: fontes.OpenSans_Regular, 
+    fontSize: 12,
     color: variaveis.cinza,
   },
   cardInfoDot: {
@@ -170,7 +173,8 @@ const homeStyle = StyleSheet.create({
   },
   cardDivider: {
     height: 1,
-    backgroundColor: variaveis.branco,
+    backgroundColor: variaveis.cinza,
+    opacity: 0.5,
     marginVertical: 14,
   },
   cardFooterRow: {
@@ -192,22 +196,26 @@ const homeStyle = StyleSheet.create({
     marginRight: 6,
   },
   confirmedText: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     fontWeight: "700",
     color: variaveis.verde,
   },
   detailsLink: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
     color: variaveis.vermelho,
   },
 
   sectionTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
     color: variaveis.branco,
   },
   sectionLink: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
     color: variaveis.vermelho,
@@ -239,6 +247,7 @@ const homeStyle = StyleSheet.create({
     height: 26,
   },
   quickAccessLabel: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     color: variaveis.cinza,
     marginTop: 8,
@@ -258,6 +267,7 @@ const homeStyle = StyleSheet.create({
     marginTop: 18,
   },
   activityDate: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12.5,
     fontWeight: "700",
     color: variaveis.vermelho,
@@ -272,16 +282,19 @@ const homeStyle = StyleSheet.create({
     flex: 1,
   },
   activityTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
     color: variaveis.branco,
   },
   activitySubtitle: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12.5,
     color: variaveis.cinza,
     marginTop: 2,
   },
   activityTime: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 13,
     color: variaveis.cinza,
   },

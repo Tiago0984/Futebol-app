@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const menuInferiorStyle = StyleSheet.create({
   tabBar: {
@@ -8,7 +8,7 @@ const menuInferiorStyle = StyleSheet.create({
     backgroundColor: variaveis.preto,
     borderTopWidth: 1,
     borderTopColor: "rgba(255,255,255,0.08)",
-    paddingBottom: 22,
+    paddingBottom: 20,
   },
   tabItem: {
     flex: 1,
@@ -29,11 +29,13 @@ const menuInferiorStyle = StyleSheet.create({
     height: 22,
   },
   tabLabel: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 11,
     color: variaveis.branco,
     marginTop: 4,
   },
   tabLabelActive: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "700",
     color: variaveis.vermelho,
