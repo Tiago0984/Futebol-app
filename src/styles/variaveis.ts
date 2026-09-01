@@ -1,5 +1,3 @@
-import { Oswald_700Bold } from "@expo-google-fonts/oswald"
-
 export const variaveis = {
 
     vermelho: "#D71920",
