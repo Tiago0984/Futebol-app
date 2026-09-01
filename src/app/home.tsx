@@ -28,7 +28,7 @@ export default function Home() {
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}
-        resizeMode="contain"
+        resizeMode="stretch"
       />
       <View style={fundoStyle.backgroundOverlay} />
 

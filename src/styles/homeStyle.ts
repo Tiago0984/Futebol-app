@@ -17,7 +17,7 @@ const homeStyle = StyleSheet.create({
     alignItems: "flex-start",
   },
   greeting: {
-    fontFamily: fontes.OpenSans_Bold,
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 20,
     color: variaveis.cinza,
   },
