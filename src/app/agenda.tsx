@@ -248,7 +248,11 @@ export default function Agenda() {
                 />
                 <Text style={agendaStyle.nextConfirmedText}>Confirmado</Text>
               </View>
-              <Text style={agendaStyle.nextDetailsLink}>Ver detalhes {">"}</Text>
+              <Pressable onPress={() => router.navigate("/treino-tecnico")}>
+                <Text style={agendaStyle.nextDetailsLink}>
+                  Ver detalhes {">"}
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>
