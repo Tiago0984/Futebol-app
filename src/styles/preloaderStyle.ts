@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const preloaderStyle = StyleSheet.create({
   container: {
@@ -28,6 +28,7 @@ const preloaderStyle = StyleSheet.create({
   titulo: {
     marginTop: 20,
 
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
     fontWeight: "bold",
 
@@ -41,6 +42,7 @@ const preloaderStyle = StyleSheet.create({
   subtitulo: {
     marginTop: 4,
 
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 22,
     fontWeight: "bold",
 
@@ -77,6 +79,7 @@ const preloaderStyle = StyleSheet.create({
   },
 
   footerText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 9,
 
     fontWeight: "bold",

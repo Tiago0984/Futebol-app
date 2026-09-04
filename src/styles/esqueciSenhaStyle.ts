@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const esqueciSenhaStyle = StyleSheet.create({
   container: {
@@ -32,6 +32,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
     color: variaveis.branco,
@@ -39,6 +40,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     letterSpacing: 2.5,
   },
   subtitle: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     color: variaveis.cinza,
     textAlign: "center",
@@ -59,6 +61,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     marginRight: 8,
   },
   badgeText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "700",
     color: variaveis.branco,
@@ -86,6 +89,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   },
   input: {
     flex: 1,
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
     color: variaveis.preto,
     height: "100%",
@@ -101,6 +105,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     marginBottom: 25,
   },
   sendButtonText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
     color: variaveis.branco,
@@ -108,6 +113,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   },
 
   backToLoginText: {
+    fontFamily: fontes.OpenSans_Bold,
     alignSelf: "center",
     fontSize: 13.5,
     fontWeight: "700",
@@ -130,6 +136,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   },
   noticeText: {
     flex: 1,
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     lineHeight: 17,
     color: variaveis.cinza,
@@ -149,18 +156,21 @@ const esqueciSenhaStyle = StyleSheet.create({
     padding: 22,
   },
   modalTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 17,
     fontWeight: "800",
     color: variaveis.preto,
     marginBottom: 12,
   },
   modalText: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 13.5,
     lineHeight: 19,
     color: variaveis.cinza,
     marginBottom: 14,
   },
   modalValidity: {
+    fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 13,
     fontWeight: "600",
     color: variaveis.preto,
@@ -174,6 +184,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     justifyContent: "center",
   },
   modalButtonText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
     color: variaveis.branco,
