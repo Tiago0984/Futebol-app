@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 import { variaveis } from "./variaveis";
 
-const indexStyle = StyleSheet.create({
+const selecaoPerfilStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: variaveis.preto,
@@ -178,4 +178,4 @@ const indexStyle = StyleSheet.create({
   },
 });
 
-export default indexStyle;
+export default selecaoPerfilStyle;

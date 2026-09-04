@@ -40,9 +40,9 @@ export default function Agenda() {
   return (
     <View style={fundoStyle.container}>
       <Image
-        source={require("@/assets/images/img/background-aacj-app1.png")}
+        source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}
-        resizeMode="cover"
+        resizeMode="stretch"
       />
       <View style={fundoStyle.backgroundOverlay} />
 

@@ -1,121 +1,113 @@
-import indexStyle from "@/styles/indexStyle";
-import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "expo-image";
+import { useEffect, useRef } from "react";
+import { Animated, Easing, Text, View } from "react-native";
 import { router } from "expo-router";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+
+import preloaderStyle from "@/styles/preloaderStyle";
+import fundoStyle from "@/styles/fundoStyle";
 
 export default function Index() {
-  return (
-    <View style={indexStyle.container}>
-      <Image
-        source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
-        style={indexStyle.backgroundImage}
-        resizeMode="cover"
-      />
-      <LinearGradient
-        colors={[
-          "rgba(17, 17, 17, 0.00)",
-          "rgba(17, 17, 17, 0.15)",
-          "rgba(17, 17, 17, 0.70)",
-          "rgba(17, 17, 17, 1.00)",
-        ]}
-        locations={[0, 0.25, 0.55, 0.78]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={indexStyle.gradient}
-      />
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.92)).current;
+  const progressAnim = useRef(new Animated.Value(0)).current;
 
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={indexStyle.scrollContent}
-        bounces={false}
-      >
-        <View style={indexStyle.heroContent}>
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        easing: Easing.out(Easing.ease),
+        useNativeDriver: true,
+      }),
+
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 7,
+        tension: 45,
+        useNativeDriver: true,
+      }),
+
+      Animated.timing(progressAnim, {
+        toValue: 1,
+        duration: 1800,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: false,
+      }),
+    ]).start();
+
+    /*
+     * Após o carregamento, direciona
+     * para a seleção de perfil.
+     */
+    const timer = setTimeout(() => {
+      router.replace("/selecao-perfil");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <View style={fundoStyle.container}>
+      <View style={preloaderStyle.container}>
+        {/* Logo AACJ */}
+        <Animated.View
+          style={[
+            preloaderStyle.logoContainer,
+            {
+              opacity: fadeAnim,
+              transform: [
+                {
+                  scale: scaleAnim,
+                },
+              ],
+            },
+          ]}
+        >
           <Image
             source={require("@/assets/images/img/logo/logo-aacj.png")}
-            style={indexStyle.logo}
-            resizeMode="contain"
+            style={preloaderStyle.logo}
+            contentFit="contain"
           />
-          <Text style={indexStyle.kicker}>CENTRO DE FORMAÇÃO</Text>
-          <Text style={indexStyle.kickerBold}>DE ATLETAS</Text>
-          <View style={indexStyle.dividerRow}>
-            <View style={indexStyle.dividerLine} />
-            <Text style={indexStyle.dividerText}>desde 2001</Text>
-            <View style={indexStyle.dividerLine} />
-          </View>
-          <Text style={indexStyle.welcomeTitle}>Bem-Vindo(a) à AACJ</Text>
-          <Text style={indexStyle.welcomeSubtitle}>
-            Associação Atlética Cohab Juscelino
-          </Text>
+        </Animated.View>
+
+        {/* Nome da instituição */}
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+          }}
+        >
+          <Text style={preloaderStyle.titulo}>Centro de Formação</Text>
+
+          <Text style={preloaderStyle.subtitulo}>DE ATLETAS</Text>
+        </Animated.View>
+
+        {/* Barra de carregamento */}
+        <View style={preloaderStyle.progressContainer}>
+          <Animated.View
+            style={[
+              preloaderStyle.progressBar,
+              {
+                width: progressAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: ["0%", "100%"],
+                }),
+              },
+            ]}
+          />
         </View>
 
-        <View style={indexStyle.body}>
-          <Text style={indexStyle.chooseProfile}>
-            Escolha seu perfil para continuar
-          </Text>
-
-          <View style={indexStyle.card}>
-            <View style={indexStyle.cardTopRow}>
-              <Image
-                source={require("@/assets/images/img/atletaVermelho.png")}
-                style={indexStyle.cardIcon}
-                tintColor="#D71920"
-                resizeMode="contain"
-              />
-              <View style={indexStyle.cardTextCol}>
-                <Text style={indexStyle.cardTitle}>Atleta</Text>
-                <Text style={indexStyle.cardDescription}>
-                  Consulte seus treinos,{"\n"}campeonatos, frequência e desempenho.
-                </Text>
-              </View>
-            </View>
-            <Pressable
-              style={indexStyle.cardButton}
-              onPress={() => router.navigate("/login-atleta")}
-            >
-              <Text style={indexStyle.cardButtonText}>Entrar como Atleta</Text>
-              <Text style={indexStyle.cardButtonArrow}>›</Text>
-            </Pressable>
-          </View>
-
-          <View style={indexStyle.card}>
-            <View style={indexStyle.cardTopRow}>
-              <Image
-                source={require("@/assets/images/img/responsavelVermelho.png")}
-                style={indexStyle.cardIcon}
-                tintColor="#D71920"
-                resizeMode="contain"
-              />
-              <View style={indexStyle.cardTextCol}>
-                <Text style={indexStyle.cardTitle}>Responsável</Text>
-                <Text style={indexStyle.cardDescription}>
-                  Acompanhe frequência, evolução e comunicados do atleta.
-                </Text>
-              </View>
-            </View>
-            <Pressable
-              style={indexStyle.cardButton}
-              onPress={() => router.navigate("/login-responsavel")}
-            >
-              <Text style={indexStyle.cardButtonText}>
-                Entrar como Responsável
-              </Text>
-              <Text style={indexStyle.cardButtonArrow}>›</Text>
-            </Pressable>
-          </View>
-
-          <View style={indexStyle.firstAccessRow}>
-            <View style={indexStyle.firstAccessLine} />
-            <Text style={indexStyle.firstAccessText}>Primeiro acesso?</Text>
-            <View style={indexStyle.firstAccessLine} />
-          </View>
-
-          <View style={indexStyle.footerLinksRow}>
-            <Text style={indexStyle.footerLink}>Fazer matricula</Text>
-            <Text style={indexStyle.footerDot}>•</Text>
-            <Text style={indexStyle.footerLink}>Conheça a AACJ</Text>
-          </View>
-        </View>
-      </ScrollView>
+        {/* Rodapé */}
+        <Animated.View
+          style={[
+            preloaderStyle.footer,
+            {
+              opacity: fadeAnim,
+            },
+          ]}
+        >
+          <Text style={preloaderStyle.footerText}>DESDE 2001</Text>
+        </Animated.View>
+      </View>
     </View>
   );
 }

@@ -10,11 +10,10 @@ const fundoStyle = StyleSheet.create({
   },
   backgroundImage: {
     ...StyleSheet.absoluteFill,
-    // No React Native Web, position absolute + inset (top/left/right/bottom)
-    // não força a Image a ocupar 100% do espaço como acontece nativamente —
-    // sem isso, ela renderiza no tamanho intrínseco do arquivo (624x990).
+    flex: 1,
     width: "100%",
     height: "100%",
+    maxWidth: 440,
   },
   backgroundOverlay: {
     ...StyleSheet.absoluteFill,
