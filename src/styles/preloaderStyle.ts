@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const preloaderStyle = StyleSheet.create({
   container: {
@@ -32,7 +32,7 @@ const preloaderStyle = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
 
-    color: variaveis.branco,
+    color: cores.branco,
 
     textAlign: "center",
 
@@ -46,7 +46,7 @@ const preloaderStyle = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
 
-    color: variaveis.branco,
+    color: cores.branco,
 
     textAlign: "center",
 
@@ -67,7 +67,7 @@ const preloaderStyle = StyleSheet.create({
   progressBar: {
     height: "100%",
 
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
 
   footer: {
@@ -84,7 +84,7 @@ const preloaderStyle = StyleSheet.create({
 
     fontWeight: "bold",
 
-    color: variaveis.cinza,
+    color: cores.cinza,
 
     letterSpacing: 3,
   },

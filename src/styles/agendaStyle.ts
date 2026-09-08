@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const agendaStyle = StyleSheet.create({
   scrollContent: {
@@ -20,12 +20,12 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 30,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   screenSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginTop: 2,
   },
   headerIconsRow: {
@@ -43,7 +43,7 @@ const agendaStyle = StyleSheet.create({
     position: "absolute",
     top: -5,
     right: -6,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 8,
     minWidth: 16,
     height: 16,
@@ -55,7 +55,7 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   monthNavRow: {
@@ -72,14 +72,14 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 20,
     fontWeight: "700",
-    color: variaveis.cinza,
+    color: cores.cinza,
     paddingHorizontal: 6,
   },
   monthText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 17,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
     marginHorizontal: 6,
   },
   monthNavRight: {
@@ -118,39 +118,39 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 11,
     fontWeight: "600",
-    color: variaveis.branco,
+    color: cores.branco,
     marginBottom: 8,
   },
   weekDayCircle: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: variaveis.branco30,
+    backgroundColor: cores.branco30,
     alignItems: "center",
     justifyContent: "center",
   },
   weekDayCircleActive: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
   weekDayNumber: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.preto,
+    color: cores.preto,
   },
   weekDayNumberActive: {
-    color: variaveis.branco,
+    color: cores.branco,
   },
   weekDayDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     marginTop: 6,
   },
 
   todayCard: {
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 20,
@@ -174,13 +174,13 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "800",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
   todaySubLabel: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.preto,
+    color: cores.preto,
     marginTop: 2,
   },
   todayCardRight: {
@@ -190,12 +190,12 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "800",
-    color: variaveis.preto,
+    color: cores.preto,
   },
   todayNextText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 11,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginTop: 2,
   },
   todayPillsScroll: {
@@ -208,7 +208,7 @@ const agendaStyle = StyleSheet.create({
   todayPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 16,
     paddingHorizontal: 10,
     height: 26,
@@ -223,7 +223,7 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 11.5,
     fontWeight: "600",
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
 
   filterScroll: {
@@ -241,21 +241,21 @@ const agendaStyle = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: variaveis.branco70,
+    borderColor: cores.branco70,
   },
   filterPillActive: {
-    backgroundColor: variaveis.vermelho,
-    borderColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
+    borderColor: cores.vermelho,
   },
   filterPillText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   nextCard: {
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 20,
@@ -264,7 +264,7 @@ const agendaStyle = StyleSheet.create({
   nextCardLabel: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginBottom: 12,
   },
   nextCardTopRow: {
@@ -279,7 +279,7 @@ const agendaStyle = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 16,
-    backgroundColor: variaveis.vermelho20,
+    backgroundColor: cores.vermelho20,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
@@ -296,14 +296,14 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "800",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginBottom: 4,
   },
   nextCardTitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "800",
-    color: variaveis.preto,
+    color: cores.preto,
     marginBottom: 6,
   },
   nextCardInfoRow: {
@@ -319,7 +319,7 @@ const agendaStyle = StyleSheet.create({
   nextCardInfoText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 11,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
   nextCardSide: {
     alignItems: "flex-end",
@@ -328,7 +328,7 @@ const agendaStyle = StyleSheet.create({
   nextConfirmedPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.verdeclaro,
+    backgroundColor: cores.verdeclaro,
     borderRadius: 20,
     paddingHorizontal: 10,
     height: 24,
@@ -342,13 +342,13 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "700",
-    color: variaveis.verde,
+    color: cores.verde,
   },
   nextDetailsLink: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12.5,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginTop: 10,
   },
 
@@ -386,7 +386,7 @@ const agendaStyle = StyleSheet.create({
   timelineTime: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
-    color: variaveis.branco,
+    color: cores.branco,
   },
   timelineLineCol: {
     width: 18,
@@ -428,7 +428,7 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginBottom: 4,
   },
   timelineInfoRow: {
@@ -445,7 +445,7 @@ const agendaStyle = StyleSheet.create({
     flexShrink: 1,
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 9.5,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
   timelineStatusCol: {
     marginLeft: 4,

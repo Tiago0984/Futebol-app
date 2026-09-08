@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const redefinirSenhaStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: variaveis.preto,
+    backgroundColor: cores.preto,
   },
   scrollContent: {
     flexGrow: 1,
@@ -33,20 +33,20 @@ const redefinirSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 2.5,
   },
   subtitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     fontWeight: "bold",
     letterSpacing: 0.5,
   },
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
     height: 30,
@@ -61,7 +61,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   body: {
@@ -74,7 +74,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 10,
     height: 50,
     paddingHorizontal: 16,
@@ -89,7 +89,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     flex: 1,
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
-    color: variaveis.preto,
+    color: cores.preto,
     height: "100%",
     ...({ outlineStyle: "none" } as any)
   },
@@ -101,7 +101,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   
   requirementsCard: {
     borderWidth: 1,
-    borderColor: variaveis.cinza,
+    borderColor: cores.cinza,
     borderRadius: 14,
     padding: 14,
     marginBottom: 20,
@@ -110,7 +110,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13.5,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginBottom: 10,
   },
   requirementRow: {
@@ -126,11 +126,11 @@ const redefinirSenhaStyle = StyleSheet.create({
   requirementText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12.5,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
 
   saveButton: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 10,
     height: 48,
     alignItems: "center",
@@ -141,7 +141,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 1.5,
   },
 
@@ -150,7 +150,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     alignSelf: "center",
     fontSize: 13.5,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
 });
 

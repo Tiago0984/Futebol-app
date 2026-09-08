@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const loginAtletaStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: variaveis.preto,
+    backgroundColor: cores.preto,
     overflow: "hidden",
   },
   scrollContent: {
@@ -33,20 +33,20 @@ const loginAtletaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 2.5,
   },
   subtitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     fontWeight: "bold",
     letterSpacing: 0.5,
   },
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
     height: 30,
@@ -61,7 +61,7 @@ const loginAtletaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   body: {
@@ -74,7 +74,7 @@ const loginAtletaStyle = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 10,
     height: 50,
     paddingHorizontal: 16,
@@ -89,7 +89,7 @@ const loginAtletaStyle = StyleSheet.create({
     flex: 1,
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
-    color: variaveis.preto,
+    color: cores.preto,
     height: "100%",
     ...({ outlineStyle: "none" } as any)
   },
@@ -104,13 +104,13 @@ const loginAtletaStyle = StyleSheet.create({
     alignSelf: "flex-end",
     fontSize: 12.5,
     fontWeight: "600",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginBottom: 16,
     textDecorationLine: 'underline',
   },
 
   enterButton: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 10,
     height: 48,
     alignItems: "center",
@@ -121,7 +121,7 @@ const loginAtletaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 1.5,
   },
 
@@ -129,7 +129,7 @@ const loginAtletaStyle = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: variaveis.cinza,
+    borderColor: cores.cinza,
     borderRadius: 14,
     padding: 14,
   },
@@ -137,7 +137,7 @@ const loginAtletaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 22,
     fontWeight: "600",
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginRight: 10,
   },
   inviteIcon: {
@@ -152,14 +152,14 @@ const loginAtletaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginBottom: 4,
   },
   inviteDescription: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     lineHeight: 17,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
 });
 

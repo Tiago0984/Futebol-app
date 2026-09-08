@@ -1,5 +1,5 @@
 import loginResponsavelStyle from "@/styles/loginResponsavelStyle";
-import { variaveis } from "@/styles/variaveis";
+import { cores } from "@/styles/variaveis";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -56,7 +56,7 @@ export default function LoginResponsavel() {
             <Image
               source={require("@/assets/images/img/groupModoClaro.png")}
               style={loginResponsavelStyle.badgeIcon}
-              tintColor={variaveis.branco}
+              tintColor={cores.branco}
               resizeMode="contain"
             />
             <Text style={loginResponsavelStyle.badgeText}>

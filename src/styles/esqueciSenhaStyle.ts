@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const esqueciSenhaStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: variaveis.preto,
+    backgroundColor: cores.preto,
     overflow: "hidden",
   },
   scrollContent: {
@@ -35,21 +35,21 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     textAlign: "center",
     letterSpacing: 2.5,
   },
   subtitle: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     textAlign: "center",
     letterSpacing: 0.5,
   },
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 30,
     paddingHorizontal: 16,
     height: 30,
@@ -64,7 +64,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   body: {
@@ -76,7 +76,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 12,
     height: 50,
     paddingHorizontal: 16,
@@ -91,12 +91,12 @@ const esqueciSenhaStyle = StyleSheet.create({
     flex: 1,
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
-    color: variaveis.preto,
+    color: cores.preto,
     height: "100%",
     ...({ outlineStyle: "none" } as any)
   },
   sendButton: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 10,
     height: 55,
     alignItems: "center",
@@ -108,7 +108,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 0.3,
   },
 
@@ -117,7 +117,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     alignSelf: "center",
     fontSize: 13.5,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginBottom: 18,
   },
 
@@ -125,7 +125,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: variaveis.cinza,
+    borderColor: cores.cinza,
     borderRadius: 14,
     padding: 14,
   },
@@ -139,7 +139,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     lineHeight: 17,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
 
   modalOverlay: {
@@ -151,7 +151,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   },
   modalCard: {
     width: "100%",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 16,
     padding: 22,
   },
@@ -159,25 +159,25 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 17,
     fontWeight: "800",
-    color: variaveis.preto,
+    color: cores.preto,
     marginBottom: 12,
   },
   modalText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 13.5,
     lineHeight: 19,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginBottom: 14,
   },
   modalValidity: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 13,
     fontWeight: "600",
-    color: variaveis.preto,
+    color: cores.preto,
     marginBottom: 20,
   },
   modalButton: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 30,
     height: 48,
     alignItems: "center",
@@ -187,7 +187,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 0.3,
   },
 });

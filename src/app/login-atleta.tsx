@@ -1,5 +1,5 @@
 import loginAtletaStyle from "@/styles/loginAtletaStyle";
-import { variaveis } from "@/styles/variaveis";
+import { cores } from "@/styles/variaveis";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -57,7 +57,7 @@ export default function LoginAtleta() {
             <Image
               source={require("@/assets/images/img/atletaCinza.png")}
               style={loginAtletaStyle.badgeIcon}
-              tintColor={variaveis.branco}
+              tintColor={cores.branco}
               resizeMode="contain"
             />
             <Text style={loginAtletaStyle.badgeText}>Área do Atleta</Text>

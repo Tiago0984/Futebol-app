@@ -3,7 +3,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import menuInferiorStyle, {
   TAB_BAR_BASE_PADDING_BOTTOM,
 } from "@/styles/menuInferiorStyle";
-import { variaveis } from "@/styles/variaveis";
+import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -300,14 +300,14 @@ export default function Agenda() {
               <View
                 style={[
                   agendaStyle.timelineDot,
-                  { backgroundColor: variaveis.laranja },
+                  { backgroundColor: cores.laranja },
                 ]}
               />
             </View>
             <View
               style={[
                 agendaStyle.timelineIconSquare,
-                { backgroundColor: variaveis.vermelho20 },
+                { backgroundColor: cores.vermelho20 },
               ]}
             >
               <Image
@@ -360,13 +360,13 @@ export default function Agenda() {
               <View
                 style={[
                   agendaStyle.statusPill,
-                  { borderColor: variaveis.laranja },
+                  { borderColor: cores.laranja },
                 ]}
               >
                 <View
                   style={[
                     agendaStyle.statusIconCircle,
-                    { backgroundColor: variaveis.laranja },
+                    { backgroundColor: cores.laranja },
                   ]}
                 >
                   <Image
@@ -375,7 +375,7 @@ export default function Agenda() {
                     resizeMode="contain"
                   />
                 </View>
-                <Text style={[agendaStyle.statusText, { color: variaveis.laranja }]}>
+                <Text style={[agendaStyle.statusText, { color: cores.laranja }]}>
                   Alterado
                 </Text>
               </View>
@@ -391,14 +391,14 @@ export default function Agenda() {
               <View
                 style={[
                   agendaStyle.timelineDot,
-                  { backgroundColor: variaveis.verde },
+                  { backgroundColor: cores.verde },
                 ]}
               />
             </View>
             <View
               style={[
                 agendaStyle.timelineIconSquare,
-                { backgroundColor: variaveis.rosa },
+                { backgroundColor: cores.rosa },
               ]}
             >
               <Image
@@ -451,13 +451,13 @@ export default function Agenda() {
               <View
                 style={[
                   agendaStyle.statusPill,
-                  { borderColor: variaveis.verde },
+                  { borderColor: cores.verde },
                 ]}
               >
                 <View
                   style={[
                     agendaStyle.statusIconCircle,
-                    { backgroundColor: variaveis.verde },
+                    { backgroundColor: cores.verde },
                   ]}
                 >
                   <Image
@@ -466,7 +466,7 @@ export default function Agenda() {
                     resizeMode="contain"
                   />
                 </View>
-                <Text style={[agendaStyle.statusText, { color: variaveis.verde }]}>
+                <Text style={[agendaStyle.statusText, { color: cores.verde }]}>
                   Confirmado
                 </Text>
               </View>
@@ -481,14 +481,14 @@ export default function Agenda() {
               <View
                 style={[
                   agendaStyle.timelineDot,
-                  { backgroundColor: variaveis.vermelho },
+                  { backgroundColor: cores.vermelho },
                 ]}
               />
             </View>
             <View
               style={[
                 agendaStyle.timelineIconSquare,
-                { backgroundColor: variaveis.azulclaro },
+                { backgroundColor: cores.azulclaro },
               ]}
             >
               <Image
@@ -541,13 +541,13 @@ export default function Agenda() {
               <View
                 style={[
                   agendaStyle.statusPill,
-                  { borderColor: variaveis.vermelho },
+                  { borderColor: cores.vermelho },
                 ]}
               >
                 <View
                   style={[
                     agendaStyle.statusIconCircle,
-                    { backgroundColor: variaveis.vermelho },
+                    { backgroundColor: cores.vermelho },
                   ]}
                 >
                   <Image
@@ -557,7 +557,7 @@ export default function Agenda() {
                   />
                 </View>
                 <Text
-                  style={[agendaStyle.statusText, { color: variaveis.vermelho }]}
+                  style={[agendaStyle.statusText, { color: cores.vermelho }]}
                 >
                   Cancelado
                 </Text>

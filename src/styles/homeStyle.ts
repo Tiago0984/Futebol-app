@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const homeStyle = StyleSheet.create({
   scrollContent: {
@@ -19,13 +19,13 @@ const homeStyle = StyleSheet.create({
   greeting: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 20,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
   greetingName: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 30,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 2,
   },
   headerIconsRow: {
@@ -43,7 +43,7 @@ const homeStyle = StyleSheet.create({
     position: "absolute",
     top: -5,
     right: -6,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 8,
     minWidth: 16,
     height: 16,
@@ -55,7 +55,7 @@ const homeStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   headerBottomRow: {
@@ -80,12 +80,12 @@ const homeStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   centroTexto: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 10,
   },
   centroDestaqueRow: {
@@ -96,19 +96,19 @@ const homeStyle = StyleSheet.create({
   centroLine: {
     width: 30,
     height: 1,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
   centroDestaqueText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
-    color: variaveis.branco,
+    color: cores.branco,
     marginHorizontal: 6,
   },
   avatarCircle: {
     width: 80,
     height: 80,
     borderRadius: 50,
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -118,7 +118,7 @@ const homeStyle = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 30,
@@ -127,7 +127,7 @@ const homeStyle = StyleSheet.create({
   cardLabel: {
     fontFamily: fontes.OpenSans_Bold, 
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginBottom: 12,
   },
   cardMainRow: {
@@ -146,7 +146,7 @@ const homeStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 20,
     fontWeight: "800",
-    color: variaveis.preto,
+    color: cores.preto,
     marginBottom: 6,
   },
   cardInfoRow: {
@@ -162,18 +162,18 @@ const homeStyle = StyleSheet.create({
   cardInfoText: {
     fontFamily: fontes.OpenSans_Regular, 
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
   cardInfoDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     marginHorizontal: 8,
   },
   cardDivider: {
     height: 1,
-    backgroundColor: variaveis.cinza,
+    backgroundColor: cores.cinza,
     opacity: 0.5,
     marginVertical: 14,
   },
@@ -185,7 +185,7 @@ const homeStyle = StyleSheet.create({
   confirmedPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.verdeclaro,
+    backgroundColor: cores.verdeclaro,
     borderRadius: 20,
     paddingHorizontal: 12,
     height: 26,
@@ -199,26 +199,26 @@ const homeStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     fontWeight: "700",
-    color: variaveis.verde,
+    color: cores.verde,
   },
   detailsLink: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
 
   sectionTitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   sectionLink: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
 
   quickAccessSection: {
@@ -249,7 +249,7 @@ const homeStyle = StyleSheet.create({
   quickAccessLabel: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginTop: 8,
     textAlign: "center",
   },
@@ -270,7 +270,7 @@ const homeStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12.5,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginBottom: 6,
   },
   activityRow: {
@@ -285,18 +285,18 @@ const homeStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   activitySubtitle: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12.5,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginTop: 2,
   },
   activityTime: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 13,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
   activityDivider: {
     height: 1,

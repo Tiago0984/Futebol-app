@@ -3,7 +3,7 @@ import menuInferiorStyle, {
   TAB_BAR_BASE_PADDING_BOTTOM,
 } from "@/styles/menuInferiorStyle";
 import treinoTecnicoStyle from "@/styles/treinoTecnicoStyle";
-import { variaveis } from "@/styles/variaveis";
+import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, Image, Pressable, ScrollView, Text, View } from "react-native";

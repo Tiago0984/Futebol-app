@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const comissaoTecnicaStyle = StyleSheet.create({
   scrollContent: {
@@ -25,14 +25,14 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 20,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginRight: 4,
   },
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 15,
     fontWeight: "600",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   headerTitle: {
     position: "absolute",
@@ -42,7 +42,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   headerIconsRow: {
     flexDirection: "row",
@@ -59,7 +59,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
     position: "absolute",
     top: -5,
     right: -6,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 8,
     minWidth: 16,
     height: 16,
@@ -71,7 +71,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   profileSection: {
@@ -84,7 +84,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: variaveis.preto,
+    backgroundColor: cores.preto,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
     alignItems: "center",
@@ -102,20 +102,20 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 18,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   profileRole: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginTop: 4,
   },
   confirmedPill: {
     flexDirection: "row",
     alignSelf: "flex-start",
     alignItems: "center",
-    backgroundColor: variaveis.verdeclaro,
+    backgroundColor: cores.verdeclaro,
     borderRadius: 20,
     paddingHorizontal: 12,
     height: 26,
@@ -130,7 +130,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "700",
-    color: variaveis.verde,
+    color: cores.verde,
   },
 
   detailsCard: {
@@ -158,13 +158,13 @@ const comissaoTecnicaStyle = StyleSheet.create({
   detailsLabel: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.branco70,
+    color: cores.branco70,
   },
   detailsValue: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14.5,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 2,
   },
 
@@ -183,19 +183,19 @@ const comissaoTecnicaStyle = StyleSheet.create({
     justifyContent: "center",
   },
   categoryPillActive: {
-    backgroundColor: variaveis.vermelho,
-    borderColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
+    borderColor: cores.vermelho,
   },
   categoryPillText: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 12.5,
     fontWeight: "600",
-    color: variaveis.branco70,
+    color: cores.branco70,
   },
   categoryPillTextActive: {
     fontFamily: fontes.OpenSans_Bold,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   contatoSection: {
@@ -206,7 +206,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   contatoRow: {
     flexDirection: "row",
@@ -224,13 +224,13 @@ const comissaoTecnicaStyle = StyleSheet.create({
   contatoLabel: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.branco70,
+    color: cores.branco70,
   },
   contatoValue: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 2,
   },
 });

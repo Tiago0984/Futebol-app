@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const BASE_WIDTH = 428;
@@ -13,7 +13,7 @@ export const TAB_BAR_BASE_PADDING_BOTTOM = 10;
 const menuInferiorStyle = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
-    backgroundColor: variaveis.preto,
+    backgroundColor: cores.preto,
     borderTopWidth: 1,
     borderTopColor: "rgba(255,255,255,0.08)",
     paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM,
@@ -32,7 +32,7 @@ const menuInferiorStyle = StyleSheet.create({
     marginBottom: 8,
   },
   tabIndicatorActive: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
   tabIcon: {
     width: scale(22, 0.7),
@@ -41,14 +41,14 @@ const menuInferiorStyle = StyleSheet.create({
   tabLabel: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: scale(11, 0.68),
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 4,
   },
   tabLabelActive: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: scale(11, 0.68),
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginTop: 4,
   },
 });

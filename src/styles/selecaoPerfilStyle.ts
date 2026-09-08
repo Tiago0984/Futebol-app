@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const selecaoPerfilStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: variaveis.preto,
+    backgroundColor: cores.preto,
     overflow: "hidden",
   },
   scrollContent: {
@@ -35,13 +35,13 @@ const selecaoPerfilStyle = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 2,
     fontWeight: "600",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   kickerBold: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 22,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 1,
     marginTop: 2,
   },
@@ -54,13 +54,13 @@ const selecaoPerfilStyle = StyleSheet.create({
   dividerLine: {
     width: 50,
     height: 1,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
   dividerText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "bold",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     letterSpacing: 1,
     marginHorizontal: 8,
   },
@@ -68,13 +68,13 @@ const selecaoPerfilStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 0.5,
   },
   welcomeSubtitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     fontWeight: "bold",
     letterSpacing: 0.5
   },
@@ -89,13 +89,13 @@ const selecaoPerfilStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     textAlign: "center",
     marginBottom: 20,
   },
 
   card: {
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 20,
     padding: 18,
     marginBottom: 16,
@@ -118,17 +118,17 @@ const selecaoPerfilStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
     fontWeight: "bold",
-    color: variaveis.preto,
+    color: cores.preto,
     marginBottom: 5,
   },
   cardDescription: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     lineHeight: 18,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
   cardButton: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 14,
     height: 46,
     justifyContent: "center",
@@ -138,7 +138,7 @@ const selecaoPerfilStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     letterSpacing: 0.8,
     textAlign: "center",
   },
@@ -150,7 +150,7 @@ const selecaoPerfilStyle = StyleSheet.create({
     right: 20,
     fontSize: 20,
     fontWeight: "bold",
-    color: variaveis.branco,
+    color: cores.branco,
     lineHeight: 46,
   },
 
@@ -163,12 +163,12 @@ const selecaoPerfilStyle = StyleSheet.create({
   firstAccessLine: {
     flex: 1,
     height: 1,
-    backgroundColor: variaveis.cinza,
+    backgroundColor: cores.cinza,
   },
   firstAccessText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginHorizontal: 10,
   },
 
@@ -181,12 +181,12 @@ const selecaoPerfilStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 13,
     fontWeight: "600",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
   footerDot: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 13,
-    color: variaveis.branco,
+    color: cores.branco,
     marginHorizontal: 30,
   },
 });

@@ -1,4 +1,4 @@
-export const variaveis = {
+export const cores = {
 
     vermelho: "#D71920",
     laranja: "#FF8800",

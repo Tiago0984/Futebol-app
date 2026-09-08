@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const BASE_WIDTH = 428;
@@ -30,14 +30,14 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 20,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginRight: 4,
   },
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 15,
     fontWeight: "600",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   headerIconsRow: {
     flexDirection: "row",
@@ -54,7 +54,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     position: "absolute",
     top: -5,
     right: -6,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 8,
     minWidth: 16,
     height: 16,
@@ -66,7 +66,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   statusRow: {
@@ -79,7 +79,7 @@ const treinoTecnicoStyle = StyleSheet.create({
   confirmedPill: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: variaveis.verdeclaro,
+    backgroundColor: cores.verdeclaro,
     borderRadius: 20,
     paddingHorizontal: 12,
     height: 26,
@@ -93,10 +93,10 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "700",
-    color: variaveis.verde,
+    color: cores.verde,
   },
   countdownPill: {
-    backgroundColor: variaveis.vermelho20,
+    backgroundColor: cores.vermelho20,
     borderRadius: 20,
     paddingHorizontal: 12,
     height: 26,
@@ -106,7 +106,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
 
   heroSection: {
@@ -128,7 +128,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 22,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   heroMetaRow: {
     flexDirection: "row",
@@ -144,19 +144,19 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 12.5,
     fontWeight: "600",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
   heroMetaTextMuted: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 12.5,
     fontWeight: "600",
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
   heroMetaDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: variaveis.branco30,
+    backgroundColor: cores.branco30,
     marginHorizontal: 8,
   },
 
@@ -184,12 +184,12 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: scale(14, 0.85),
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   infoSubLabel: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: scale(12, 0.85),
-    color: variaveis.branco70,
+    color: cores.branco70,
     marginTop: 2,
   },
 
@@ -207,7 +207,7 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
   detailsRowDivider: {
     borderTopWidth: 1,
-    borderTopColor: variaveis.cinza,
+    borderTopColor: cores.cinza,
   },
   detailsIcon: {
     width: 30,
@@ -221,25 +221,25 @@ const treinoTecnicoStyle = StyleSheet.create({
   detailsLabel: {
     fontFamily: fontes.OpenSans_Regular ,
     fontSize: 12,
-    color: variaveis.branco70,
+    color: cores.branco70,
   },
   detailsValue: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14.5,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 2,
   },
   detailsSubValue: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.branco70,
+    color: cores.branco70,
     marginTop: 1,
   },
   detailsChevron: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 18,
-    color: variaveis.branco30,
+    color: cores.branco30,
   },
 
   checklistRow: {
@@ -268,7 +268,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: scale(10, 0.64),
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     flexShrink: 1,
   },
   checklistItemRow: {
@@ -284,13 +284,13 @@ const treinoTecnicoStyle = StyleSheet.create({
   checklistItemText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: scale(10.5, 0.64),
-    color: variaveis.branco,
+    color: cores.branco,
     flexShrink: 1,
   },
 
   observacoesCard: {
     flexDirection: "row",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 20,
@@ -308,7 +308,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "700",
-    color: variaveis.preto,
+    color: cores.preto,
     marginBottom: 8,
   },
   observacoesItemRow: {
@@ -318,18 +318,18 @@ const treinoTecnicoStyle = StyleSheet.create({
   observacoesBullet: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
-    color: variaveis.vermelho,
+    color: cores.vermelho,
     marginRight: 8,
   },
   observacoesItemText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 11,
-    color: variaveis.cinza,
+    color: cores.cinza,
     flex: 1,
   },
 
   quickActionsSection: {
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
     borderRadius: 20,
     marginHorizontal: 20,
     marginTop: 26,
@@ -343,7 +343,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: variaveis.vermelho20,
+    backgroundColor: cores.vermelho20,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
@@ -356,7 +356,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 17,
     fontWeight: "700",
-    color: variaveis.preto,
+    color: cores.preto,
   },
   quickActionsGrid: {
     marginTop: 10,
@@ -398,19 +398,19 @@ const treinoTecnicoStyle = StyleSheet.create({
   quickActionChevron: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginLeft: 4,
   },
   quickActionTitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: scale(9.3, 0.55),
     fontWeight: "700",
-    color: variaveis.preto,
+    color: cores.preto,
   },
   quickActionSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: scale(10, 0.8),
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginTop: 3,
   },
 });

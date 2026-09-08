@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const campeonatosStyle = StyleSheet.create({
   scrollContent: {
@@ -24,13 +24,13 @@ const campeonatosStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 29,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   screenSubtitle: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 13,
     fontWeight: "600",
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 4,
   },
   headerIconsRow: {
@@ -49,7 +49,7 @@ const campeonatosStyle = StyleSheet.create({
     position: "absolute",
     top: -5,
     right: -6,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
     borderRadius: 8,
     minWidth: 16,
     height: 16,
@@ -61,7 +61,7 @@ const campeonatosStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   filterRow: {
@@ -81,18 +81,18 @@ const campeonatosStyle = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.08)",
   },
   filterPillActive: {
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
   filterPillText: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 13,
     fontWeight: "600",
-    color: variaveis.branco70,
+    color: cores.branco70,
   },
   filterPillTextActive: {
     fontFamily: fontes.OpenSans_Bold,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   card: {
@@ -100,7 +100,7 @@ const campeonatosStyle = StyleSheet.create({
     marginTop: 20,
     borderRadius: 20,
     overflow: "hidden",
-    backgroundColor: variaveis.preto,
+    backgroundColor: cores.preto,
   },
   cardBanner: {
     position: "absolute",
@@ -150,18 +150,18 @@ const campeonatosStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 17,
     fontWeight: "800",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   cardSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.branco70,
+    color: cores.branco70,
     marginTop: 2,
   },
   statusPill: {
     flexShrink: 0,
     marginLeft: "auto",
-    backgroundColor: variaveis.verdeclaro,
+    backgroundColor: cores.verdeclaro,
     borderRadius: 14,
     paddingHorizontal: 10,
     height: 24,
@@ -172,7 +172,7 @@ const campeonatosStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "700",
-    color: variaveis.verde,
+    color: cores.verde,
   },
 
   progressSection: {
@@ -188,7 +188,7 @@ const campeonatosStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
   progressTrack: {
     height: 6,
@@ -198,7 +198,7 @@ const campeonatosStyle = StyleSheet.create({
   progressFill: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
 
   cardBottomRow: {
@@ -215,13 +215,13 @@ const campeonatosStyle = StyleSheet.create({
   nextPhaseLabel: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
-    color: variaveis.branco70,
+    color: cores.branco70,
   },
   nextPhaseValue: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14.5,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
     marginTop: 2,
   },
   verCampeonatoText: {
@@ -229,7 +229,7 @@ const campeonatosStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.vermelho,
+    color: cores.vermelho,
   },
 });
 
