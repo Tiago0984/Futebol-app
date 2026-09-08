@@ -391,6 +391,7 @@ export default function TreinoTecnico() {
                   treinoTecnicoStyle.quickActionCell,
                   treinoTecnicoStyle.quickActionCellDivider,
                 ]}
+                onPress={() => router.navigate("/agenda-local")}
               >
                 <View style={treinoTecnicoStyle.quickActionTopRow}>
                   <Image
