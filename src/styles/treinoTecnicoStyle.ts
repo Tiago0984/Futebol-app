@@ -190,7 +190,7 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
 
   detailsCard: {
-    backgroundColor: "rgba(255,255,255,0.06)",
+    // backgroundColor: "rgba(255,255,255,0.06)",
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 24,
@@ -203,7 +203,7 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
   detailsRowDivider: {
     borderTopWidth: 1,
-    borderTopColor: "rgba(255,255,255,0.08)",
+    borderTopColor: variaveis.cinza
   },
   detailsIconSquare: {
     width: 40,
@@ -253,7 +253,6 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
   checklistCard: {
     flex: 1,
-    backgroundColor: variaveis.branco,
     borderRadius: 18,
     padding: 16,
   },
@@ -263,15 +262,15 @@ const treinoTecnicoStyle = StyleSheet.create({
     marginBottom: 12,
   },
   checklistHeaderIcon: {
-    width: 16,
-    height: 16,
+    width: 20,
+    height: 20,
     marginRight: 8,
   },
   checklistHeaderText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
-    color: variaveis.preto,
+    color: variaveis.branco,
     flexShrink: 1,
   },
   checklistItemRow: {
@@ -280,14 +279,14 @@ const treinoTecnicoStyle = StyleSheet.create({
     marginTop: 8,
   },
   checklistItemIcon: {
-    width: 14,
-    height: 14,
+    width: 15,
+    height: 15,
     marginRight: 8,
   },
   checklistItemText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12.5,
-    color: variaveis.preto,
+    color: variaveis.branco,
     flexShrink: 1,
   },
 
@@ -309,15 +308,15 @@ const treinoTecnicoStyle = StyleSheet.create({
     marginRight: 12,
   },
   observacoesIcon: {
-    width: 16,
-    height: 16,
+    width: 20,
+    height: 20,
   },
   observacoesTextCol: {
     flex: 1,
   },
   observacoesTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "700",
     color: variaveis.preto,
     marginBottom: 8,
@@ -334,76 +333,108 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
   observacoesItemText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12.5,
+    fontSize: 11,
     color: variaveis.cinza,
     flex: 1,
   },
 
   quickActionsSection: {
-    paddingHorizontal: 20,
+    backgroundColor: variaveis.branco,
+    borderRadius: 20,
+    marginHorizontal: 20,
     marginTop: 26,
+    padding: 20,
   },
   sectionTitleRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  sectionTitleIcon: {
-    width: 16,
-    height: 16,
-    marginRight: 8,
-  },
-  sectionTitle: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
-    fontWeight: "700",
-    color: variaveis.branco,
-  },
-  quickActionsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 14,
-    columnGap: 12,
-    rowGap: 12,
-  },
-  quickActionCard: {
-    width: "48%",
-    backgroundColor: variaveis.branco,
-    borderRadius: 16,
-    padding: 14,
-  },
-  quickActionTopRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-  },
-  quickActionIconCircle: {
-    width: 36,
-    height: 36,
+  sectionTitleIconBox: {
+    width: 40,
+    height: 40,
     borderRadius: 12,
     backgroundColor: variaveis.vermelho20,
     alignItems: "center",
     justifyContent: "center",
+    marginRight: 12,
+  },
+  sectionTitleIcon: {
+    width: 30,
+    height: 30,
+  },
+  sectionTitle: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 17,
+    fontWeight: "700",
+    color: variaveis.preto,
+  },
+  quickActionsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 10,
+    position: "relative",
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.08)",
+    borderRadius: 8,
+  },
+  quickActionDividerVertical: {
+    position: "absolute",
+    left: "50%",
+    top: 0,
+    bottom: 0,
+    width: 1,
+    backgroundColor: "rgba(0,0,0,0.08)",
+  },
+  quickActionDividerHorizontal: {
+    position: "absolute",
+    top: "50%",
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: "rgba(0,0,0,0.08)",
+  },
+  quickActionCell: {
+    width: "50%",
+    paddingVertical: 10,
+  },
+  quickActionCellMapa: {
+    paddingTop: 20,
+    paddingBottom: 2,
+    
+  },
+  quickActionCellBorderRight: {
+    paddingRight: 14,
+  },
+  quickActionCellPadLeft: {
+    paddingLeft: 14,
+  },
+  quickActionTopRow: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   quickActionIcon: {
-    width: 17,
-    height: 17,
+    width: 25,
+    height: 25,
+    marginLeft: 5,
+    marginRight: 10,
+  },
+  quickActionTextCol: {
+    flex: 1,
   },
   quickActionChevron: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
     color: variaveis.cinza,
-    marginTop: 4,
   },
   quickActionTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "700",
     color: variaveis.preto,
-    marginTop: 10,
   },
   quickActionSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: 10,
     color: variaveis.cinza,
     marginTop: 3,
   },

@@ -169,11 +169,12 @@ export default function TreinoTecnico() {
             <Text style={treinoTecnicoStyle.detailsChevron}>›</Text>
           </View>
 
-          <View
+          <Pressable
             style={[
               treinoTecnicoStyle.detailsRow,
               treinoTecnicoStyle.detailsRowDivider,
             ]}
+            onPress={() => router.navigate("/comissao-tecnica")}
           >
             <View style={treinoTecnicoStyle.detailsIconSquare}>
               <Image
@@ -192,7 +193,7 @@ export default function TreinoTecnico() {
               </Text>
             </View>
             <Text style={treinoTecnicoStyle.detailsChevron}>›</Text>
-          </View>
+          </Pressable>
 
           <View
             style={[
@@ -296,89 +297,115 @@ export default function TreinoTecnico() {
 
         <View style={treinoTecnicoStyle.quickActionsSection}>
           <View style={treinoTecnicoStyle.sectionTitleRow}>
-            <Image
-              source={require("@/assets/images/img/raiovermelho.png")}
-              style={treinoTecnicoStyle.sectionTitleIcon}
-              resizeMode="contain"
-            />
+            <View style={treinoTecnicoStyle.sectionTitleIconBox}>
+              <Image
+                source={require("@/assets/images/img/raiovermelho.png")}
+                style={treinoTecnicoStyle.sectionTitleIcon}
+                resizeMode="contain"
+              />
+            </View>
             <Text style={treinoTecnicoStyle.sectionTitle}>Ações rápidas</Text>
           </View>
 
           <View style={treinoTecnicoStyle.quickActionsGrid}>
-            <Pressable style={treinoTecnicoStyle.quickActionCard}>
+            <View style={treinoTecnicoStyle.quickActionDividerVertical} />
+            <View style={treinoTecnicoStyle.quickActionDividerHorizontal} />
+
+            <Pressable
+              style={[
+                treinoTecnicoStyle.quickActionCell,
+                treinoTecnicoStyle.quickActionCellBorderRight,
+                treinoTecnicoStyle.quickActionCellMapa,
+              ]}
+            >
               <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <View style={treinoTecnicoStyle.quickActionIconCircle}>
-                  <Image
-                    source={require("@/assets/images/img/mapavermelho.png")}
-                    style={treinoTecnicoStyle.quickActionIcon}
-                    resizeMode="contain"
-                  />
+                <Image
+                  source={require("@/assets/images/img/mapavermelho.png")}
+                  style={treinoTecnicoStyle.quickActionIcon}
+                  resizeMode="contain"
+                />
+                <View style={treinoTecnicoStyle.quickActionTextCol}>
+                  <Text style={treinoTecnicoStyle.quickActionTitle}>
+                    Abrir mapa
+                  </Text>
+                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
+                    Visualizar o local do treino
+                  </Text>
                 </View>
                 <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
               </View>
-              <Text style={treinoTecnicoStyle.quickActionTitle}>
-                Abrir mapa
-              </Text>
-              <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                Visualizar o local do treino
-              </Text>
             </Pressable>
 
-            <Pressable style={treinoTecnicoStyle.quickActionCard}>
+            <Pressable
+              style={[
+                treinoTecnicoStyle.quickActionCell,
+                treinoTecnicoStyle.quickActionCellPadLeft,
+              ]}
+            >
               <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <View style={treinoTecnicoStyle.quickActionIconCircle}>
-                  <Image
-                    source={require("@/assets/images/img/agendaVermelha.png")}
-                    style={treinoTecnicoStyle.quickActionIcon}
-                    resizeMode="contain"
-                  />
+                <Image
+                  source={require("@/assets/images/img/agendaVermelha.png")}
+                  style={treinoTecnicoStyle.quickActionIcon}
+                  resizeMode="contain"
+                />
+                <View style={treinoTecnicoStyle.quickActionTextCol}>
+                  <Text style={treinoTecnicoStyle.quickActionTitle}>
+                    Adicionar ao calendário
+                  </Text>
+                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
+                    Adicionar o compromisso ao calendário
+                  </Text>
                 </View>
                 <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
               </View>
-              <Text style={treinoTecnicoStyle.quickActionTitle}>
-                Adicionar ao calendário
-              </Text>
-              <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                Adicionar o compromisso ao calendário
-              </Text>
             </Pressable>
 
-            <Pressable style={treinoTecnicoStyle.quickActionCard}>
+            <Pressable
+              style={[
+                treinoTecnicoStyle.quickActionCell,
+                treinoTecnicoStyle.quickActionCellBorderRight,
+              ]}
+            >
               <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <View style={treinoTecnicoStyle.quickActionIconCircle}>
-                  <Image
-                    source={require("@/assets/images/img/compartilharvermelho.png")}
-                    style={treinoTecnicoStyle.quickActionIcon}
-                    resizeMode="contain"
-                  />
+                <Image
+                  source={require("@/assets/images/img/compartilharvermelho.png")}
+                  style={treinoTecnicoStyle.quickActionIcon}
+                  resizeMode="contain"
+                />
+                <View style={treinoTecnicoStyle.quickActionTextCol}>
+                  <Text style={treinoTecnicoStyle.quickActionTitle}>
+                    Compartilhar
+                  </Text>
+                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
+                    Compartilhar data, horário e local com outra pessoa
+                  </Text>
                 </View>
                 <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
               </View>
-              <Text style={treinoTecnicoStyle.quickActionTitle}>
-                Compartilhar
-              </Text>
-              <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                Compartilhar data, horário e local com outra pessoa
-              </Text>
             </Pressable>
 
-            <Pressable style={treinoTecnicoStyle.quickActionCard}>
+            <Pressable
+              style={[
+                treinoTecnicoStyle.quickActionCell,
+                treinoTecnicoStyle.quickActionCellPadLeft,
+              ]}
+            >
               <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <View style={treinoTecnicoStyle.quickActionIconCircle}>
-                  <Image
-                    source={require("@/assets/images/img/chatvermelho.png")}
-                    style={treinoTecnicoStyle.quickActionIcon}
-                    resizeMode="contain"
-                  />
+                <Image
+                  source={require("@/assets/images/img/chatvermelho.png")}
+                  style={treinoTecnicoStyle.quickActionIcon}
+                  resizeMode="contain"
+                />
+                <View style={treinoTecnicoStyle.quickActionTextCol}>
+                  <Text style={treinoTecnicoStyle.quickActionTitle}>
+                    Entrar em contato
+                  </Text>
+                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
+                    Conversar com o responsável
+                  </Text>
                 </View>
                 <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
               </View>
-              <Text style={treinoTecnicoStyle.quickActionTitle}>
-                Entrar em contato
-              </Text>
-              <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                Conversar com o responsável
-              </Text>
             </Pressable>
           </View>
         </View>
