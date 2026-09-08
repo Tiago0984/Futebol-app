@@ -511,7 +511,10 @@ export default function Agenda() {
           />
           <Text style={menuInferiorStyle.tabLabelActive}>Agenda</Text>
         </View>
-        <View style={menuInferiorStyle.tabItem}>
+        <Pressable
+          style={menuInferiorStyle.tabItem}
+          onPress={() => router.navigate("/campeonatos")}
+        >
           <View style={menuInferiorStyle.tabIndicator} />
           <Image
             source={require("@/assets/images/img/campeonatosbranco.png")}
@@ -519,7 +522,7 @@ export default function Agenda() {
             resizeMode="contain"
           />
           <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
-        </View>
+        </Pressable>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
           <Image

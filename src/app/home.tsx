@@ -150,7 +150,10 @@ export default function Home() {
               </View>
               <Text style={homeStyle.quickAccessLabel}>Agenda</Text>
             </Pressable>
-            <View style={homeStyle.quickAccessItem}>
+            <Pressable
+              style={homeStyle.quickAccessItem}
+              onPress={() => router.navigate("/campeonatos")}
+            >
               <View style={homeStyle.quickAccessIconCircle}>
                 <Image
                   source={require("@/assets/images/img/campeonatosCinza.png")}
@@ -159,7 +162,7 @@ export default function Home() {
                 />
               </View>
               <Text style={homeStyle.quickAccessLabel}>Campeonatos</Text>
-            </View>
+            </Pressable>
             <View style={homeStyle.quickAccessItem}>
               <View style={homeStyle.quickAccessIconCircle}>
                 <Image
@@ -264,7 +267,10 @@ export default function Home() {
           />
           <Text style={menuInferiorStyle.tabLabel}>Agenda</Text>
         </Pressable>
-        <View style={menuInferiorStyle.tabItem}>
+        <Pressable
+          style={menuInferiorStyle.tabItem}
+          onPress={() => router.navigate("/campeonatos")}
+        >
           <View style={menuInferiorStyle.tabIndicator} />
           <Image
             source={require("@/assets/images/img/campeonatosbranco.png")}
@@ -273,7 +279,7 @@ export default function Home() {
             resizeMode="contain"
           />
           <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
-        </View>
+        </Pressable>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
           <Image
