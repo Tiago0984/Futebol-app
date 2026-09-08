@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const selecaoPerfilStyle = StyleSheet.create({
   container: {
@@ -31,12 +31,14 @@ const selecaoPerfilStyle = StyleSheet.create({
     marginBottom: 14,
   },
   kicker: {
+    fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 12,
     letterSpacing: 2,
     fontWeight: "600",
     color: variaveis.branco,
   },
   kickerBold: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 22,
     fontWeight: "800",
     color: variaveis.branco,
@@ -55,6 +57,7 @@ const selecaoPerfilStyle = StyleSheet.create({
     backgroundColor: variaveis.vermelho,
   },
   dividerText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "bold",
     color: variaveis.vermelho,
@@ -62,12 +65,14 @@ const selecaoPerfilStyle = StyleSheet.create({
     marginHorizontal: 8,
   },
   welcomeTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
     color: variaveis.branco,
     letterSpacing: 0.5,
   },
   welcomeSubtitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     color: variaveis.cinza,
     fontWeight: "bold",
@@ -81,6 +86,7 @@ const selecaoPerfilStyle = StyleSheet.create({
     paddingBottom: 30,
   },
   chooseProfile: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "bold",
     color: variaveis.branco,
@@ -109,12 +115,14 @@ const selecaoPerfilStyle = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
     fontWeight: "bold",
     color: variaveis.preto,
     marginBottom: 5,
   },
   cardDescription: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     lineHeight: 18,
     color: variaveis.cinza,
@@ -127,6 +135,7 @@ const selecaoPerfilStyle = StyleSheet.create({
     position: "relative",
   },
   cardButtonText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "bold",
     color: variaveis.branco,
@@ -134,6 +143,7 @@ const selecaoPerfilStyle = StyleSheet.create({
     textAlign: "center",
   },
   cardButtonArrow: {
+    fontFamily: fontes.OpenSans_Bold,
     position: "absolute",
     top: 0,
     bottom: 0,
@@ -156,6 +166,7 @@ const selecaoPerfilStyle = StyleSheet.create({
     backgroundColor: variaveis.cinza,
   },
   firstAccessText: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     color: variaveis.cinza,
     marginHorizontal: 10,
@@ -167,11 +178,13 @@ const selecaoPerfilStyle = StyleSheet.create({
     justifyContent: "center",
   },
   footerLink: {
+    fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 13,
     fontWeight: "600",
     color: variaveis.vermelho,
   },
   footerDot: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 13,
     color: variaveis.branco,
     marginHorizontal: 30,

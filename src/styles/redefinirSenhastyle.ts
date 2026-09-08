@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const redefinirSenhaStyle = StyleSheet.create({
   container: {
@@ -30,12 +30,14 @@ const redefinirSenhaStyle = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
     color: variaveis.branco,
     letterSpacing: 2.5,
   },
   subtitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     color: variaveis.cinza,
     fontWeight: "bold",
@@ -56,6 +58,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     marginRight: 10,
   },
   badgeText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "bold",
     color: variaveis.branco,
@@ -84,6 +87,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   },
   input: {
     flex: 1,
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
     color: variaveis.preto,
     height: "100%",
@@ -103,6 +107,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     marginBottom: 20,
   },
   requirementsTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13.5,
     fontWeight: "700",
     color: variaveis.branco,
@@ -119,6 +124,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     marginRight: 10,
   },
   requirementText: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12.5,
     color: variaveis.cinza,
   },
@@ -132,6 +138,7 @@ const redefinirSenhaStyle = StyleSheet.create({
     marginBottom: 18,
   },
   saveButtonText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "bold",
     color: variaveis.branco,
@@ -139,6 +146,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   },
 
   backToLoginText: {
+    fontFamily: fontes.OpenSans_Bold,
     alignSelf: "center",
     fontSize: 13.5,
     fontWeight: "700",

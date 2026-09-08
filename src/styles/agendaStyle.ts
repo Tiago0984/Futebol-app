@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const agendaStyle = StyleSheet.create({
   scrollContent: {
@@ -17,11 +17,13 @@ const agendaStyle = StyleSheet.create({
     alignItems: "flex-start",
   },
   screenTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 30,
     fontWeight: "800",
     color: variaveis.branco,
   },
   screenSubtitle: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
     color: variaveis.cinza,
     marginTop: 2,
@@ -50,6 +52,7 @@ const agendaStyle = StyleSheet.create({
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
     color: variaveis.branco,
@@ -66,12 +69,14 @@ const agendaStyle = StyleSheet.create({
     alignItems: "center",
   },
   monthChevron: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 20,
     fontWeight: "700",
     color: variaveis.cinza,
     paddingHorizontal: 6,
   },
   monthText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 17,
     fontWeight: "800",
     color: variaveis.branco,
@@ -110,6 +115,7 @@ const agendaStyle = StyleSheet.create({
     alignItems: "center",
   },
   weekDayLabel: {
+    fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 11,
     fontWeight: "600",
     color: variaveis.branco,
@@ -127,6 +133,7 @@ const agendaStyle = StyleSheet.create({
     backgroundColor: variaveis.vermelho,
   },
   weekDayNumber: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
     color: variaveis.preto,
@@ -172,11 +179,13 @@ const agendaStyle = StyleSheet.create({
     height: 22,
   },
   todayLabel: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "800",
     color: variaveis.vermelho,
   },
   todaySubLabel: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
     color: variaveis.preto,
@@ -186,11 +195,13 @@ const agendaStyle = StyleSheet.create({
     alignItems: "flex-end",
   },
   todayCountText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "800",
     color: variaveis.preto,
   },
   todayNextText: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 11,
     color: variaveis.cinza,
     marginTop: 2,
@@ -214,6 +225,7 @@ const agendaStyle = StyleSheet.create({
     marginRight: 6,
   },
   todayPillText: {
+    fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 11.5,
     fontWeight: "600",
     color: variaveis.cinza,
@@ -241,6 +253,7 @@ const agendaStyle = StyleSheet.create({
     borderColor: variaveis.vermelho,
   },
   filterPillText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "700",
     color: variaveis.branco,
@@ -257,6 +270,7 @@ const agendaStyle = StyleSheet.create({
     padding: 18,
   },
   nextCardLabel: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     color: variaveis.cinza,
     marginBottom: 12,
@@ -287,12 +301,14 @@ const agendaStyle = StyleSheet.create({
     flex: 1,
   },
   nextCardTime: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 13,
     fontWeight: "800",
     color: variaveis.vermelho,
     marginBottom: 4,
   },
   nextCardTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
     fontWeight: "800",
     color: variaveis.preto,
@@ -309,6 +325,7 @@ const agendaStyle = StyleSheet.create({
     marginRight: 6,
   },
   nextCardInfoText: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12.5,
     color: variaveis.cinza,
   },
@@ -330,11 +347,13 @@ const agendaStyle = StyleSheet.create({
     marginRight: 5,
   },
   nextConfirmedText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "700",
     color: variaveis.verde,
   },
   nextDetailsLink: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12.5,
     fontWeight: "700",
     color: variaveis.vermelho,
@@ -353,6 +372,7 @@ const agendaStyle = StyleSheet.create({
     marginTop: 14,
   },
   timelineTime: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12.5,
     fontWeight: "700",
     color: variaveis.branco,
@@ -390,6 +410,7 @@ const agendaStyle = StyleSheet.create({
     paddingBottom: 22,
   },
   timelineTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 14.5,
     fontWeight: "700",
     color: variaveis.branco,
@@ -406,6 +427,7 @@ const agendaStyle = StyleSheet.create({
     marginRight: 6,
   },
   timelineInfoText: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     color: variaveis.cinza,
   },
@@ -435,6 +457,7 @@ const agendaStyle = StyleSheet.create({
     height: 8,
   },
   statusText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "700",
   },

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { variaveis } from "./variaveis";
+import { fontes, variaveis } from "./variaveis";
 
 const loginAtletaStyle = StyleSheet.create({
   container: {
@@ -30,12 +30,14 @@ const loginAtletaStyle = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 25,
     fontWeight: "bold",
     color: variaveis.branco,
     letterSpacing: 2.5,
   },
   subtitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     color: variaveis.cinza,
     fontWeight: "bold",
@@ -56,6 +58,7 @@ const loginAtletaStyle = StyleSheet.create({
     marginRight: 10,
   },
   badgeText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     fontWeight: "bold",
     color: variaveis.branco,
@@ -84,6 +87,7 @@ const loginAtletaStyle = StyleSheet.create({
   },
   input: {
     flex: 1,
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
     color: variaveis.preto,
     height: "100%",
@@ -96,6 +100,7 @@ const loginAtletaStyle = StyleSheet.create({
   },
 
   forgotPasswordText: {
+    fontFamily: fontes.OpenSans_SemiBold,
     alignSelf: "flex-end",
     fontSize: 12.5,
     fontWeight: "600",
@@ -113,6 +118,7 @@ const loginAtletaStyle = StyleSheet.create({
     marginBottom: 18,
   },
   enterButtonText: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
     color: variaveis.branco,
@@ -128,6 +134,7 @@ const loginAtletaStyle = StyleSheet.create({
     padding: 14,
   },
   inviteChevron: {
+    fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 22,
     fontWeight: "600",
     color: variaveis.cinza,
@@ -142,12 +149,14 @@ const loginAtletaStyle = StyleSheet.create({
     flex: 1,
   },
   inviteTitle: {
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "700",
     color: variaveis.branco,
     marginBottom: 4,
   },
   inviteDescription: {
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     lineHeight: 17,
     color: variaveis.cinza,
