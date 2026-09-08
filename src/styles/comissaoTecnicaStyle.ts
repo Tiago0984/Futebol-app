@@ -147,18 +147,10 @@ const comissaoTecnicaStyle = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "rgba(255,255,255,0.08)",
   },
-  detailsIconSquare: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: variaveis.vermelho20,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
   detailsIcon: {
     width: 20,
     height: 20,
+    marginRight: 20,
   },
   detailsTextCol: {
     flex: 1,

@@ -1,6 +1,8 @@
 import agendaStyle from "@/styles/agendaStyle";
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle from "@/styles/menuInferiorStyle";
+import menuInferiorStyle, {
+  TAB_BAR_BASE_PADDING_BOTTOM,
+} from "@/styles/menuInferiorStyle";
 import { variaveis } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -12,6 +14,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const diasDaSemana = [
   { label: "SEG", numero: 21 },
@@ -28,6 +31,7 @@ const filtros = ["Todos", "Treinos", "Campeonatos", "Avaliações", "Reuniões"]
 export default function Agenda() {
   const [filtroAtivo, setFiltroAtivo] = useState("Todos");
   const indicadorAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(indicadorAnim, {
@@ -563,7 +567,12 @@ export default function Agenda() {
         </View>
       </ScrollView>
 
-      <View style={menuInferiorStyle.tabBar}>
+      <View
+        style={[
+          menuInferiorStyle.tabBar,
+          { paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom },
+        ]}
+      >
         <Pressable
           style={menuInferiorStyle.tabItem}
           onPress={() => router.navigate("/home")}
@@ -575,7 +584,9 @@ export default function Agenda() {
             tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Home</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Home
+          </Text>
         </Pressable>
         <View style={menuInferiorStyle.tabItem}>
           <Animated.View
@@ -593,7 +604,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabelActive}>Agenda</Text>
+          <Text style={menuInferiorStyle.tabLabelActive} numberOfLines={1}>
+            Agenda
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -602,7 +615,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Campeonatos
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -611,7 +626,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Desempenho
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -620,7 +637,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Usuário</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Usuário
+          </Text>
         </View>
       </View>
     </View>

@@ -1,9 +1,12 @@
 import comissaoTecnicaStyle from "@/styles/comissaoTecnicaStyle";
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle from "@/styles/menuInferiorStyle";
+import menuInferiorStyle, {
+  TAB_BAR_BASE_PADDING_BOTTOM,
+} from "@/styles/menuInferiorStyle";
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const categoriasAtendidas = [
   { label: "Sub-13", ativo: false },
@@ -13,6 +16,7 @@ const categoriasAtendidas = [
 
 export default function ComissaoTecnica() {
   const indicadorAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(indicadorAnim, {
@@ -25,7 +29,7 @@ export default function ComissaoTecnica() {
   return (
     <View style={fundoStyle.container}>
       <Image
-        source={require("@/assets/images/img/background-aacj-app1.png")}
+        source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}
         resizeMode="cover"
       />
@@ -101,7 +105,7 @@ export default function ComissaoTecnica() {
 
         <View style={comissaoTecnicaStyle.detailsCard}>
           <View style={comissaoTecnicaStyle.detailsRow}>
-            <View style={comissaoTecnicaStyle.detailsIconSquare}>
+            <View>
               <Image
                 source={require("@/assets/images/img/bandeiravermelha.png")}
                 style={comissaoTecnicaStyle.detailsIcon}

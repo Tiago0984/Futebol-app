@@ -1,10 +1,13 @@
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle from "@/styles/menuInferiorStyle";
+import menuInferiorStyle, {
+  TAB_BAR_BASE_PADDING_BOTTOM,
+} from "@/styles/menuInferiorStyle";
 import treinoTecnicoStyle from "@/styles/treinoTecnicoStyle";
 import { variaveis } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const objetivosDoTreino = [
   "Posse de bola",
@@ -28,6 +31,7 @@ const observacoes = [
 
 export default function TreinoTecnico() {
   const indicadorAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(indicadorAnim, {
@@ -40,7 +44,7 @@ export default function TreinoTecnico() {
   return (
     <View style={fundoStyle.container}>
       <Image
-        source={require("@/assets/images/img/background-aacj-app1.png")}
+        source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}
         resizeMode="cover"
       />
@@ -90,17 +94,19 @@ export default function TreinoTecnico() {
               style={treinoTecnicoStyle.confirmedIcon}
               resizeMode="contain"
             />
-            <Text style={treinoTecnicoStyle.confirmedText}>Confirmado</Text>
+            <Text style={treinoTecnicoStyle.confirmedText} numberOfLines={1}>
+              Confirmado
+            </Text>
           </View>
           <View style={treinoTecnicoStyle.countdownPill}>
-            <Text style={treinoTecnicoStyle.countdownText}>
+            <Text style={treinoTecnicoStyle.countdownText} numberOfLines={1}>
               Faltam 2h 15min
             </Text>
           </View>
         </View>
 
         <View style={treinoTecnicoStyle.heroSection}>
-          <View style={treinoTecnicoStyle.heroIconCircle}>
+          <View>
             <Image
               source={require("@/assets/images/img/atletaVermelho.png")}
               style={treinoTecnicoStyle.heroIcon}
@@ -108,16 +114,28 @@ export default function TreinoTecnico() {
             />
           </View>
           <View style={treinoTecnicoStyle.heroTextCol}>
-            <Text style={treinoTecnicoStyle.heroTitle}>Treino Técnico</Text>
+            <Text
+              style={treinoTecnicoStyle.heroTitle}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.8}
+            >
+              Treino Técnico
+            </Text>
             <View style={treinoTecnicoStyle.heroMetaRow}>
               <Image
                 source={require("@/assets/images/img/agendaVermelha.png")}
                 style={treinoTecnicoStyle.heroMetaIcon}
                 resizeMode="contain"
               />
-              <Text style={treinoTecnicoStyle.heroMetaText}>Hoje</Text>
+              <Text style={treinoTecnicoStyle.heroMetaText} numberOfLines={1}>
+                Hoje
+              </Text>
               <View style={treinoTecnicoStyle.heroMetaDot} />
-              <Text style={treinoTecnicoStyle.heroMetaTextMuted}>
+              <Text
+                style={treinoTecnicoStyle.heroMetaTextMuted}
+                numberOfLines={1}
+              >
                 Campo Principal
               </Text>
             </View>
@@ -131,9 +149,16 @@ export default function TreinoTecnico() {
               style={treinoTecnicoStyle.infoIcon}
               resizeMode="contain"
             />
-            <View>
-              <Text style={treinoTecnicoStyle.infoLabel}>17:30 as 19:00</Text>
-              <Text style={treinoTecnicoStyle.infoSubLabel}>
+            <View style={treinoTecnicoStyle.infoTextCol}>
+              <Text
+                style={treinoTecnicoStyle.infoLabel}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
+              >
+                17:30 as 19:00
+              </Text>
+              <Text style={treinoTecnicoStyle.infoSubLabel} numberOfLines={2}>
                 Duração: 1h 30min
               </Text>
             </View>
@@ -144,9 +169,16 @@ export default function TreinoTecnico() {
               style={treinoTecnicoStyle.infoIcon}
               resizeMode="contain"
             />
-            <View>
-              <Text style={treinoTecnicoStyle.infoLabel}>Campo principal</Text>
-              <Text style={treinoTecnicoStyle.infoSubLabel}>
+            <View style={treinoTecnicoStyle.infoTextCol}>
+              <Text
+                style={treinoTecnicoStyle.infoLabel}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
+              >
+                Campo principal
+              </Text>
+              <Text style={treinoTecnicoStyle.infoSubLabel} numberOfLines={2}>
                 Centro de formação AACJ
               </Text>
             </View>
@@ -155,16 +187,23 @@ export default function TreinoTecnico() {
 
         <View style={treinoTecnicoStyle.detailsCard}>
           <View style={treinoTecnicoStyle.detailsRow}>
-            <View style={treinoTecnicoStyle.detailsIconSquare}>
-              <Image
-                source={require("@/assets/images/img/bandeiravermelha.png")}
-                style={treinoTecnicoStyle.detailsIcon}
-                resizeMode="contain"
-              />
-            </View>
+            <Image
+              source={require("@/assets/images/img/bandeiravermelha.png")}
+              style={treinoTecnicoStyle.detailsIcon}
+              resizeMode="contain"
+            />
             <View style={treinoTecnicoStyle.detailsTextCol}>
-              <Text style={treinoTecnicoStyle.detailsLabel}>Categoria</Text>
-              <Text style={treinoTecnicoStyle.detailsValue}>Sub-17</Text>
+              <Text style={treinoTecnicoStyle.detailsLabel} numberOfLines={1}>
+                Categoria
+              </Text>
+              <Text
+                style={treinoTecnicoStyle.detailsValue}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.85}
+              >
+                Sub-17
+              </Text>
             </View>
             <Text style={treinoTecnicoStyle.detailsChevron}>›</Text>
           </View>
@@ -176,19 +215,27 @@ export default function TreinoTecnico() {
             ]}
             onPress={() => router.navigate("/comissao-tecnica")}
           >
-            <View style={treinoTecnicoStyle.detailsIconSquare}>
-              <Image
-                source={require("@/assets/images/img/perfilVermelho.png")}
-                style={treinoTecnicoStyle.detailsIcon}
-                resizeMode="contain"
-              />
-            </View>
+            <Image
+              source={require("@/assets/images/img/perfilVermelho.png")}
+              style={treinoTecnicoStyle.detailsIcon}
+              resizeMode="contain"
+            />
             <View style={treinoTecnicoStyle.detailsTextCol}>
-              <Text style={treinoTecnicoStyle.detailsLabel}>Responsável</Text>
-              <Text style={treinoTecnicoStyle.detailsValue}>
+              <Text style={treinoTecnicoStyle.detailsLabel} numberOfLines={1}>
+                Responsável
+              </Text>
+              <Text
+                style={treinoTecnicoStyle.detailsValue}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.85}
+              >
                 Professor João Silva
               </Text>
-              <Text style={treinoTecnicoStyle.detailsSubValue}>
+              <Text
+                style={treinoTecnicoStyle.detailsSubValue}
+                numberOfLines={1}
+              >
                 Treinador Técnico
               </Text>
             </View>
@@ -201,18 +248,21 @@ export default function TreinoTecnico() {
               treinoTecnicoStyle.detailsRowDivider,
             ]}
           >
-            <View style={treinoTecnicoStyle.detailsIconSquare}>
-              <Image
-                source={require("@/assets/images/img/atletaVermelho.png")}
-                style={treinoTecnicoStyle.detailsIcon}
-                resizeMode="contain"
-              />
-            </View>
+            <Image
+              source={require("@/assets/images/img/atletaVermelho.png")}
+              style={treinoTecnicoStyle.detailsIcon}
+              resizeMode="contain"
+            />
             <View style={treinoTecnicoStyle.detailsTextCol}>
-              <Text style={treinoTecnicoStyle.detailsLabel}>
+              <Text style={treinoTecnicoStyle.detailsLabel} numberOfLines={1}>
                 Tipo de atividade
               </Text>
-              <Text style={treinoTecnicoStyle.detailsValue}>
+              <Text
+                style={treinoTecnicoStyle.detailsValue}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.85}
+              >
                 Treino Técnico
               </Text>
             </View>
@@ -228,7 +278,12 @@ export default function TreinoTecnico() {
                 style={treinoTecnicoStyle.checklistHeaderIcon}
                 resizeMode="contain"
               />
-              <Text style={treinoTecnicoStyle.checklistHeaderText}>
+              <Text
+                style={treinoTecnicoStyle.checklistHeaderText}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.6}
+              >
                 Objetivos do treino
               </Text>
             </View>
@@ -239,7 +294,12 @@ export default function TreinoTecnico() {
                   style={treinoTecnicoStyle.checklistItemIcon}
                   resizeMode="contain"
                 />
-                <Text style={treinoTecnicoStyle.checklistItemText}>
+                <Text
+                  style={treinoTecnicoStyle.checklistItemText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.6}
+                >
                   {item}
                 </Text>
               </View>
@@ -253,7 +313,12 @@ export default function TreinoTecnico() {
                 style={treinoTecnicoStyle.checklistHeaderIcon}
                 resizeMode="contain"
               />
-              <Text style={treinoTecnicoStyle.checklistHeaderText}>
+              <Text
+                style={treinoTecnicoStyle.checklistHeaderText}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.6}
+              >
                 Equipamentos necessários
               </Text>
             </View>
@@ -264,7 +329,12 @@ export default function TreinoTecnico() {
                   style={treinoTecnicoStyle.checklistItemIcon}
                   resizeMode="contain"
                 />
-                <Text style={treinoTecnicoStyle.checklistItemText}>
+                <Text
+                  style={treinoTecnicoStyle.checklistItemText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.6}
+                >
                   {item}
                 </Text>
               </View>
@@ -273,7 +343,7 @@ export default function TreinoTecnico() {
         </View>
 
         <View style={treinoTecnicoStyle.observacoesCard}>
-          <View style={treinoTecnicoStyle.observacoesIconCircle}>
+          <View>
             <Image
               source={require("@/assets/images/img/informacaovermelho.png")}
               style={treinoTecnicoStyle.observacoesIcon}
@@ -281,7 +351,7 @@ export default function TreinoTecnico() {
             />
           </View>
           <View style={treinoTecnicoStyle.observacoesTextCol}>
-            <Text style={treinoTecnicoStyle.observacoesTitle}>
+            <Text style={treinoTecnicoStyle.observacoesTitle} numberOfLines={1}>
               Observações
             </Text>
             {observacoes.map((item) => (
@@ -304,114 +374,148 @@ export default function TreinoTecnico() {
                 resizeMode="contain"
               />
             </View>
-            <Text style={treinoTecnicoStyle.sectionTitle}>Ações rápidas</Text>
+            <Text style={treinoTecnicoStyle.sectionTitle} numberOfLines={1}>
+              Ações rápidas
+            </Text>
           </View>
 
           <View style={treinoTecnicoStyle.quickActionsGrid}>
-            <View style={treinoTecnicoStyle.quickActionDividerVertical} />
-            <View style={treinoTecnicoStyle.quickActionDividerHorizontal} />
-
-            <Pressable
+            <View
               style={[
-                treinoTecnicoStyle.quickActionCell,
-                treinoTecnicoStyle.quickActionCellBorderRight,
-                treinoTecnicoStyle.quickActionCellMapa,
+                treinoTecnicoStyle.quickActionRow,
+                treinoTecnicoStyle.quickActionRowDivider,
               ]}
             >
-              <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <Image
-                  source={require("@/assets/images/img/mapavermelho.png")}
-                  style={treinoTecnicoStyle.quickActionIcon}
-                  resizeMode="contain"
-                />
-                <View style={treinoTecnicoStyle.quickActionTextCol}>
-                  <Text style={treinoTecnicoStyle.quickActionTitle}>
-                    Abrir mapa
-                  </Text>
-                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                    Visualizar o local do treino
-                  </Text>
+              <Pressable
+                style={[
+                  treinoTecnicoStyle.quickActionCell,
+                  treinoTecnicoStyle.quickActionCellDivider,
+                ]}
+              >
+                <View style={treinoTecnicoStyle.quickActionTopRow}>
+                  <Image
+                    source={require("@/assets/images/img/mapavermelho.png")}
+                    style={treinoTecnicoStyle.quickActionIcon}
+                    resizeMode="contain"
+                  />
+                  <View style={treinoTecnicoStyle.quickActionTextCol}>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionTitle}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.6}
+                    >
+                      Abrir mapa
+                    </Text>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionSubtitle}
+                      numberOfLines={3}
+                    >
+                      Visualizar o local do treino
+                    </Text>
+                  </View>
+                  <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
                 </View>
-                <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
-              </View>
-            </Pressable>
+              </Pressable>
 
-            <Pressable
-              style={[
-                treinoTecnicoStyle.quickActionCell,
-                treinoTecnicoStyle.quickActionCellPadLeft,
-              ]}
-            >
-              <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <Image
-                  source={require("@/assets/images/img/agendaVermelha.png")}
-                  style={treinoTecnicoStyle.quickActionIcon}
-                  resizeMode="contain"
-                />
-                <View style={treinoTecnicoStyle.quickActionTextCol}>
-                  <Text style={treinoTecnicoStyle.quickActionTitle}>
-                    Adicionar ao calendário
-                  </Text>
-                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                    Adicionar o compromisso ao calendário
-                  </Text>
+              <Pressable style={treinoTecnicoStyle.quickActionCell}>
+                <View style={treinoTecnicoStyle.quickActionTopRow}>
+                  <Image
+                    source={require("@/assets/images/img/agendaVermelha.png")}
+                    style={treinoTecnicoStyle.quickActionIcon}
+                    resizeMode="contain"
+                  />
+                  <View style={treinoTecnicoStyle.quickActionTextCol}>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionTitle}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.6}
+                    >
+                      Adicionar ao calendário
+                    </Text>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionSubtitle}
+                      numberOfLines={3}
+                    >
+                      Adicionar o compromisso ao calendário
+                    </Text>
+                  </View>
+                  <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
                 </View>
-                <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
-              </View>
-            </Pressable>
+              </Pressable>
+            </View>
 
-            <Pressable
-              style={[
-                treinoTecnicoStyle.quickActionCell,
-                treinoTecnicoStyle.quickActionCellBorderRight,
-              ]}
-            >
-              <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <Image
-                  source={require("@/assets/images/img/compartilharvermelho.png")}
-                  style={treinoTecnicoStyle.quickActionIcon}
-                  resizeMode="contain"
-                />
-                <View style={treinoTecnicoStyle.quickActionTextCol}>
-                  <Text style={treinoTecnicoStyle.quickActionTitle}>
-                    Compartilhar
-                  </Text>
-                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                    Compartilhar data, horário e local com outra pessoa
-                  </Text>
+            <View style={treinoTecnicoStyle.quickActionRow}>
+              <Pressable
+                style={[
+                  treinoTecnicoStyle.quickActionCell,
+                  treinoTecnicoStyle.quickActionCellDivider,
+                ]}
+              >
+                <View style={treinoTecnicoStyle.quickActionTopRow}>
+                  <Image
+                    source={require("@/assets/images/img/compartilharvermelho.png")}
+                    style={treinoTecnicoStyle.quickActionIcon}
+                    resizeMode="contain"
+                  />
+                  <View style={treinoTecnicoStyle.quickActionTextCol}>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionTitle}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.6}
+                    >
+                      Compartilhar
+                    </Text>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionSubtitle}
+                      numberOfLines={3}
+                    >
+                      Compartilhar data, horário e local com outra pessoa
+                    </Text>
+                  </View>
+                  <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
                 </View>
-                <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
-              </View>
-            </Pressable>
+              </Pressable>
 
-            <Pressable
-              style={[
-                treinoTecnicoStyle.quickActionCell,
-                treinoTecnicoStyle.quickActionCellPadLeft,
-              ]}
-            >
-              <View style={treinoTecnicoStyle.quickActionTopRow}>
-                <Image
-                  source={require("@/assets/images/img/chatvermelho.png")}
-                  style={treinoTecnicoStyle.quickActionIcon}
-                  resizeMode="contain"
-                />
-                <View style={treinoTecnicoStyle.quickActionTextCol}>
-                  <Text style={treinoTecnicoStyle.quickActionTitle}>
-                    Entrar em contato
-                  </Text>
-                  <Text style={treinoTecnicoStyle.quickActionSubtitle}>
-                    Conversar com o responsável
-                  </Text>
+              <Pressable style={treinoTecnicoStyle.quickActionCell}>
+                <View style={treinoTecnicoStyle.quickActionTopRow}>
+                  <Image
+                    source={require("@/assets/images/img/chatvermelho.png")}
+                    style={treinoTecnicoStyle.quickActionIcon}
+                    resizeMode="contain"
+                  />
+                  <View style={treinoTecnicoStyle.quickActionTextCol}>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionTitle}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.6}
+                    >
+                      Entrar em contato
+                    </Text>
+                    <Text
+                      style={treinoTecnicoStyle.quickActionSubtitle}
+                      numberOfLines={3}
+                    >
+                      Conversar com o responsável
+                    </Text>
+                  </View>
+                  <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
                 </View>
-                <Text style={treinoTecnicoStyle.quickActionChevron}>›</Text>
-              </View>
-            </Pressable>
+              </Pressable>
+            </View>
           </View>
         </View>
       </ScrollView>
 
-      <View style={menuInferiorStyle.tabBar}>
+      <View
+        style={[
+          menuInferiorStyle.tabBar,
+          { paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom },
+        ]}
+      >
         <Pressable
           style={menuInferiorStyle.tabItem}
           onPress={() => router.navigate("/home")}
@@ -423,7 +527,9 @@ export default function TreinoTecnico() {
             tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Home</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Home
+          </Text>
         </Pressable>
         <View style={menuInferiorStyle.tabItem}>
           <Animated.View
@@ -441,7 +547,9 @@ export default function TreinoTecnico() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabelActive}>Agenda</Text>
+          <Text style={menuInferiorStyle.tabLabelActive} numberOfLines={1}>
+            Agenda
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -450,7 +558,9 @@ export default function TreinoTecnico() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Campeonatos
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -459,7 +569,9 @@ export default function TreinoTecnico() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Desempenho
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -468,7 +580,9 @@ export default function TreinoTecnico() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Usuário</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Usuário
+          </Text>
         </View>
       </View>
     </View>
