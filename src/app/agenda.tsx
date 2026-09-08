@@ -1,6 +1,8 @@
 import agendaStyle from "@/styles/agendaStyle";
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle from "@/styles/menuInferiorStyle";
+import menuInferiorStyle, {
+  TAB_BAR_BASE_PADDING_BOTTOM,
+} from "@/styles/menuInferiorStyle";
 import { variaveis } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -12,6 +14,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const diasDaSemana = [
   { label: "SEG", numero: 21 },
@@ -28,6 +31,7 @@ const filtros = ["Todos", "Treinos", "Campeonatos", "Avaliações", "Reuniões"]
 export default function Agenda() {
   const [filtroAtivo, setFiltroAtivo] = useState("Todos");
   const indicadorAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(indicadorAnim, {
@@ -132,7 +136,7 @@ export default function Agenda() {
         <View style={agendaStyle.todayCard}>
           <View style={agendaStyle.todayCardTopRow}>
             <View style={agendaStyle.todayCardLeft}>
-              <View style={agendaStyle.todayIconCircle}>
+              <View>
                 <Image
                   source={require("@/assets/images/img/agendaVermelha.png")}
                   style={agendaStyle.todayIcon}
@@ -150,7 +154,12 @@ export default function Agenda() {
             </View>
           </View>
 
-          <View style={agendaStyle.todayPillsRow}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={agendaStyle.todayPillsScroll}
+            contentContainerStyle={agendaStyle.todayPillsRow}
+          >
             <View style={agendaStyle.todayPill}>
               <Image
                 source={require("@/assets/images/img/tenisvermelho.png")}
@@ -175,10 +184,15 @@ export default function Agenda() {
               />
               <Text style={agendaStyle.todayPillText}>Reunião x1</Text>
             </View>
-          </View>
+          </ScrollView>
         </View>
 
-        <View style={agendaStyle.filterRow}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={agendaStyle.filterScroll}
+          contentContainerStyle={agendaStyle.filterRow}
+        >
           {filtros.map((filtro) => {
             const ativo = filtro === filtroAtivo;
             return (
@@ -190,18 +204,11 @@ export default function Agenda() {
                 ]}
                 onPress={() => setFiltroAtivo(filtro)}
               >
-                <Text
-                  style={[
-                    agendaStyle.filterPillText,
-                    ativo && agendaStyle.filterPillTextActive,
-                  ]}
-                >
-                  {filtro}
-                </Text>
+                <Text style={agendaStyle.filterPillText}>{filtro}</Text>
               </Pressable>
             );
           })}
-        </View>
+        </ScrollView>
 
         <View style={agendaStyle.nextCard}>
           <Text style={agendaStyle.nextCardLabel}>Próximo compromisso</Text>
@@ -209,31 +216,50 @@ export default function Agenda() {
             <View style={agendaStyle.nextCardMainRow}>
               <View style={agendaStyle.nextCardIconSquare}>
                 <Image
-                  source={require("@/assets/images/img/tenisvermelho.png")}
+                  source={require("@/assets/images/img/atletaVermelho.png")}
                   style={agendaStyle.nextCardIcon}
                   resizeMode="contain"
                 />
               </View>
               <View style={agendaStyle.nextCardTextCol}>
-                <Text style={agendaStyle.nextCardTime}>17:30</Text>
-                <Text style={agendaStyle.nextCardTitle}>Treino Técnico</Text>
+                <Text style={agendaStyle.nextCardTime} numberOfLines={1}>
+                  17:30
+                </Text>
+                <Text
+                  style={agendaStyle.nextCardTitle}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                >
+                  Treino Técnico
+                </Text>
                 <View style={agendaStyle.nextCardInfoRow}>
                   <Image
                     source={require("@/assets/images/img/localizaçãopreto.png")}
                     style={agendaStyle.nextCardInfoIcon}
                     resizeMode="contain"
                   />
-                  <Text style={agendaStyle.nextCardInfoText}>
+                  <Text
+                    style={agendaStyle.nextCardInfoText}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.7}
+                  >
                     Campo Principal
                   </Text>
                 </View>
                 <View style={agendaStyle.nextCardInfoRow}>
                   <Image
-                    source={require("@/assets/images/img/perfilPreto.png")}
+                    source={require("@/assets/images/img/userPreto.png")}
                     style={agendaStyle.nextCardInfoIcon}
                     resizeMode="contain"
                   />
-                  <Text style={agendaStyle.nextCardInfoText}>
+                  <Text
+                    style={agendaStyle.nextCardInfoText}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.7}
+                  >
                     Professor João
                   </Text>
                 </View>
@@ -257,19 +283,26 @@ export default function Agenda() {
           </View>
         </View>
 
+        <View style={agendaStyle.timelineConnector}>
+          <View style={agendaStyle.timelineConnectorSpacer} />
+          <View style={agendaStyle.timelineConnectorRail}>
+            <View style={agendaStyle.timelineConnectorLine} />
+          </View>
+        </View>
+
         <View style={agendaStyle.timelineSection}>
           <View style={agendaStyle.timelineItem}>
             <View style={agendaStyle.timelineTimeCol}>
               <Text style={agendaStyle.timelineTime}>19:15</Text>
             </View>
             <View style={agendaStyle.timelineLineCol}>
+              <View style={agendaStyle.timelineLine} />
               <View
                 style={[
                   agendaStyle.timelineDot,
                   { backgroundColor: variaveis.laranja },
                 ]}
               />
-              <View style={agendaStyle.timelineLine} />
             </View>
             <View
               style={[
@@ -284,14 +317,28 @@ export default function Agenda() {
               />
             </View>
             <View style={agendaStyle.timelineTextCol}>
-              <Text style={agendaStyle.timelineTitle}>Preparação Física</Text>
+              <Text
+                style={agendaStyle.timelineTitle}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
+              >
+                Preparação Física
+              </Text>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
                   source={require("@/assets/images/img/localizaçãocinza.png")}
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
-                <Text style={agendaStyle.timelineInfoText}>Academia</Text>
+                <Text
+                  style={agendaStyle.timelineInfoText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                >
+                  Academia
+                </Text>
               </View>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
@@ -299,7 +346,12 @@ export default function Agenda() {
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
-                <Text style={agendaStyle.timelineInfoText}>
+                <Text
+                  style={agendaStyle.timelineInfoText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                >
                   Professor Lucas
                 </Text>
               </View>
@@ -335,13 +387,13 @@ export default function Agenda() {
               <Text style={agendaStyle.timelineTime}>20:00</Text>
             </View>
             <View style={agendaStyle.timelineLineCol}>
+              <View style={agendaStyle.timelineLine} />
               <View
                 style={[
                   agendaStyle.timelineDot,
                   { backgroundColor: variaveis.verde },
                 ]}
               />
-              <View style={agendaStyle.timelineLine} />
             </View>
             <View
               style={[
@@ -356,14 +408,28 @@ export default function Agenda() {
               />
             </View>
             <View style={agendaStyle.timelineTextCol}>
-              <Text style={agendaStyle.timelineTitle}>Reunião Técnica</Text>
+              <Text
+                style={agendaStyle.timelineTitle}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
+              >
+                Reunião Técnica
+              </Text>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
                   source={require("@/assets/images/img/localizaçãocinza.png")}
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
-                <Text style={agendaStyle.timelineInfoText}>Sala de Vídeo</Text>
+                <Text
+                  style={agendaStyle.timelineInfoText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                >
+                  Sala de Vídeo
+                </Text>
               </View>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
@@ -371,7 +437,12 @@ export default function Agenda() {
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
-                <Text style={agendaStyle.timelineInfoText}>
+                <Text
+                  style={agendaStyle.timelineInfoText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                >
                   Comissão Técnica
                 </Text>
               </View>
@@ -427,14 +498,26 @@ export default function Agenda() {
               />
             </View>
             <View style={agendaStyle.timelineTextCol}>
-              <Text style={agendaStyle.timelineTitle}>Viagem</Text>
+              <Text
+                style={agendaStyle.timelineTitle}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
+              >
+                Viagem
+              </Text>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
                   source={require("@/assets/images/img/localizaçãocinza.png")}
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
-                <Text style={agendaStyle.timelineInfoText}>
+                <Text
+                  style={agendaStyle.timelineInfoText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                >
                   Deslocamento para jogo
                 </Text>
               </View>
@@ -444,7 +527,12 @@ export default function Agenda() {
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
-                <Text style={agendaStyle.timelineInfoText}>
+                <Text
+                  style={agendaStyle.timelineInfoText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.7}
+                >
                   Motorista Carlos
                 </Text>
               </View>
@@ -479,7 +567,12 @@ export default function Agenda() {
         </View>
       </ScrollView>
 
-      <View style={menuInferiorStyle.tabBar}>
+      <View
+        style={[
+          menuInferiorStyle.tabBar,
+          { paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom },
+        ]}
+      >
         <Pressable
           style={menuInferiorStyle.tabItem}
           onPress={() => router.navigate("/home")}
@@ -491,7 +584,9 @@ export default function Agenda() {
             tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Home</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Home
+          </Text>
         </Pressable>
         <View style={menuInferiorStyle.tabItem}>
           <Animated.View
@@ -509,7 +604,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabelActive}>Agenda</Text>
+          <Text style={menuInferiorStyle.tabLabelActive} numberOfLines={1}>
+            Agenda
+          </Text>
         </View>
         <Pressable
           style={menuInferiorStyle.tabItem}
@@ -521,7 +618,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Campeonatos
+          </Text>
         </Pressable>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -530,7 +629,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Desempenho
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -539,7 +640,9 @@ export default function Agenda() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Usuário</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Usuário
+          </Text>
         </View>
       </View>
     </View>

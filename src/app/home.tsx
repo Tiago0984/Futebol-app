@@ -1,6 +1,8 @@
 import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
-import menuInferiorStyle from "@/styles/menuInferiorStyle";
+import menuInferiorStyle, {
+  TAB_BAR_BASE_PADDING_BOTTOM,
+} from "@/styles/menuInferiorStyle";
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import {
@@ -11,9 +13,11 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Home() {
   const indicadorAnim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     Animated.timing(indicadorAnim, {
@@ -235,7 +239,12 @@ export default function Home() {
         </View>
       </ScrollView>
 
-      <View style={menuInferiorStyle.tabBar}>
+      <View
+        style={[
+          menuInferiorStyle.tabBar,
+          { paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom },
+        ]}
+      >
         <View style={menuInferiorStyle.tabItem}>
           <Animated.View
             style={[
@@ -252,7 +261,9 @@ export default function Home() {
             style={menuInferiorStyle.tabIcon}
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabelActive}>Home</Text>
+          <Text style={menuInferiorStyle.tabLabelActive} numberOfLines={1}>
+            Home
+          </Text>
         </View>
         <Pressable
           style={menuInferiorStyle.tabItem}
@@ -265,7 +276,9 @@ export default function Home() {
             tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Agenda</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Agenda
+          </Text>
         </Pressable>
         <Pressable
           style={menuInferiorStyle.tabItem}
@@ -278,7 +291,9 @@ export default function Home() {
             tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Campeonatos
+          </Text>
         </Pressable>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -288,7 +303,9 @@ export default function Home() {
             tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Desempenho
+          </Text>
         </View>
         <View style={menuInferiorStyle.tabItem}>
           <View style={menuInferiorStyle.tabIndicator} />
@@ -298,7 +315,9 @@ export default function Home() {
             tintColor="#FFFFFF"
             resizeMode="contain"
           />
-          <Text style={menuInferiorStyle.tabLabel}>Usuário</Text>
+          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
+            Usuário
+          </Text>
         </View>
       </View>
     </View>

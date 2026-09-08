@@ -5,6 +5,7 @@ import { OpenSans_700Bold, OpenSans_400Regular, OpenSans_600SemiBold } from "@ex
 import { Oswald_700Bold, Oswald_400Regular } from "@expo-google-fonts/oswald";
 
 import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import * as SplashScreen from "expo-splash-screen";
 
@@ -31,10 +32,12 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <SafeAreaProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </SafeAreaProvider>
   );
 }

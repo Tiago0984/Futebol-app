@@ -1,6 +1,12 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 import { fontes, variaveis } from "./variaveis";
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const BASE_WIDTH = 428;
+const WIDTH_RATIO = Math.min(1, SCREEN_WIDTH / BASE_WIDTH);
+const scale = (size: number, min = 0.72) =>
+  Math.round(size * Math.max(min, WIDTH_RATIO) * 10) / 10;
 
 const treinoTecnicoStyle = StyleSheet.create({
   scrollContent: {
@@ -109,21 +115,14 @@ const treinoTecnicoStyle = StyleSheet.create({
     paddingHorizontal: 20,
     marginTop: 16,
   },
-  heroIconCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: variaveis.vermelho20,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 14,
-  },
   heroIcon: {
     width: 50,
     height: 50,
+    marginRight: 30,
   },
   heroTextCol: {
     flex: 1,
+    minWidth: 0,
   },
   heroTitle: {
     fontFamily: fontes.OpenSans_Bold,
@@ -168,7 +167,12 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
   infoCol: {
     flex: 1,
+    minWidth: 0,
     flexDirection: "row",
+  },
+  infoTextCol: {
+    flex: 1,
+    minWidth: 0,
   },
   infoIcon: {
     width: 16,
@@ -178,13 +182,13 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
   infoLabel: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 14,
+    fontSize: scale(14, 0.85),
     fontWeight: "700",
     color: variaveis.branco,
   },
   infoSubLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: scale(12, 0.85),
     color: variaveis.branco70,
     marginTop: 2,
   },
@@ -203,26 +207,19 @@ const treinoTecnicoStyle = StyleSheet.create({
   },
   detailsRowDivider: {
     borderTopWidth: 1,
-    borderTopColor: variaveis.cinza
-  },
-  detailsIconSquare: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: variaveis.vermelho20,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
+    borderTopColor: variaveis.cinza,
   },
   detailsIcon: {
     width: 30,
     height: 30,
+    marginRight: 16,
   },
   detailsTextCol: {
     flex: 1,
+    minWidth: 0,
   },
   detailsLabel: {
-    fontFamily: fontes.OpenSans_Regular,
+    fontFamily: fontes.OpenSans_Regular ,
     fontSize: 12,
     color: variaveis.branco70,
   },
@@ -249,12 +246,13 @@ const treinoTecnicoStyle = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     marginTop: 24,
-    columnGap: 14,
+    columnGap: scale(10, 0.65),
   },
   checklistCard: {
     flex: 1,
+    minWidth: 0,
     borderRadius: 18,
-    padding: 16,
+    paddingVertical: scale(14, 0.65),
   },
   checklistHeaderRow: {
     flexDirection: "row",
@@ -262,13 +260,13 @@ const treinoTecnicoStyle = StyleSheet.create({
     marginBottom: 12,
   },
   checklistHeaderIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
+    width: scale(18, 0.7),
+    height: scale(18, 0.7),
+    marginRight: scale(8, 0.6),
   },
   checklistHeaderText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: scale(10, 0.64),
     fontWeight: "700",
     color: variaveis.branco,
     flexShrink: 1,
@@ -279,13 +277,13 @@ const treinoTecnicoStyle = StyleSheet.create({
     marginTop: 8,
   },
   checklistItemIcon: {
-    width: 15,
-    height: 15,
-    marginRight: 8,
+    width: scale(15, 0.78),
+    height: scale(15, 0.78),
+    marginRight: scale(8, 0.7),
   },
   checklistItemText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12.5,
+    fontSize: scale(10.5, 0.64),
     color: variaveis.branco,
     flexShrink: 1,
   },
@@ -298,18 +296,10 @@ const treinoTecnicoStyle = StyleSheet.create({
     marginTop: 20,
     padding: 16,
   },
-  observacoesIconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: variaveis.vermelho20,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
   observacoesIcon: {
     width: 20,
     height: 20,
+    marginRight: 12,
   },
   observacoesTextCol: {
     flex: 1,
@@ -343,7 +333,7 @@ const treinoTecnicoStyle = StyleSheet.create({
     borderRadius: 20,
     marginHorizontal: 20,
     marginTop: 26,
-    padding: 20,
+    padding: scale(20, 0.8),
   },
   sectionTitleRow: {
     flexDirection: "row",
@@ -369,72 +359,57 @@ const treinoTecnicoStyle = StyleSheet.create({
     color: variaveis.preto,
   },
   quickActionsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
     marginTop: 10,
-    position: "relative",
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.08)",
     borderRadius: 8,
+    overflow: "hidden",
   },
-  quickActionDividerVertical: {
-    position: "absolute",
-    left: "50%",
-    top: 0,
-    bottom: 0,
-    width: 1,
-    backgroundColor: "rgba(0,0,0,0.08)",
+  quickActionRow: {
+    flexDirection: "row",
   },
-  quickActionDividerHorizontal: {
-    position: "absolute",
-    top: "50%",
-    left: 0,
-    right: 0,
-    height: 1,
-    backgroundColor: "rgba(0,0,0,0.08)",
+  quickActionRowDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0,0,0,0.08)",
   },
   quickActionCell: {
-    width: "50%",
-    paddingVertical: 10,
+    flex: 1,
+    minWidth: 0,
+    paddingVertical: scale(12, 0.8),
+    paddingHorizontal: scale(10, 0.5),
   },
-  quickActionCellMapa: {
-    paddingTop: 20,
-    paddingBottom: 2,
-    
-  },
-  quickActionCellBorderRight: {
-    paddingRight: 14,
-  },
-  quickActionCellPadLeft: {
-    paddingLeft: 14,
+  quickActionCellDivider: {
+    borderRightWidth: 1,
+    borderRightColor: "rgba(0,0,0,0.08)",
   },
   quickActionTopRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   quickActionIcon: {
-    width: 25,
-    height: 25,
-    marginLeft: 5,
-    marginRight: 10,
+    width: scale(25, 0.65),
+    height: scale(25, 0.65),
+    marginRight: scale(7, 0.5),
   },
   quickActionTextCol: {
     flex: 1,
+    minWidth: 0,
   },
   quickActionChevron: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 16,
     color: variaveis.cinza,
+    marginLeft: 4,
   },
   quickActionTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: scale(9.3, 0.55),
     fontWeight: "700",
     color: variaveis.preto,
   },
   quickActionSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: scale(10, 0.8),
     color: variaveis.cinza,
     marginTop: 3,
   },

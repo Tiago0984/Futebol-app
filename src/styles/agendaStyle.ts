@@ -165,18 +165,10 @@ const agendaStyle = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  todayIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: variaveis.vermelho20,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
   todayIcon: {
-    width: 22,
-    height: 22,
+    width: 30,
+    height: 30,
+    marginRight: 12,
   },
   todayLabel: {
     fontFamily: fontes.OpenSans_Bold,
@@ -206,9 +198,12 @@ const agendaStyle = StyleSheet.create({
     color: variaveis.cinza,
     marginTop: 2,
   },
+  todayPillsScroll: {
+    marginTop: 14,
+  },
   todayPillsRow: {
     flexDirection: "row",
-    marginTop: 14,
+    paddingRight: 4,
   },
   todayPill: {
     flexDirection: "row",
@@ -231,12 +226,12 @@ const agendaStyle = StyleSheet.create({
     color: variaveis.cinza,
   },
 
+  filterScroll: {
+    marginTop: 20,
+  },
   filterRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
     paddingHorizontal: 20,
-    marginTop: 20,
-    rowGap: 10,
     columnGap: 10,
   },
   filterPill: {
@@ -258,16 +253,13 @@ const agendaStyle = StyleSheet.create({
     fontWeight: "700",
     color: variaveis.branco,
   },
-  filterPillTextActive: {
-    color: variaveis.branco,
-  },
 
   nextCard: {
     backgroundColor: variaveis.branco,
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 20,
-    padding: 18,
+    padding: 14,
   },
   nextCardLabel: {
     fontFamily: fontes.OpenSans_Regular,
@@ -277,7 +269,6 @@ const agendaStyle = StyleSheet.create({
   },
   nextCardTopRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
   },
   nextCardMainRow: {
     flexDirection: "row",
@@ -291,14 +282,15 @@ const agendaStyle = StyleSheet.create({
     backgroundColor: variaveis.vermelho20,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 14,
+    marginRight: 10,
   },
   nextCardIcon: {
-    width: 28,
-    height: 28,
+    width: 40,
+    height: 40,
   },
   nextCardTextCol: {
     flex: 1,
+    minWidth: 0,
   },
   nextCardTime: {
     fontFamily: fontes.OpenSans_Bold,
@@ -309,7 +301,7 @@ const agendaStyle = StyleSheet.create({
   },
   nextCardTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "800",
     color: variaveis.preto,
     marginBottom: 6,
@@ -326,7 +318,7 @@ const agendaStyle = StyleSheet.create({
   },
   nextCardInfoText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12.5,
+    fontSize: 11,
     color: variaveis.cinza,
   },
   nextCardSide: {
@@ -360,26 +352,46 @@ const agendaStyle = StyleSheet.create({
     marginTop: 10,
   },
 
+  timelineConnector: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    height: 24,
+  },
+  timelineConnectorSpacer: {
+    width: 36,
+  },
+  timelineConnectorRail: {
+    width: 18,
+    alignItems: "center",
+    position: "relative",
+  },
+  timelineConnectorLine: {
+    position: "absolute",
+    top: 0,
+    bottom: -18,
+    width: 2,
+    backgroundColor: "rgba(255,255,255,0.15)",
+  },
+
   timelineSection: {
     paddingHorizontal: 20,
-    marginTop: 26,
   },
   timelineItem: {
     flexDirection: "row",
   },
   timelineTimeCol: {
-    width: 42,
+    width: 36,
     marginTop: 14,
   },
   timelineTime: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12.5,
-    fontWeight: "700",
+    fontSize: 13,
     color: variaveis.branco,
   },
   timelineLineCol: {
     width: 18,
     alignItems: "center",
+    position: "relative",
   },
   timelineDot: {
     width: 8,
@@ -388,18 +400,20 @@ const agendaStyle = StyleSheet.create({
     marginTop: 18,
   },
   timelineLine: {
+    position: "absolute",
+    top: 18,
+    bottom: -18,
     width: 2,
-    flex: 1,
     backgroundColor: "rgba(255,255,255,0.15)",
-    marginTop: 4,
   },
   timelineIconSquare: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: 40,
+    height: 40,
+    borderRadius: 13,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
+    marginLeft: 4,
+    marginRight: 4,
   },
   timelineIcon: {
     width: 20,
@@ -407,11 +421,12 @@ const agendaStyle = StyleSheet.create({
   },
   timelineTextCol: {
     flex: 1,
+    minWidth: 0,
     paddingBottom: 22,
   },
   timelineTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 14.5,
+    fontSize: 13,
     fontWeight: "700",
     color: variaveis.branco,
     marginBottom: 4,
@@ -427,30 +442,30 @@ const agendaStyle = StyleSheet.create({
     marginRight: 6,
   },
   timelineInfoText: {
+    flexShrink: 1,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: 9.5,
     color: variaveis.cinza,
   },
   timelineStatusCol: {
-    marginLeft: 8,
+    marginLeft: 4,
+    marginTop: 10,
   },
   statusPill: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     borderRadius: 14,
-    paddingHorizontal: 8,
-    width: 108,
+    paddingHorizontal: 5,
     height: 24,
     borderWidth: 1,
   },
   statusIconCircle: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 6,
+    marginRight: 3,
   },
   statusIconGlyph: {
     width: 8,
