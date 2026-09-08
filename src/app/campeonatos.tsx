@@ -17,7 +17,10 @@ export default function Campeonatos() {
 
   const { width: larguraTela } = useWindowDimensions();
   const larguraCard = Math.min(larguraTela - 40, 560);
-  const alturaBanner = larguraCard * (175 / 380) + 8;
+
+  const [alturaCard1, setAlturaCard1] = useState(0);
+  const [alturaCard2, setAlturaCard2] = useState(0);
+  const [alturaCard3, setAlturaCard3] = useState(0);
 
   return (
     <View style={fundoStyle.container}>
@@ -159,20 +162,20 @@ export default function Campeonatos() {
         <View style={[campeonatosStyle.card, { width: larguraCard }]}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
-            style={[
-              campeonatosStyle.cardBanner,
-              { width: larguraCard, height: alturaBanner },
-            ]}
+            style={[campeonatosStyle.cardBanner, { height: alturaCard1 }]}
             resizeMode="stretch"
           />
           <View
             style={[
               campeonatosStyle.cardBannerOverlay,
-              { width: larguraCard, height: alturaBanner },
+              { height: alturaCard1 },
             ]}
           />
 
-          <View style={campeonatosStyle.cardContent}>
+          <View
+            style={campeonatosStyle.cardContent}
+            onLayout={(e) => setAlturaCard1(e.nativeEvent.layout.height)}
+          >
             <View style={campeonatosStyle.cardTopRow}>
               <View style={campeonatosStyle.cardTitleRow}>
                 <View style={campeonatosStyle.cardIconCircle}>
@@ -229,20 +232,20 @@ export default function Campeonatos() {
         <View style={[campeonatosStyle.card, { width: larguraCard }]}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
-            style={[
-              campeonatosStyle.cardBanner,
-              { width: larguraCard, height: alturaBanner },
-            ]}
+            style={[campeonatosStyle.cardBanner, { height: alturaCard2 }]}
             resizeMode="stretch"
           />
           <View
             style={[
               campeonatosStyle.cardBannerOverlay,
-              { width: larguraCard, height: alturaBanner },
+              { height: alturaCard2 },
             ]}
           />
 
-          <View style={campeonatosStyle.cardContent}>
+          <View
+            style={campeonatosStyle.cardContent}
+            onLayout={(e) => setAlturaCard2(e.nativeEvent.layout.height)}
+          >
             <View style={campeonatosStyle.cardTopRow}>
               <View style={campeonatosStyle.cardTitleRow}>
                 <View style={campeonatosStyle.cardIconCircle}>
@@ -301,20 +304,20 @@ export default function Campeonatos() {
         <View style={[campeonatosStyle.card, { width: larguraCard }]}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
-            style={[
-              campeonatosStyle.cardBanner,
-              { width: larguraCard, height: alturaBanner },
-            ]}
+            style={[campeonatosStyle.cardBanner, { height: alturaCard3 }]}
             resizeMode="stretch"
           />
           <View
             style={[
               campeonatosStyle.cardBannerOverlay,
-              { width: larguraCard, height: alturaBanner },
+              { height: alturaCard3 },
             ]}
           />
 
-          <View style={campeonatosStyle.cardContent}>
+          <View
+            style={campeonatosStyle.cardContent}
+            onLayout={(e) => setAlturaCard3(e.nativeEvent.layout.height)}
+          >
             <View style={campeonatosStyle.cardTopRow}>
               <View style={campeonatosStyle.cardTitleRow}>
                 <View style={campeonatosStyle.cardIconCircle}>

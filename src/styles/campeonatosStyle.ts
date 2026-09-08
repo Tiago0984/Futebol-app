@@ -106,11 +106,13 @@ const campeonatosStyle = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
+    right: 0,
   },
   cardBannerOverlay: {
     position: "absolute",
     top: 0,
     left: 0,
+    right: 0,
     backgroundColor: "rgba(0,0,0,0.3)",
   },
   cardContent: {
