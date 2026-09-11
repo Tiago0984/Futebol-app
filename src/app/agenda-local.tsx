@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import fundoStyle from "@/styles/fundoStyle";
 import menuInferiorStyle from "@/styles/menuInferiorStyle";
 import AgendaLocalStyle from "@/styles/agendaLocalStyle";
-import { variaveis } from "@/styles/variaveis";
+import { cores } from "@/styles/variaveis";
 
 export default function AgendaLocal() {
   const [copiado, setCopiado] = useState(false);
@@ -107,7 +107,7 @@ export default function AgendaLocal() {
                   source={require("@/assets/images/img/shoppingbranco.png")}
                   style={AgendaLocalStyle.headerIcon}
                   contentFit="contain"
-                  tintColor={variaveis.branco}
+                  tintColor={cores.branco}
                 />
               </Pressable>
 
@@ -116,7 +116,7 @@ export default function AgendaLocal() {
                   source={require("@/assets/images/img/sinoBranco.png")}
                   style={AgendaLocalStyle.headerIcon}
                   contentFit="contain"
-                  tintColor={variaveis.branco}
+                  tintColor={cores.branco}
                 />
 
                 <View style={AgendaLocalStyle.notificationBadge}>
@@ -156,7 +156,7 @@ export default function AgendaLocal() {
                 source={require("@/assets/images/img/localizaçãocinza.png")}
                 style={AgendaLocalStyle.locationIcon}
                 contentFit="contain"
-                tintColor={variaveis.cinza}
+                tintColor={cores.cinza}
               />
 
               <Text style={AgendaLocalStyle.addressText}>{endereco}</Text>
@@ -178,7 +178,7 @@ export default function AgendaLocal() {
                     source={require("@/assets/images/img/localizaçãovermelho.png")}
                     style={AgendaLocalStyle.actionIcon}
                     contentFit="contain"
-                    tintColor={variaveis.vermelho}
+                    tintColor={cores.vermelho}
                   />
                 </View>
 
@@ -206,7 +206,7 @@ export default function AgendaLocal() {
                   <Image style={AgendaLocalStyle.copyIcon}
                     source={require("@/assets/images/img/copy.png")}
                     contentFit="contain"
-                    tintColor={variaveis.vermelho}
+                    tintColor={cores.vermelho}
                   />
                 </View>
 
@@ -232,9 +232,9 @@ export default function AgendaLocal() {
               >
                 <View style={AgendaLocalStyle.actionIconContainer}>
                   <Image style={AgendaLocalStyle.shareIcon}
-                    source={require("@/assets/images/img/compartilharVermelho.png")}
+                    source={require("@/assets/images/img/compartilharvermelho.png")}
                     contentFit="contain"
-                    tintColor={variaveis.vermelho}
+                    tintColor={cores.vermelho}
                   />
                 </View>
 
@@ -266,7 +266,7 @@ export default function AgendaLocal() {
               source={require("@/assets/images/img/homeBranca.png")}
               style={menuInferiorStyle.tabIcon}
               contentFit="contain"
-              tintColor={variaveis.branco}
+              tintColor={cores.branco}
             />
 
             <Text style={menuInferiorStyle.tabLabel}>Início</Text>
@@ -287,7 +287,7 @@ export default function AgendaLocal() {
               source={require("@/assets/images/img/agendaBranca.png")}
               style={menuInferiorStyle.tabIcon}
               contentFit="contain"
-              tintColor={variaveis.vermelho}
+              tintColor={cores.vermelho}
             />
 
             <Text style={menuInferiorStyle.tabLabelActive}>Agenda</Text>
@@ -300,7 +300,7 @@ export default function AgendaLocal() {
               source={require("@/assets/images/img/campeonatosbranco.png")}
               style={menuInferiorStyle.tabIcon}
               contentFit="contain"
-              tintColor={variaveis.branco}
+              tintColor={cores.branco}
             />
 
             <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
@@ -313,7 +313,7 @@ export default function AgendaLocal() {
               source={require("@/assets/images/img/desempenhoBranco.png")}
               style={menuInferiorStyle.tabIcon}
               contentFit="contain"
-              tintColor={variaveis.branco}
+              tintColor={cores.branco}
             />
 
             <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
@@ -326,7 +326,7 @@ export default function AgendaLocal() {
               source={require("@/assets/images/img/perfilbranco.png")}
               style={menuInferiorStyle.tabIcon}
               contentFit="contain"
-              tintColor={variaveis.branco}
+              tintColor={cores.branco}
             />
 
             <Text style={menuInferiorStyle.tabLabel}>Perfil</Text>

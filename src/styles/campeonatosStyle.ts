@@ -95,6 +95,61 @@ const campeonatosStyle = StyleSheet.create({
     color: cores.branco,
   },
 
+  emptyStateSection: {
+    alignItems: "center",
+    paddingHorizontal: 32,
+    marginTop: 90,
+  },
+  emptyStateIconCircle: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: cores.branco,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
+  },
+  emptyStateIcon: {
+    width: 100,
+    height: 100,
+  },
+  emptyStateTitle: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 18,
+    fontWeight: "800",
+    color: cores.branco,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  emptyStateDescription: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 13,
+    color: cores.branco70,
+    textAlign: "center",
+    lineHeight: 19,
+    marginBottom: 28,
+  },
+  emptyStateButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "stretch",
+    backgroundColor: cores.branco,
+    borderRadius: 14,
+    height: 52,
+  },
+  emptyStateButtonIcon: {
+    width: 30,
+    height: 30,
+    marginRight: 8,
+  },
+  emptyStateButtonText: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 15,
+    fontWeight: "700",
+    color: cores.preto,
+  },
+
   card: {
     alignSelf: "center",
     marginTop: 20,

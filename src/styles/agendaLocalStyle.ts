@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { fontes, variaveis } from "./variaveis";
+import { fontes, cores } from "./variaveis";
 
 const AgendaLocalStyle = StyleSheet.create({
   container: {
@@ -33,14 +33,14 @@ const AgendaLocalStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 32,
     lineHeight: 32,
-    color: variaveis.branco,
+    color: cores.branco,
     marginRight: 4,
   },
 
   backText: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 14,
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   headerTitle: {
@@ -51,7 +51,7 @@ const AgendaLocalStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 18,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   headerIcons: {
@@ -84,14 +84,14 @@ const AgendaLocalStyle = StyleSheet.create({
     paddingHorizontal: 3,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: variaveis.vermelho,
+    backgroundColor: cores.vermelho,
   },
 
   notificationText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 9,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   // MAPA
@@ -100,7 +100,7 @@ const AgendaLocalStyle = StyleSheet.create({
     marginHorizontal: 24,
     borderRadius: 16,
     overflow: "hidden",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
   },
 
   map: {
@@ -116,21 +116,21 @@ const AgendaLocalStyle = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 18,
     borderRadius: 16,
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
   },
 
   locationTitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 17,
     fontWeight: "700",
-    color: variaveis.preto,
+    color: cores.preto,
   },
 
   locationSubtitle: {
     marginTop: 3,
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 13,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
 
   addressRow: {
@@ -151,7 +151,7 @@ const AgendaLocalStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 12,
     lineHeight: 18,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
 
   // AÇÕES
@@ -166,13 +166,13 @@ const AgendaLocalStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
     fontWeight: "700",
-    color: variaveis.branco,
+    color: cores.branco,
   },
 
   actionsCard: {
     borderRadius: 16,
     overflow: "hidden",
-    backgroundColor: variaveis.branco,
+    backgroundColor: cores.branco,
   },
 
   actionRow: {
@@ -213,7 +213,7 @@ const AgendaLocalStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: 14,
     fontWeight: "600",
-    color: variaveis.preto,
+    color: cores.preto,
   },
 
   actionDescription: {
@@ -221,21 +221,21 @@ const AgendaLocalStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 11,
     lineHeight: 16,
-    color: variaveis.cinza,
+    color: cores.cinza,
   },
 
   actionArrow: {
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 27,
     lineHeight: 27,
-    color: variaveis.cinza,
+    color: cores.cinza,
     marginLeft: 8,
   },
 
   actionDivider: {
     height: 1,
     marginLeft: 64,
-    backgroundColor: variaveis.branco30,
+    backgroundColor: cores.branco30,
   },
 });
 

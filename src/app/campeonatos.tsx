@@ -1,6 +1,7 @@
 import campeonatosStyle from "@/styles/campeonatosStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import menuInferiorStyle from "@/styles/menuInferiorStyle";
+import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -11,6 +12,10 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+
+// true = atleta cadastrado em campeonatos (mostra os cards)
+// false = atleta sem nenhum campeonato (mostra a tela vazia)
+const temCampeonato = false;
 
 export default function Campeonatos() {
   const [filtroAtivo, setFiltroAtivo] = useState("Todos");
@@ -67,6 +72,39 @@ export default function Campeonatos() {
           </View>
         </View>
 
+        {!temCampeonato && (
+          <View style={campeonatosStyle.emptyStateSection}>
+            <View style={campeonatosStyle.emptyStateIconCircle}>
+              <Image
+                source={require("@/assets/images/img/campeonatosVermelho.png")}
+                style={campeonatosStyle.emptyStateIcon}
+                tintColor={cores.preto}
+                resizeMode="contain"
+              />
+            </View>
+            <Text style={campeonatosStyle.emptyStateTitle}>
+              Nenhum campeonato{"\n"}em andamento
+            </Text>
+            <Text style={campeonatosStyle.emptyStateDescription}>
+              Você ainda não está inscrito em uma competição. Assim que sua
+              equipe for cadastrada, todas as informações aparecerão aqui
+              automaticamente.
+            </Text>
+            <Pressable style={campeonatosStyle.emptyStateButton}>
+              <Image
+                source={require("@/assets/images/img/refreshPreto.png")}
+                style={campeonatosStyle.emptyStateButtonIcon}
+                resizeMode="contain"
+              />
+              <Text style={campeonatosStyle.emptyStateButtonText}>
+                Atualizar
+              </Text>
+            </Pressable>
+          </View>
+        )}
+
+        {temCampeonato && (
+        <>
         <View style={campeonatosStyle.filterRow}>
           <Pressable
             style={[
@@ -372,6 +410,8 @@ export default function Campeonatos() {
             </View>
           </View>
         </View>
+        </>
+        )}
       </ScrollView>
 
       <View style={menuInferiorStyle.tabBar}>
