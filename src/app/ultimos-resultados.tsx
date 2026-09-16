@@ -139,42 +139,58 @@ export default function UltimosResultados() {
         </View>
 
         <View style={ultimosResultadosStyle.listSection}>
-          {resultados.map((item, index) => {
-            const ehUltimo = index === resultados.length - 1;
+          <View>
+            {resultados.map((item, index) => {
+              const ehUltimo = index === resultados.length - 1;
 
-            const estiloPill =
-              item.resultado === "Vitória"
-                ? ultimosResultadosStyle.resultPillVitoria
-                : item.resultado === "Derrota"
-                  ? ultimosResultadosStyle.resultPillDerrota
-                  : ultimosResultadosStyle.resultPillEmpate;
+              return (
+                <View key={index} style={ultimosResultadosStyle.resultRow}>
+                  <View style={ultimosResultadosStyle.dateCol}>
+                    <Text style={ultimosResultadosStyle.dateDay}>
+                      {item.dia}
+                    </Text>
+                    <Text style={ultimosResultadosStyle.dateWeekday}>
+                      {item.semana}
+                    </Text>
+                  </View>
 
-            const corTexto =
-              item.resultado === "Vitória"
-                ? cores.verde
-                : item.resultado === "Derrota"
-                  ? cores.vermelho
-                  : cores.cinza;
-
-            return (
-              <View key={index} style={ultimosResultadosStyle.resultRow}>
-                <View style={ultimosResultadosStyle.dateCol}>
-                  <Text style={ultimosResultadosStyle.dateDay}>
-                    {item.dia}
-                  </Text>
-                  <Text style={ultimosResultadosStyle.dateWeekday}>
-                    {item.semana}
-                  </Text>
+                  <View style={ultimosResultadosStyle.lineCol}>
+                    <View style={ultimosResultadosStyle.lineDot} />
+                    {!ehUltimo && (
+                      <View style={ultimosResultadosStyle.lineConnector} />
+                    )}
+                  </View>
                 </View>
+              );
+            })}
+          </View>
 
-                <View style={ultimosResultadosStyle.lineCol}>
-                  <View style={ultimosResultadosStyle.lineDot} />
-                  {!ehUltimo && (
-                    <View style={ultimosResultadosStyle.lineConnector} />
-                  )}
-                </View>
+          <View style={ultimosResultadosStyle.listCard}>
+            {resultados.map((item, index) => {
+              const ehUltimo = index === resultados.length - 1;
 
-                <View style={ultimosResultadosStyle.resultCard}>
+              const estiloPill =
+                item.resultado === "Vitória"
+                  ? ultimosResultadosStyle.resultPillVitoria
+                  : item.resultado === "Derrota"
+                    ? ultimosResultadosStyle.resultPillDerrota
+                    : ultimosResultadosStyle.resultPillEmpate;
+
+              const corTexto =
+                item.resultado === "Vitória"
+                  ? cores.verde
+                  : item.resultado === "Derrota"
+                    ? cores.vermelho
+                    : cores.cinza;
+
+              return (
+                <View
+                  key={index}
+                  style={[
+                    ultimosResultadosStyle.resultItem,
+                    !ehUltimo && ultimosResultadosStyle.resultItemDivider,
+                  ]}
+                >
                   <Image
                     source={item.crest}
                     style={ultimosResultadosStyle.resultCrest}
@@ -215,9 +231,9 @@ export default function UltimosResultados() {
                     </Text>
                   </View>
                 </View>
-              </View>
-            );
-          })}
+              );
+            })}
+          </View>
         </View>
       </ScrollView>
 

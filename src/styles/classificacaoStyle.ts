@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 import { fontes, cores } from "./variaveis";
 
-const proximaPartidaStyle = StyleSheet.create({
+const classificacaoStyle = StyleSheet.create({
   scrollContent: {
     paddingBottom: 24,
   },
@@ -78,103 +78,105 @@ const proximaPartidaStyle = StyleSheet.create({
     color: cores.branco,
   },
 
-  listSection: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    marginTop: 22,
-  },
-  partidaRow: {
-    flexDirection: "row",
-  },
-  listCard: {
-    flex: 1,
+  tableCard: {
     backgroundColor: cores.branco,
     borderRadius: 18,
+    marginHorizontal: 20,
+    marginTop: 20,
     paddingHorizontal: 12,
-  },
-  dateCol: {
-    width: 40,
-    height: 74,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dateDay: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
-    fontWeight: "700",
-    color: cores.branco,
-  },
-  dateWeekday: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
-    color: cores.branco70,
-  },
-  lineCol: {
-    width: 20,
-    height: 74,
-    alignItems: "center",
-  },
-  lineDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: cores.cinza,
-    marginTop: 33,
-  },
-  lineConnector: {
-    position: "absolute",
-    top: 41,
-    bottom: -33,
-    width: 2,
-    backgroundColor: "rgba(255,255,255,0.15)",
+    paddingTop: 6,
   },
 
-  partidaItem: {
+  tableHeaderRow: {
     flexDirection: "row",
     alignItems: "center",
-    height: 74,
-  },
-  partidaItemDivider: {
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "rgba(0,0,0,0.08)",
   },
-  partidaCrest: {
-    width: 36,
-    height: 36,
-    marginRight: 10,
-  },
-  partidaTextCol: {
-    flex: 1,
-    minWidth: 0,
-  },
-  partidaTeams: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12.5,
-    fontWeight: "700",
-    color: cores.preto,
-  },
-  partidaVs: {
-    fontFamily: fontes.OpenSans_Regular,
-    color: cores.cinza,
-  },
-  partidaCompeticao: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10.5,
-    color: cores.cinza,
-    marginTop: 2,
-  },
-  partidaLocal: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10.5,
-    color: cores.cinza,
-  },
-  verDetalhesText: {
+  tableHeaderText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 11,
     fontWeight: "700",
-    color: cores.vermelho,
-    marginLeft: 8,
+    color: cores.cinza,
+  },
+
+  linhaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0,0,0,0.06)",
+  },
+  colPos: {
+    width: 24,
+  },
+  colPosText: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 12,
+    fontWeight: "700",
+    color: cores.preto,
+  },
+  colEquipe: {
+    flex: 1,
+    minWidth: 0,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  equipeBadge: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: "#D9D9D9",
+    marginRight: 8,
+  },
+  equipeNome: {
+    flex: 1,
+    minWidth: 0,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 12,
+    fontWeight: "700",
+    color: cores.preto,
+  },
+  colNumero: {
+    width: 22,
+    alignItems: "center",
+  },
+  colNumeroTexto: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 12,
+    color: cores.preto,
+  },
+  colDestaque: {
+    width: 28,
+    alignItems: "center",
+  },
+  colDestaqueTexto: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 12,
+    fontWeight: "700",
+    color: cores.preto,
+  },
+
+  legenda: {
+    paddingVertical: 14,
+  },
+  legendaLinha: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginBottom: 4,
+  },
+  legendaItem: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 11,
+    color: cores.cinza,
+    marginRight: 16,
+  },
+  legendaSigla: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontWeight: "700",
+    color: cores.preto,
   },
 });
 
-export default proximaPartidaStyle;
+export default classificacaoStyle;

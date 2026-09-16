@@ -79,16 +79,24 @@ const ultimosResultadosStyle = StyleSheet.create({
   },
 
   listSection: {
+    flexDirection: "row",
     paddingHorizontal: 20,
     marginTop: 22,
   },
   resultRow: {
     flexDirection: "row",
   },
+  listCard: {
+    flex: 1,
+    backgroundColor: cores.branco,
+    borderRadius: 18,
+    paddingHorizontal: 12,
+  },
   dateCol: {
     width: 40,
+    height: 74,
     alignItems: "center",
-    paddingTop: 16,
+    justifyContent: "center",
   },
   dateDay: {
     fontFamily: fontes.OpenSans_Bold,
@@ -103,6 +111,7 @@ const ultimosResultadosStyle = StyleSheet.create({
   },
   lineCol: {
     width: 20,
+    height: 74,
     alignItems: "center",
   },
   lineDot: {
@@ -110,24 +119,24 @@ const ultimosResultadosStyle = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: cores.verde,
-    marginTop: 20,
+    marginTop: 33,
   },
   lineConnector: {
     position: "absolute",
-    top: 28,
-    bottom: -16,
+    top: 41,
+    bottom: -33,
     width: 2,
     backgroundColor: "rgba(255,255,255,0.15)",
   },
 
-  resultCard: {
-    flex: 1,
+  resultItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: cores.branco,
-    borderRadius: 14,
-    padding: 12,
-    marginBottom: 16,
+    height: 74,
+  },
+  resultItemDivider: {
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(0,0,0,0.08)",
   },
   resultCrest: {
     width: 36,

@@ -3,11 +3,96 @@ import menuInferiorStyle, {
   TAB_BAR_BASE_PADDING_BOTTOM,
 } from "@/styles/menuInferiorStyle";
 import proximaPartidaStyle from "@/styles/proximaPartidaStyle";
-import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const crestAacj = require("@/assets/images/img/logo/logo-aacj.png");
+const crestTimePreto = require("@/assets/images/img/logo/time-preto.jpg");
+
+const partidas = [
+  {
+    dia: "04/05",
+    semana: "Dom",
+    crest: crestAacj,
+    adversario: "Santos",
+    competicao: "Campeonato paulista sub-17",
+    local: "Estádio Municipal",
+  },
+  {
+    dia: "27/04",
+    semana: "Dom",
+    crest: crestTimePreto,
+    adversario: "Palmeiras",
+    competicao: "Campeonato paulista sub-17",
+    local: "Arena Barueri",
+  },
+  {
+    dia: "20/04",
+    semana: "Dom",
+    crest: crestAacj,
+    adversario: "Santos",
+    competicao: "Campeonato paulista sub-17",
+    local: "Estádio Municipal",
+  },
+  {
+    dia: "27/04",
+    semana: "Dom",
+    crest: crestTimePreto,
+    adversario: "Palmeiras",
+    competicao: "Campeonato paulista sub-17",
+    local: "Arena Barueri",
+  },
+  {
+    dia: "04/05",
+    semana: "Dom",
+    crest: crestAacj,
+    adversario: "Santos",
+    competicao: "Campeonato paulista sub-17",
+    local: "Estádio Municipal",
+  },
+  {
+    dia: "27/04",
+    semana: "Dom",
+    crest: crestTimePreto,
+    adversario: "Palmeiras",
+    competicao: "Campeonato paulista sub-17",
+    local: "Arena Barueri",
+  },
+  {
+    dia: "20/04",
+    semana: "Dom",
+    crest: crestAacj,
+    adversario: "Santos",
+    competicao: "Campeonato paulista sub-17",
+    local: "Estádio Municipal",
+  },
+  {
+    dia: "27/04",
+    semana: "Dom",
+    crest: crestTimePreto,
+    adversario: "Palmeiras",
+    competicao: "Campeonato paulista sub-17",
+    local: "Arena Barueri",
+  },
+  {
+    dia: "04/05",
+    semana: "Dom",
+    crest: crestAacj,
+    adversario: "Santos",
+    competicao: "Campeonato paulista sub-17",
+    local: "Estádio Municipal",
+  },
+  {
+    dia: "27/04",
+    semana: "Dom",
+    crest: crestTimePreto,
+    adversario: "Palmeiras",
+    competicao: "Campeonato paulista sub-17",
+    local: "Arena Barueri",
+  },
+];
 
 export default function ProximaPartida() {
   const indicadorAnim = useRef(new Animated.Value(0)).current;
@@ -45,7 +130,7 @@ export default function ProximaPartida() {
             </Pressable>
             <View style={proximaPartidaStyle.headerTitleCol}>
               <Text style={proximaPartidaStyle.headerTitle} numberOfLines={1}>
-                Próxima partida
+                Próximas partidas
               </Text>
               <Text
                 style={proximaPartidaStyle.headerSubtitle}
@@ -78,291 +163,84 @@ export default function ProximaPartida() {
           </View>
         </View>
 
-        <View style={proximaPartidaStyle.matchCard}>
-          <View style={proximaPartidaStyle.teamsRow}>
-            <View style={proximaPartidaStyle.teamCol}>
-              <Image
-                source={require("@/assets/images/img/logo/logo-aacj.png")}
-                style={proximaPartidaStyle.teamCrest}
-                resizeMode="contain"
-              />
-              <Text style={proximaPartidaStyle.teamName} numberOfLines={1}>
-                AACJ
-              </Text>
-            </View>
-            <Text style={proximaPartidaStyle.vsText}>Vs</Text>
-            <View style={proximaPartidaStyle.teamCol}>
-              <Image
-                source={require("@/assets/images/img/logo/time-preto.jpg")}
-                style={proximaPartidaStyle.teamCrest}
-                resizeMode="contain"
-              />
-              <Text style={proximaPartidaStyle.teamName} numberOfLines={1}>
-                Time preto
-              </Text>
-            </View>
-          </View>
+        <View style={proximaPartidaStyle.listSection}>
+          <View>
+            {partidas.map((item, index) => {
+              const ehUltimo = index === partidas.length - 1;
 
-          <View style={proximaPartidaStyle.matchDivider} />
-
-          <View style={proximaPartidaStyle.matchInfoRow}>
-            <View style={proximaPartidaStyle.matchInfoCol}>
-              <Image
-                source={require("@/assets/images/img/agendaPreta.png")}
-                style={proximaPartidaStyle.matchInfoIcon}
-                resizeMode="contain"
-              />
-              <View style={proximaPartidaStyle.matchInfoTextCol}>
-                <Text style={proximaPartidaStyle.matchInfoLabel}>
-                  Domingo
-                </Text>
-                <Text style={proximaPartidaStyle.matchInfoValue}>
-                  11/05/2026
-                </Text>
-              </View>
-            </View>
-            <View style={proximaPartidaStyle.matchInfoDivider} />
-            <View style={proximaPartidaStyle.matchInfoCol}>
-              <Image
-                source={require("@/assets/images/img/clockvermelho.png")}
-                style={proximaPartidaStyle.matchInfoIcon}
-                tintColor={cores.preto}
-                resizeMode="contain"
-              />
-              <View style={proximaPartidaStyle.matchInfoTextCol}>
-                <Text style={proximaPartidaStyle.matchInfoLabel}>
-                  Domingo
-                </Text>
-                <Text style={proximaPartidaStyle.matchInfoValue}>
-                  11/05/2026
-                </Text>
-              </View>
-            </View>
-            <View style={proximaPartidaStyle.matchInfoDivider} />
-            <View style={proximaPartidaStyle.matchInfoCol}>
-              <Image
-                source={require("@/assets/images/img/localizaçãopreto.png")}
-                style={proximaPartidaStyle.matchInfoIcon}
-                resizeMode="contain"
-              />
-              <View style={proximaPartidaStyle.matchInfoTextCol}>
-                <Text style={proximaPartidaStyle.matchInfoLabel}>
-                  Domingo
-                </Text>
-                <Text style={proximaPartidaStyle.matchInfoValue}>
-                  11/05/2026
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          <View style={proximaPartidaStyle.confirmedPill}>
-            <Text style={proximaPartidaStyle.confirmedText}>Confirmado</Text>
-          </View>
-        </View>
-
-        <View style={proximaPartidaStyle.participacaoSection}>
-          <Text style={proximaPartidaStyle.participacaoTitle}>
-            Sua participação
-          </Text>
-
-          <View style={proximaPartidaStyle.detailsCard}>
-            <View style={proximaPartidaStyle.detailsRow}>
-              <Text style={proximaPartidaStyle.detailsLabel}>Status</Text>
-              <View style={proximaPartidaStyle.statusPill}>
-                <Text style={proximaPartidaStyle.statusPillText}>
-                  Convocado
-                </Text>
-              </View>
-            </View>
-
-            <View
-              style={[
-                proximaPartidaStyle.detailsRow,
-                proximaPartidaStyle.detailsRowDivider,
-              ]}
-            >
-              <Text style={proximaPartidaStyle.detailsLabel}>
-                Número da camisa
-              </Text>
-              <Text style={proximaPartidaStyle.detailsValue}>10</Text>
-            </View>
-
-            <View
-              style={[
-                proximaPartidaStyle.detailsRow,
-                proximaPartidaStyle.detailsRowDivider,
-              ]}
-            >
-              <Text style={proximaPartidaStyle.detailsLabel}>Posição</Text>
-              <Text style={proximaPartidaStyle.detailsValue}>Meia</Text>
-            </View>
-
-            <View
-              style={[
-                proximaPartidaStyle.detailsRow,
-                proximaPartidaStyle.detailsRowDivider,
-              ]}
-            >
-              <Text style={proximaPartidaStyle.detailsLabel}>
-                Comissão técnica
-              </Text>
-              <Text style={proximaPartidaStyle.detailsValue}>
-                Claudinei Oliveira
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={proximaPartidaStyle.quickActionsSection}>
-          <View style={proximaPartidaStyle.sectionTitleRow}>
-            <View style={proximaPartidaStyle.sectionTitleIconBox}>
-              <Image
-                source={require("@/assets/images/img/raiovermelho.png")}
-                style={proximaPartidaStyle.sectionTitleIcon}
-                resizeMode="contain"
-              />
-            </View>
-            <Text style={proximaPartidaStyle.sectionTitle} numberOfLines={1}>
-              Ações rápidas
-            </Text>
-          </View>
-
-          <View style={proximaPartidaStyle.quickActionsGrid}>
-            <View
-              style={[
-                proximaPartidaStyle.quickActionRow,
-                proximaPartidaStyle.quickActionRowDivider,
-              ]}
-            >
-              <Pressable
-                style={[
-                  proximaPartidaStyle.quickActionCell,
-                  proximaPartidaStyle.quickActionCellDivider,
-                ]}
-              >
-                <View style={proximaPartidaStyle.quickActionTopRow}>
-                  <Image
-                    source={require("@/assets/images/img/mapavermelho.png")}
-                    style={proximaPartidaStyle.quickActionIcon}
-                    resizeMode="contain"
-                  />
-                  <View style={proximaPartidaStyle.quickActionTextCol}>
-                    <Text
-                      style={proximaPartidaStyle.quickActionTitle}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.6}
-                    >
-                      Abrir mapa
+              return (
+                <View key={index} style={proximaPartidaStyle.partidaRow}>
+                  <View style={proximaPartidaStyle.dateCol}>
+                    <Text style={proximaPartidaStyle.dateDay}>
+                      {item.dia}
                     </Text>
-                    <Text
-                      style={proximaPartidaStyle.quickActionSubtitle}
-                      numberOfLines={3}
-                    >
-                      Visualizar o local do treino
+                    <Text style={proximaPartidaStyle.dateWeekday}>
+                      {item.semana}
                     </Text>
                   </View>
-                  <Text style={proximaPartidaStyle.quickActionChevron}>
-                    ›
-                  </Text>
-                </View>
-              </Pressable>
 
-              <Pressable style={proximaPartidaStyle.quickActionCell}>
-                <View style={proximaPartidaStyle.quickActionTopRow}>
+                  <View style={proximaPartidaStyle.lineCol}>
+                    <View style={proximaPartidaStyle.lineDot} />
+                    {!ehUltimo && (
+                      <View style={proximaPartidaStyle.lineConnector} />
+                    )}
+                  </View>
+                </View>
+              );
+            })}
+          </View>
+
+          <View style={proximaPartidaStyle.listCard}>
+            {partidas.map((item, index) => {
+              const ehUltimo = index === partidas.length - 1;
+
+              return (
+                <View
+                  key={index}
+                  style={[
+                    proximaPartidaStyle.partidaItem,
+                    !ehUltimo && proximaPartidaStyle.partidaItemDivider,
+                  ]}
+                >
                   <Image
-                    source={require("@/assets/images/img/agendaVermelha.png")}
-                    style={proximaPartidaStyle.quickActionIcon}
+                    source={item.crest}
+                    style={proximaPartidaStyle.partidaCrest}
                     resizeMode="contain"
                   />
-                  <View style={proximaPartidaStyle.quickActionTextCol}>
+                  <View style={proximaPartidaStyle.partidaTextCol}>
                     <Text
-                      style={proximaPartidaStyle.quickActionTitle}
+                      style={proximaPartidaStyle.partidaTeams}
                       numberOfLines={1}
                       adjustsFontSizeToFit
-                      minimumFontScale={0.6}
+                      minimumFontScale={0.7}
                     >
-                      Adicionar ao calendário
+                      AACJ
+                      <Text style={proximaPartidaStyle.partidaVs}> VS </Text>
+                      {item.adversario}
                     </Text>
                     <Text
-                      style={proximaPartidaStyle.quickActionSubtitle}
-                      numberOfLines={3}
-                    >
-                      Adicionar o compromisso ao calendário
-                    </Text>
-                  </View>
-                  <Text style={proximaPartidaStyle.quickActionChevron}>
-                    ›
-                  </Text>
-                </View>
-              </Pressable>
-            </View>
-
-            <View style={proximaPartidaStyle.quickActionRow}>
-              <Pressable
-                style={[
-                  proximaPartidaStyle.quickActionCell,
-                  proximaPartidaStyle.quickActionCellDivider,
-                ]}
-              >
-                <View style={proximaPartidaStyle.quickActionTopRow}>
-                  <Image
-                    source={require("@/assets/images/img/compartilharvermelho.png")}
-                    style={proximaPartidaStyle.quickActionIcon}
-                    resizeMode="contain"
-                  />
-                  <View style={proximaPartidaStyle.quickActionTextCol}>
-                    <Text
-                      style={proximaPartidaStyle.quickActionTitle}
+                      style={proximaPartidaStyle.partidaCompeticao}
                       numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.6}
                     >
-                      Compartilhar
+                      {item.competicao}
                     </Text>
                     <Text
-                      style={proximaPartidaStyle.quickActionSubtitle}
-                      numberOfLines={3}
-                    >
-                      Compartilhar data, horário e local com outra pessoa
-                    </Text>
-                  </View>
-                  <Text style={proximaPartidaStyle.quickActionChevron}>
-                    ›
-                  </Text>
-                </View>
-              </Pressable>
-
-              <Pressable style={proximaPartidaStyle.quickActionCell}>
-                <View style={proximaPartidaStyle.quickActionTopRow}>
-                  <Image
-                    source={require("@/assets/images/img/chatvermelho.png")}
-                    style={proximaPartidaStyle.quickActionIcon}
-                    resizeMode="contain"
-                  />
-                  <View style={proximaPartidaStyle.quickActionTextCol}>
-                    <Text
-                      style={proximaPartidaStyle.quickActionTitle}
+                      style={proximaPartidaStyle.partidaLocal}
                       numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.6}
                     >
-                      Entrar em contato
-                    </Text>
-                    <Text
-                      style={proximaPartidaStyle.quickActionSubtitle}
-                      numberOfLines={3}
-                    >
-                      Conversar com o responsável
+                      {item.local}
                     </Text>
                   </View>
-                  <Text style={proximaPartidaStyle.quickActionChevron}>
-                    ›
-                  </Text>
+                  <Pressable
+                    onPress={() => router.navigate("/detalhe-proxima-partida")}
+                  >
+                    <Text style={proximaPartidaStyle.verDetalhesText}>
+                      Ver detalhes {">"}
+                    </Text>
+                  </Pressable>
                 </View>
-              </Pressable>
-            </View>
+              );
+            })}
           </View>
         </View>
       </ScrollView>

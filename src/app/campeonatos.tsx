@@ -15,7 +15,7 @@ import {
 
 // true = atleta cadastrado em campeonatos (mostra os cards)
 // false = atleta sem nenhum campeonato (mostra a tela vazia)
-const temCampeonato = false;
+const temCampeonato = true;
 
 export default function Campeonatos() {
   const [filtroAtivo, setFiltroAtivo] = useState("Todos");
@@ -260,9 +260,11 @@ export default function Campeonatos() {
                   Quartas de final
                 </Text>
               </View>
-              <Text style={campeonatosStyle.verCampeonatoText}>
-                Ver campeonato {">"}
-              </Text>
+              <Pressable onPress={() => router.navigate("/campeonato-detalhe")}>
+                <Text style={campeonatosStyle.verCampeonatoText}>
+                  Ver campeonato {">"}
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -332,9 +334,11 @@ export default function Campeonatos() {
                   Semifinais
                 </Text>
               </View>
-              <Text style={campeonatosStyle.verCampeonatoText}>
-                Ver campeonato {">"}
-              </Text>
+              <Pressable onPress={() => router.navigate("/campeonato-detalhe")}>
+                <Text style={campeonatosStyle.verCampeonatoText}>
+                  Ver campeonato {">"}
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -404,9 +408,11 @@ export default function Campeonatos() {
                   Oitavas de final
                 </Text>
               </View>
-              <Text style={campeonatosStyle.verCampeonatoText}>
-                Ver campeonato {">"}
-              </Text>
+              <Pressable onPress={() => router.navigate("/campeonato-detalhe")}>
+                <Text style={campeonatosStyle.verCampeonatoText}>
+                  Ver campeonato {">"}
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>
