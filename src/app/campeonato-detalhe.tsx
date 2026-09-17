@@ -234,9 +234,13 @@ export default function CampeonatoDetalhe() {
               </Text>
             </View>
             <View style={campeonatoDetalheStyle.matchBottomSideRight}>
-              <Text style={campeonatoDetalheStyle.matchVerDetalhesText}>
-                Ver detalhes {">"}
-              </Text>
+              <Pressable
+                onPress={() => router.navigate("/detalhe-proxima-partida")}
+              >
+                <Text style={campeonatoDetalheStyle.matchVerDetalhesText}>
+                  Ver detalhes {">"}
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>
