@@ -490,7 +490,7 @@ export default function Desempenho() {
           <View style={desempenhoStyle.achievementsRow}>
             <View style={desempenhoStyle.achievementPill}>
               <Image
-                source={require("@/assets/images/img/medalha.png")}
+                source={require("@/assets/images/img/medalhadourada.png")}
                 style={desempenhoStyle.achievementIcon}
                 resizeMode="contain"
               />
@@ -514,7 +514,7 @@ export default function Desempenho() {
 
             <View style={desempenhoStyle.achievementPill}>
               <Image
-                source={require("@/assets/images/img/medalha.png")}
+                source={require("@/assets/images/img/medalhadourada.png")}
                 style={desempenhoStyle.achievementIcon}
                 resizeMode="contain"
               />

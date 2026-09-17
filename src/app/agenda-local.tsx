@@ -228,7 +228,7 @@ export default function AgendaLocal() {
                 <View style={agendaLocalStyle.actionIconContainer}>
                   <Image
                     style={agendaLocalStyle.shareIcon}
-                    source={require("@/assets/images/img/compartilharVermelho.png")}
+                    source={require("@/assets/images/img/compartilharvermelho.png")}
                     contentFit="contain"
                     tintColor={cores.vermelho}
                   />
