@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { cores, fontes } from "./variaveis";
 
 const agendaStyle = StyleSheet.create({
   scrollContent: {
