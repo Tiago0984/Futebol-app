@@ -9,10 +9,10 @@ import {
   View
 } from "react-native";
 
+import TabBar from "@/components/tabBar";
 import agendaLocalStyle from "@/styles/agendaLocalStyle";
 import { cores } from "@/styles/variaveis";
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle from "@/styles/menuInferiorStyle";
 
 export default function AgendaLocal() {
   const [copiado, setCopiado] = useState(false);
@@ -250,84 +250,8 @@ export default function AgendaLocal() {
           </View>
         </ScrollView>
 
-        {/* MENU INFERIOR */}
-        <View style={menuInferiorStyle.tabBar}>
-          <Pressable
-            style={menuInferiorStyle.tabItem}
-            onPress={() => router.navigate("/home")}
-          >
-            <View style={menuInferiorStyle.tabIndicator} />
-
-            <Image
-              source={require("@/assets/images/img/homeBranca.png")}
-              style={menuInferiorStyle.tabIcon}
-              contentFit="contain"
-              tintColor={cores.branco}
-            />
-
-            <Text style={menuInferiorStyle.tabLabel}>Início</Text>
-          </Pressable>
-
-          <Pressable
-            style={menuInferiorStyle.tabItem}
-            onPress={() => router.navigate("/agenda")}
-          >
-            <View
-              style={[
-                menuInferiorStyle.tabIndicator,
-                menuInferiorStyle.tabIndicatorActive,
-              ]}
-            />
-
-            <Image
-              source={require("@/assets/images/img/agendaBranca.png")}
-              style={menuInferiorStyle.tabIcon}
-              contentFit="contain"
-              tintColor={cores.vermelho}
-            />
-
-            <Text style={menuInferiorStyle.tabLabelActive}>Agenda</Text>
-          </Pressable>
-
-          <Pressable style={menuInferiorStyle.tabItem}>
-            <View style={menuInferiorStyle.tabIndicator} />
-
-            <Image
-              source={require("@/assets/images/img/campeonatosbranco.png")}
-              style={menuInferiorStyle.tabIcon}
-              contentFit="contain"
-              tintColor={cores.branco}
-            />
-
-            <Text style={menuInferiorStyle.tabLabel}>Campeonatos</Text>
-          </Pressable>
-
-          <Pressable style={menuInferiorStyle.tabItem}>
-            <View style={menuInferiorStyle.tabIndicator} />
-
-            <Image
-              source={require("@/assets/images/img/desempenhoBranco.png")}
-              style={menuInferiorStyle.tabIcon}
-              contentFit="contain"
-              tintColor={cores.branco}
-            />
-
-            <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
-          </Pressable>
-
-          <Pressable style={menuInferiorStyle.tabItem}>
-            <View style={menuInferiorStyle.tabIndicator} />
-
-            <Image
-              source={require("@/assets/images/img/perfilbranco.png")}
-              style={menuInferiorStyle.tabIcon}
-              contentFit="contain"
-              tintColor={cores.branco}
-            />
-
-            <Text style={menuInferiorStyle.tabLabel}>Perfil</Text>
-          </Pressable>
-        </View>
+        {/* TabBar unificada */}
+        <TabBar abaAtiva="agenda" />
       </View>
     </View>
   );
