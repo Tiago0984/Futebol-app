@@ -1,6 +1,6 @@
+import TabBar from "@/components/tabBar";
 import campeonatosStyle from "@/styles/campeonatosStyle";
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export default function Campeonatos() {
   return (
     <View style={fundoStyle.container}>
       <Image
-        source={require("@/assets/images/img/background-aacj-app1.png")}
+        source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}
         resizeMode="cover"
       />
@@ -200,13 +200,16 @@ export default function Campeonatos() {
         <View style={[campeonatosStyle.card, { width: larguraCard }]}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
-            style={[campeonatosStyle.cardBanner, { height: alturaCard1 }]}
-            resizeMode="stretch"
+            style={[
+              campeonatosStyle.cardBanner,
+              { width: larguraCard + 2, height: alturaCard1 + 2 },
+            ]}
+            resizeMode="cover"
           />
           <View
             style={[
               campeonatosStyle.cardBannerOverlay,
-              { height: alturaCard1 },
+              { width: larguraCard + 2, height: alturaCard1 + 2 },
             ]}
           />
 
@@ -272,13 +275,16 @@ export default function Campeonatos() {
         <View style={[campeonatosStyle.card, { width: larguraCard }]}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
-            style={[campeonatosStyle.cardBanner, { height: alturaCard2 }]}
-            resizeMode="stretch"
+            style={[
+              campeonatosStyle.cardBanner,
+              { width: larguraCard + 2, height: alturaCard2 + 2 },
+            ]}
+            resizeMode="cover"
           />
           <View
             style={[
               campeonatosStyle.cardBannerOverlay,
-              { height: alturaCard2 },
+              { width: larguraCard + 2, height: alturaCard2 + 2 },
             ]}
           />
 
@@ -346,13 +352,16 @@ export default function Campeonatos() {
         <View style={[campeonatosStyle.card, { width: larguraCard }]}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
-            style={[campeonatosStyle.cardBanner, { height: alturaCard3 }]}
-            resizeMode="stretch"
+            style={[
+              campeonatosStyle.cardBanner,
+              { width: larguraCard + 2, height: alturaCard3 + 2 },
+            ]}
+            resizeMode="cover"
           />
           <View
             style={[
               campeonatosStyle.cardBannerOverlay,
-              { height: alturaCard3 },
+              { width: larguraCard + 2, height: alturaCard3 + 2 },
             ]}
           />
 
@@ -420,66 +429,8 @@ export default function Campeonatos() {
         )}
       </ScrollView>
 
-      <View style={menuInferiorStyle.tabBar}>
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/home")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/homeBranca.png")}
-            style={menuInferiorStyle.tabIcon}
-            tintColor="#FFFFFF"
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel}>Home</Text>
-        </Pressable>
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/agenda")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/agendaBranca.png")}
-            style={menuInferiorStyle.tabIcon}
-            tintColor="#FFFFFF"
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel}>Agenda</Text>
-        </Pressable>
-        <View style={menuInferiorStyle.tabItem}>
-          <View
-            style={[
-              menuInferiorStyle.tabIndicator,
-              menuInferiorStyle.tabIndicatorActive,
-            ]}
-          />
-          <Image
-            source={require("@/assets/images/img/campeonatosVermelho.png")}
-            style={menuInferiorStyle.tabIcon}
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabelActive}>Campeonatos</Text>
-        </View>
-        <View style={menuInferiorStyle.tabItem}>
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/desempenhoBranco.png")}
-            style={menuInferiorStyle.tabIcon}
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel}>Desempenho</Text>
-        </View>
-        <View style={menuInferiorStyle.tabItem}>
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/perfilbranco.png")}
-            style={menuInferiorStyle.tabIcon}
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel}>Usuário</Text>
-        </View>
-      </View>
+      {/* TabBar unificada */}
+      <TabBar abaAtiva="campeonatos" />
     </View>
   );
 }

@@ -1,499 +1,589 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const BASE_WIDTH = 428;
-const WIDTH_RATIO = Math.min(1, SCREEN_WIDTH / BASE_WIDTH);
-const scale = (size: number, min = 0.72) =>
-  Math.round(size * Math.max(min, WIDTH_RATIO) * 10) / 10;
+import { cores, fontes } from "./variaveis";
 
 const campeonatoDetalheStyle = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
+
   scrollContent: {
     paddingBottom: 24,
   },
 
+  /* HEADER */
+
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  headerTopRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
+    paddingHorizontal: 24,
+    paddingTop: 22,
+    minHeight: 78,
   },
+
   backButton: {
-    flexDirection: "row",
-    alignItems: "center",
+    marginTop: 7,
+    marginRight: 20,
   },
-  backChevron: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 20,
-    fontWeight: "700",
-    color: cores.branco,
-    marginRight: 4,
-  },
+
   backText: {
-    fontFamily: fontes.OpenSans_SemiBold,
+    fontFamily: fontes.OpenSans_Regular,
     fontSize: 15,
-    fontWeight: "600",
     color: cores.branco,
   },
+
   headerTitleCol: {
     flex: 1,
-    marginLeft: 14,
+    minWidth: 0,
   },
-  headerTitle: {
+
+  screenTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "800",
     color: cores.branco,
   },
-  headerSubtitle: {
+
+  screenSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
-    color: cores.branco70,
-    marginTop: 2,
+    fontSize: 10,
+    color: cores.branco,
+    marginTop: 1,
   },
+
   headerIconsRow: {
     flexDirection: "row",
     alignItems: "center",
+    marginLeft: 10,
   },
+
   headerIconButton: {
+    position: "relative",
     marginLeft: 16,
   },
+
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: 24,
+    height: 24,
   },
+
   notificationBadge: {
     position: "absolute",
-    top: -5,
-    right: -6,
-    backgroundColor: cores.vermelho,
+    top: -6,
+    right: -7,
+    minWidth: 15,
+    height: 15,
+    paddingHorizontal: 3,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 3,
+    backgroundColor: cores.vermelho,
   },
+
   notificationBadgeText: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 9,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
+  /* CARD DE INFORMAÇÕES */
+
+  infoCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    width: "88%",
+    minHeight: 130,
+    marginTop: 3,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    backgroundColor: cores.branco,
+  },
+
+  campeonatoLogo: {
+    width: 62,
+    height: 82,
+    marginRight: 12,
+  },
+
+  infoContent: {
+    flex: 1,
+    minWidth: 0,
+  },
+
+  infoHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  statusPill: {
+    alignSelf: "flex-end",
+    paddingHorizontal: 9,
+    height: 20,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: cores.verdeclaro,
+  },
+
+  statusPillText: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 9,
+    color: cores.verde,
+  },
+
+  infoRows: {
+    marginTop: 1,
+  },
+
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 3,
+  },
+
+  infoLabel: {
+    width: 76,
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 8.5,
+    color: cores.cinza,
+  },
+
+  infoValue: {
+    flex: 1,
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 9,
+    color: cores.preto,
+  },
+
+  /* SEÇÕES */
+
+  section: {
+    marginHorizontal: 34,
+    marginTop: 25,
+  },
+
+  sectionTitle: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 11,
+    fontWeight: "700",
+    color: cores.branco,
+    marginBottom: 9,
+  },
+
+  /* PROGRESSO */
+
+  progressHeader: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    marginBottom: 7,
+  },
+
+  progressRoundCol: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  progressLabel: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 10,
     fontWeight: "700",
     color: cores.branco,
   },
 
-  infoCard: {
-    backgroundColor: cores.branco,
-    borderRadius: 18,
-    marginHorizontal: 20,
-    marginTop: 20,
-    padding: 16,
-  },
-  infoCardTopRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-  },
-  infoCardLeftGroup: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  crestImage: {
-    width: 70,
-    height: 70,
-    marginRight: 14,
-  },
-  detailsCol: {
-    flex: 1,
-    minWidth: 0,
-  },
-  detailRow: {
-    marginBottom: 8,
-  },
-  detailLabel: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
-    color: cores.preto,
-  },
-  detailValue: {
+  progressValue: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
-    // fontWeight: "600",
-    color: cores.cinza,
-    marginTop: 2,
-  },
-  statusPill: {
-    flexShrink: 0,
-    marginLeft: 8,
-    backgroundColor: cores.verdeclaro,
-    borderRadius: 14,
-    paddingHorizontal: 10,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  statusPillText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11,
-    fontWeight: "700",
-    color: cores.verde,
+    fontSize: 10,
+    color: cores.branco70,
+    marginLeft: 28,
   },
 
-  sectionTitle: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
-    fontWeight: "700",
-    color: cores.branco,
-  },
-
-  progressSection: {
-    paddingHorizontal: 20,
-    marginTop: 26,
-  },
-  progressLabelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 12,
-    marginBottom: 8,
-  },
-  progressLabelMuted: {
+  progressPercent: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: 10,
     color: cores.branco70,
   },
-  progressLabelValue: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
-    fontWeight: "700",
-    color: cores.branco,
-  },
-  progressPercentText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
-    fontWeight: "700",
-    color: cores.branco,
-  },
+
   progressTrack: {
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "rgba(255,255,255,0.25)",
+    width: "100%",
+    height: 9,
+    borderRadius: 5,
+    overflow: "hidden",
+    backgroundColor: cores.branco,
   },
+
   progressFill: {
-    height: 6,
-    borderRadius: 3,
+    height: "100%",
+    borderRadius: 5,
     backgroundColor: cores.vermelho,
   },
+
   nextPhaseText: {
-    marginTop: 10,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12.5,
+    fontSize: 8.5,
     color: cores.branco70,
+    marginTop: 9,
   },
+
   nextPhaseValue: {
     fontFamily: fontes.OpenSans_Bold,
     fontWeight: "700",
     color: cores.branco,
   },
 
-  statsSection: {
-    paddingHorizontal: 20,
-    marginTop: 26,
-  },
+  /* ESTATÍSTICAS */
+
   statsGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginTop: 12,
-    columnGap: 10,
-    rowGap: 10,
-  },
-  statTile: {
-    width: "23%",
-    backgroundColor: "rgba(255,255,255,0.06)",
-    borderRadius: 12,
-    paddingVertical: scale(14, 0.6),
-    alignItems: "center",
-  },
-  statValue: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(18, 0.6),
-    fontWeight: "800",
-    color: cores.branco,
-  },
-  statLabel: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: scale(10.5, 0.6),
-    color: cores.branco70,
-    marginTop: 4,
-    textAlign: "center",
+    justifyContent: "space-between",
+    rowGap: 5,
   },
 
-  matchCard: {
-    backgroundColor: cores.branco,
-    borderRadius: 18,
-    marginHorizontal: 20,
-    marginTop: 26,
-    padding: 18,
+  statCard: {
+    width: "23.5%",
+    minHeight: 39,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.14)",
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 3,
   },
+
+  statValue: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 13,
+    fontWeight: "800",
+    color: cores.branco,
+    lineHeight: 15,
+  },
+
+  statLabel: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 7.5,
+    color: cores.branco70,
+    marginTop: 1,
+  },
+
+  /* PRÓXIMA PARTIDA */
+
+  matchCard: {
+    marginHorizontal: 24,
+    marginTop: 19,
+    paddingHorizontal: 12,
+    paddingTop: 14,
+    paddingBottom: 11,
+    borderRadius: 16,
+    backgroundColor: cores.branco,
+  },
+
   matchCardTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: 11,
     fontWeight: "700",
     color: cores.preto,
-    marginBottom: 18,
+    marginBottom: 12,
   },
-  matchTeamsRow: {
+
+  matchContent: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
   },
-  matchTeamCol: {
-    flex: 1,
+
+  teamCol: {
+    width: 78,
     alignItems: "center",
-  },
-  matchTeamCrest: {
-    width: scale(60, 0.75),
-    height: scale(60, 0.75),
-  },
-  matchTeamName: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(13, 0.75),
-    fontWeight: "700",
-    color: cores.preto,
-    marginTop: 8,
-  },
-  matchCenterCol: {
-    alignItems: "center",
-    paddingHorizontal: 6,
-  },
-  matchDay: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(13, 0.75),
-    fontWeight: "700",
-    color: cores.preto,
-  },
-  matchTime: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(22, 0.7),
-    fontWeight: "800",
-    color: cores.preto,
-    marginTop: 2,
-  },
-  matchLocal: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: scale(11, 0.75),
-    color: cores.cinza,
-    marginTop: 2,
-  },
-  matchBottomRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 18,
-  },
-  matchBottomSide: {
-    flex: 1,
-  },
-  matchBottomSideRight: {
-    flex: 1,
-    alignItems: "flex-end",
-  },
-  matchConfirmedPill: {
-    backgroundColor: cores.verdeclaro,
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    height: 28,
     justifyContent: "center",
   },
-  matchConfirmedText: {
+
+  teamLogo: {
+    width: 48,
+    height: 48,
+  },
+
+  teamName: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12.5,
+    fontSize: 10,
+    fontWeight: "700",
+    color: cores.preto,
+    marginTop: 4,
+  },
+
+  matchCenter: {
+    flex: 1,
+    alignItems: "center",
+  },
+
+  matchDay: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 10,
+    color: cores.preto,
+  },
+
+  matchTime: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 20,
+    fontWeight: "800",
+    color: cores.preto,
+    marginTop: 1,
+  },
+
+  matchLocation: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 8,
+    color: cores.cinza,
+    marginTop: 1,
+  },
+
+  confirmedPill: {
+    height: 20,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: cores.verdeclaro,
+    marginTop: 5,
+  },
+
+  confirmedText: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 8.5,
     fontWeight: "700",
     color: cores.verde,
   },
-  matchVerDetalhesText: {
+
+  matchDetailsButton: {
+    alignSelf: "flex-end",
+    marginTop: -2,
+  },
+
+  matchDetailsText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: 10,
     fontWeight: "700",
     color: cores.vermelho,
   },
 
-  twoColSection: {
+  /* CLASSIFICAÇÃO + RESULTADOS */
+
+  tablesRow: {
     flexDirection: "row",
-    paddingHorizontal: 20,
-    marginTop: 26,
-  },
-  colClassificacao: {
-    flex: 1,
-    paddingRight: 12,
-  },
-  colDivider: {
-    width: 1,
-    backgroundColor: "rgba(255,255,255,0.15)",
-  },
-  colResultados: {
-    flex: 1,
-    paddingLeft: 12,
-  },
-  colHeaderRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  colTitle: {
-    flexShrink: 1,
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(14, 0.65),
-    fontWeight: "700",
-    color: cores.branco,
-  },
-  colLink: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(11, 0.65),
-    fontWeight: "700",
-    color: cores.vermelho,
-    marginLeft: 8,
+    marginHorizontal: 18,
+    marginTop: 20,
   },
 
-  standingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  standingPosition: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(13, 0.65),
-    fontWeight: "700",
-    color: cores.branco,
-    width: 14,
-  },
-  standingBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: "#D9D9D9",
-    marginHorizontal: 8,
-  },
-  standingName: {
+  tableColumn: {
     flex: 1,
     minWidth: 0,
+    paddingRight: 10,
+  },
+
+  tableColumnRight: {
+    borderLeftWidth: 1,
+    borderLeftColor: "rgba(255,255,255,0.20)",
+    paddingLeft: 10,
+  },
+
+  tableHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.22)",
+    paddingBottom: 5,
+  },
+
+  tableTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(12.5, 0.65),
+    fontSize: 9,
     fontWeight: "700",
     color: cores.branco,
   },
-  standingPoints: {
+
+  tableLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(13, 0.65),
+    fontSize: 7.5,
+    color: cores.vermelho,
+  },
+
+  tableRows: {
+    paddingTop: 4,
+  },
+
+  classificationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: 25,
+  },
+
+  position: {
+    width: 11,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 8.5,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
+  teamDot: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: "#D9D9D9",
+    marginRight: 5,
+  },
+
+  classificationTeam: {
+    flex: 1,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 8.5,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
+  points: {
+    width: 20,
+    textAlign: "right",
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 8.5,
     fontWeight: "700",
     color: cores.branco,
   },
 
   resultRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 14,
+    minHeight: 25,
+    width: "100%",
   },
-  resultScoreText: {
-    flex: 1,
-    minWidth: 0,
+
+  resultTeams: {
+    flexShrink: 1,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(11, 0.6),
+    fontSize: 7.5,
     fontWeight: "700",
     color: cores.branco,
-    marginRight: 6,
   },
-  resultPill: {
+
+  resultScore: {
     flexShrink: 0,
-    borderWidth: 1.5,
-    borderRadius: 14,
-    paddingHorizontal: 8,
-    height: 24,
-    justifyContent: "center",
-  },
-  resultPillText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(10, 0.6),
+    fontSize: 7.5,
     fontWeight: "700",
+    color: cores.branco,
+    marginHorizontal: 4,
   },
-  resultPillVitoria: {
+
+  resultWin: {
+    marginLeft: "auto",
+    flexShrink: 0,
+    borderWidth: 1,
     borderColor: cores.verde,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    height: 17,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  resultPillEmpate: {
-    borderColor: "rgba(255,255,255,0.4)",
+
+  resultWinText: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 7,
+    color: cores.verde,
   },
-  resultPillDerrota: {
+
+  resultDraw: {
+    marginLeft: "auto",
+    flexShrink: 0,
+    borderWidth: 1,
+    borderColor: cores.cinza,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    height: 17,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  resultDrawText: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 7,
+    color: cores.branco70,
+  },
+
+  resultLoss: {
+    marginLeft: "auto",
+    flexShrink: 0,
+    borderWidth: 1,
     borderColor: cores.laranja,
+    borderRadius: 10,
+    paddingHorizontal: 6,
+    height: 17,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
-  sectionDivider: {
-    height: 1,
-    backgroundColor: "rgba(255,255,255,0.15)",
-    marginHorizontal: 20,
-    marginTop: 6,
-  },
-
-  proximasSection: {
-    paddingHorizontal: 20,
-    marginTop: 20,
-  },
-  proximasHeaderRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  proximasHeaderDivider: {
-    height: 1,
-    backgroundColor: "rgba(255,255,255,0.15)",
-    marginBottom: 14,
-  },
-  proximasTitle: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
-    fontWeight: "700",
-    color: cores.branco,
-  },
-  proximasLink: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
-    fontWeight: "700",
-    color: cores.vermelho,
-  },
-  proximaRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  proximaData: {
-    flexShrink: 0,
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(12.5, 0.7),
-    fontWeight: "700",
-    color: cores.branco,
-  },
-  proximaDataDia: {
+  resultLossText: {
     fontFamily: fontes.OpenSans_Regular,
+    fontSize: 7,
+    color: cores.laranja,
+  },
+
+  /* PRÓXIMAS PARTIDAS */
+
+  upcomingSection: {
+    marginHorizontal: 24,
+    marginTop: 18,
+  },
+
+  upcomingHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.18)",
+  },
+
+  upcomingHeaderText: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 7.5,
     color: cores.branco70,
   },
-  proximaTeams: {
+
+  upcomingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    minHeight: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.12)",
+  },
+
+  upcomingDate: {
+    width: 31,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 8,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
+  upcomingGame: {
     flex: 1,
-    minWidth: 0,
-    marginHorizontal: 10,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(12.5, 0.7),
+    fontSize: 8,
     fontWeight: "700",
     color: cores.branco,
+    marginLeft: 5,
   },
-  proximaTeamsVs: {
-    fontFamily: fontes.OpenSans_Regular,
-    color: cores.branco70,
-  },
-  proximaHora: {
-    flexShrink: 0,
+
+  upcomingTime: {
+    width: 38,
+    textAlign: "right",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: scale(12.5, 0.7),
+    fontSize: 8,
     fontWeight: "700",
     color: cores.branco,
   },

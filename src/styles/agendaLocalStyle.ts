@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { fontes, cores } from "./variaveis";
 
-const AgendaLocalStyle = StyleSheet.create({
+const agendaLocalStyle = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -239,4 +239,4 @@ const AgendaLocalStyle = StyleSheet.create({
   },
 });
 
-export default AgendaLocalStyle;
+export default agendaLocalStyle;
