@@ -9,7 +9,7 @@ import {
   View
 } from "react-native";
 
-import AgendaLocalStyle from "@/styles/AgendaLocalStyle";
+import agendaLocalStyle from "@/styles/agendaLocalStyle";
 import { cores } from "@/styles/variaveis";
 import fundoStyle from "@/styles/fundoStyle";
 import menuInferiorStyle from "@/styles/menuInferiorStyle";
@@ -81,52 +81,52 @@ export default function AgendaLocal() {
 
       <View style={fundoStyle.backgroundOverlay} />
 
-      <View style={AgendaLocalStyle.container}>
+      <View style={agendaLocalStyle.container}>
         <ScrollView
-          style={AgendaLocalStyle.scrollView}
-          contentContainerStyle={AgendaLocalStyle.scrollContent}
+          style={agendaLocalStyle.scrollView}
+          contentContainerStyle={agendaLocalStyle.scrollContent}
           showsVerticalScrollIndicator={false}
         >
           {/* HEADER */}
-          <View style={AgendaLocalStyle.header}>
+          <View style={agendaLocalStyle.header}>
             <Pressable
-              style={AgendaLocalStyle.backButton}
+              style={agendaLocalStyle.backButton}
               onPress={() => router.back()}
             >
-              <Text style={AgendaLocalStyle.backIcon}>‹</Text>
+              <Text style={agendaLocalStyle.backIcon}>‹</Text>
 
-              <Text style={AgendaLocalStyle.backText}>Voltar</Text>
+              <Text style={agendaLocalStyle.backText}>Voltar</Text>
             </Pressable>
 
-            <Text style={AgendaLocalStyle.headerTitle}>Local</Text>
+            <Text style={agendaLocalStyle.headerTitle}>Local</Text>
 
-            <View style={AgendaLocalStyle.headerIcons}>
-              <Pressable style={AgendaLocalStyle.headerIconButton}>
+            <View style={agendaLocalStyle.headerIcons}>
+              <Pressable style={agendaLocalStyle.headerIconButton}>
                 <Image
                   source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={AgendaLocalStyle.headerIcon}
+                  style={agendaLocalStyle.headerIcon}
                   contentFit="contain"
                   tintColor={cores.branco}
                 />
               </Pressable>
 
-              <Pressable style={AgendaLocalStyle.headerIconButton}>
+              <Pressable style={agendaLocalStyle.headerIconButton}>
                 <Image
                   source={require("@/assets/images/img/sinoBranco.png")}
-                  style={AgendaLocalStyle.headerIcon}
+                  style={agendaLocalStyle.headerIcon}
                   contentFit="contain"
                   tintColor={cores.branco}
                 />
 
-                <View style={AgendaLocalStyle.notificationBadge}>
-                  <Text style={AgendaLocalStyle.notificationText}>2</Text>
+                <View style={agendaLocalStyle.notificationBadge}>
+                  <Text style={agendaLocalStyle.notificationText}>2</Text>
                 </View>
               </Pressable>
             </View>
           </View>
 
           {/* MAPA */}
-          <View style={AgendaLocalStyle.mapContainer}>
+          <View style={agendaLocalStyle.mapContainer}>
             <iframe
               src="https://www.google.com/maps?q=Senac+São+Miguel+Paulista,+Av.+Marechal+Tito,+1500,+São+Paulo+-+SP,+08010-090&output=embed"
               style={{
@@ -141,110 +141,110 @@ export default function AgendaLocal() {
           </View>
 
           {/* INFORMAÇÕES DO LOCAL */}
-          <View style={AgendaLocalStyle.locationCard}>
-            <Text style={AgendaLocalStyle.locationTitle}>Campo principal</Text>
+          <View style={agendaLocalStyle.locationCard}>
+            <Text style={agendaLocalStyle.locationTitle}>Campo principal</Text>
 
-            <Text style={AgendaLocalStyle.locationSubtitle}>
+            <Text style={agendaLocalStyle.locationSubtitle}>
               Centro de formação AACJ
             </Text>
 
-            <View style={AgendaLocalStyle.addressRow}>
+            <View style={agendaLocalStyle.addressRow}>
               <Image
                 source={require("@/assets/images/img/localizaçãocinza.png")}
-                style={AgendaLocalStyle.locationIcon}
+                style={agendaLocalStyle.locationIcon}
                 contentFit="contain"
                 tintColor={cores.cinza}
               />
 
-              <Text style={AgendaLocalStyle.addressText}>{endereco}</Text>
+              <Text style={agendaLocalStyle.addressText}>{endereco}</Text>
             </View>
           </View>
 
           {/* AÇÕES */}
-          <View style={AgendaLocalStyle.actionsSection}>
-            <Text style={AgendaLocalStyle.sectionTitle}>Ações</Text>
+          <View style={agendaLocalStyle.actionsSection}>
+            <Text style={agendaLocalStyle.sectionTitle}>Ações</Text>
 
-            <View style={AgendaLocalStyle.actionsCard}>
+            <View style={agendaLocalStyle.actionsCard}>
               {/* ABRIR NO MAPA */}
-              <Pressable style={AgendaLocalStyle.actionRow} onPress={abrirMapa}>
-                <View style={AgendaLocalStyle.actionIconContainer}>
+              <Pressable style={agendaLocalStyle.actionRow} onPress={abrirMapa}>
+                <View style={agendaLocalStyle.actionIconContainer}>
                   <Image
                     source={require("@/assets/images/img/localizaçãovermelho.png")}
-                    style={AgendaLocalStyle.actionIcon}
+                    style={agendaLocalStyle.actionIcon}
                     contentFit="contain"
                     tintColor={cores.vermelho}
                   />
                 </View>
 
-                <View style={AgendaLocalStyle.actionContent}>
-                  <Text style={AgendaLocalStyle.actionTitle}>
+                <View style={agendaLocalStyle.actionContent}>
+                  <Text style={agendaLocalStyle.actionTitle}>
                     Abrir no mapa
                   </Text>
 
-                  <Text style={AgendaLocalStyle.actionDescription}>
+                  <Text style={agendaLocalStyle.actionDescription}>
                     Ver rota e localização
                   </Text>
                 </View>
 
-                <Text style={AgendaLocalStyle.actionArrow}>›</Text>
+                <Text style={agendaLocalStyle.actionArrow}>›</Text>
               </Pressable>
 
-              <View style={AgendaLocalStyle.actionDivider} />
+              <View style={agendaLocalStyle.actionDivider} />
 
               {/* COPIAR ENDEREÇO */}
               <Pressable
-                style={AgendaLocalStyle.actionRow}
+                style={agendaLocalStyle.actionRow}
                 onPress={copiarEndereco}
               >
-                <View style={AgendaLocalStyle.actionIconContainer}>
+                <View style={agendaLocalStyle.actionIconContainer}>
                   <Image
-                    style={AgendaLocalStyle.copyIcon}
+                    style={agendaLocalStyle.copyIcon}
                     source={require("@/assets/images/img/copy.png")}
                     contentFit="contain"
                     tintColor={cores.vermelho}
                   />
                 </View>
 
-                <View style={AgendaLocalStyle.actionContent}>
-                  <Text style={AgendaLocalStyle.actionTitle}>
+                <View style={agendaLocalStyle.actionContent}>
+                  <Text style={agendaLocalStyle.actionTitle}>
                     {copiado ? "Endereço copiado!" : "Copiar endereço"}
                   </Text>
 
-                  <Text style={AgendaLocalStyle.actionDescription}>
+                  <Text style={agendaLocalStyle.actionDescription}>
                     Copiar endereço para a área de transferência
                   </Text>
                 </View>
 
-                <Text style={AgendaLocalStyle.actionArrow}>›</Text>
+                <Text style={agendaLocalStyle.actionArrow}>›</Text>
               </Pressable>
 
-              <View style={AgendaLocalStyle.actionDivider} />
+              <View style={agendaLocalStyle.actionDivider} />
 
               {/* COMPARTILHAR */}
               <Pressable
-                style={AgendaLocalStyle.actionRow}
+                style={agendaLocalStyle.actionRow}
                 onPress={compartilharLocalizacao}
               >
-                <View style={AgendaLocalStyle.actionIconContainer}>
+                <View style={agendaLocalStyle.actionIconContainer}>
                   <Image
-                    style={AgendaLocalStyle.shareIcon}
+                    style={agendaLocalStyle.shareIcon}
                     source={require("@/assets/images/img/compartilharVermelho.png")}
                     contentFit="contain"
                     tintColor={cores.vermelho}
                   />
                 </View>
 
-                <View style={AgendaLocalStyle.actionContent}>
-                  <Text style={AgendaLocalStyle.actionTitle}>
+                <View style={agendaLocalStyle.actionContent}>
+                  <Text style={agendaLocalStyle.actionTitle}>
                     Compartilhar localização
                   </Text>
 
-                  <Text style={AgendaLocalStyle.actionDescription}>
+                  <Text style={agendaLocalStyle.actionDescription}>
                     Enviar local para outra pessoa
                   </Text>
                 </View>
 
-                <Text style={AgendaLocalStyle.actionArrow}>›</Text>
+                <Text style={agendaLocalStyle.actionArrow}>›</Text>
               </Pressable>
             </View>
           </View>

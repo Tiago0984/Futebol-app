@@ -308,7 +308,7 @@ export default function DetalheProximaPartida() {
               >
                 <View style={detalheProximaPartidaStyle.quickActionTopRow}>
                   <Image
-                    source={require("@/assets/images/img/compartilharvermelho.png")}
+                    source={require("@/assets/images/img/compartilharVermelho.png")}
                     style={detalheProximaPartidaStyle.quickActionIcon}
                     resizeMode="contain"
                   />

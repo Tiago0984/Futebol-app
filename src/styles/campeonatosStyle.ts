@@ -151,6 +151,7 @@ const campeonatosStyle = StyleSheet.create({
   },
 
   card: {
+    position: "relative",
     alignSelf: "center",
     marginTop: 20,
     borderRadius: 20,
@@ -159,15 +160,13 @@ const campeonatosStyle = StyleSheet.create({
   },
   cardBanner: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
+    top: -1,
+    left: -1,
   },
   cardBannerOverlay: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
+    top: -1,
+    left: -1,
     backgroundColor: "rgba(0,0,0,0.3)",
   },
   cardContent: {
