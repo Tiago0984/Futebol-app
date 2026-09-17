@@ -1,19 +1,18 @@
+import { Image } from "expo-image";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
   Linking,
   Pressable,
   ScrollView,
-  Share,
   Text,
-  View,
+  View
 } from "react-native";
-import { Image } from "expo-image";
-import { router } from "expo-router";
 
+import AgendaLocalStyle from "@/styles/AgendaLocalStyle";
+import { cores } from "@/styles/variaveis";
 import fundoStyle from "@/styles/fundoStyle";
 import menuInferiorStyle from "@/styles/menuInferiorStyle";
-import AgendaLocalStyle from "@/styles/agendaLocalStyle";
-import { cores } from "@/styles/variaveis";
 
 export default function AgendaLocal() {
   const [copiado, setCopiado] = useState(false);
@@ -143,9 +142,7 @@ export default function AgendaLocal() {
 
           {/* INFORMAÇÕES DO LOCAL */}
           <View style={AgendaLocalStyle.locationCard}>
-            <Text style={AgendaLocalStyle.locationTitle}>
-              Campo principal
-            </Text>
+            <Text style={AgendaLocalStyle.locationTitle}>Campo principal</Text>
 
             <Text style={AgendaLocalStyle.locationSubtitle}>
               Centro de formação AACJ
@@ -169,10 +166,7 @@ export default function AgendaLocal() {
 
             <View style={AgendaLocalStyle.actionsCard}>
               {/* ABRIR NO MAPA */}
-              <Pressable
-                style={AgendaLocalStyle.actionRow}
-                onPress={abrirMapa}
-              >
+              <Pressable style={AgendaLocalStyle.actionRow} onPress={abrirMapa}>
                 <View style={AgendaLocalStyle.actionIconContainer}>
                   <Image
                     source={require("@/assets/images/img/localizaçãovermelho.png")}
@@ -203,7 +197,8 @@ export default function AgendaLocal() {
                 onPress={copiarEndereco}
               >
                 <View style={AgendaLocalStyle.actionIconContainer}>
-                  <Image style={AgendaLocalStyle.copyIcon}
+                  <Image
+                    style={AgendaLocalStyle.copyIcon}
                     source={require("@/assets/images/img/copy.png")}
                     contentFit="contain"
                     tintColor={cores.vermelho}
@@ -231,8 +226,9 @@ export default function AgendaLocal() {
                 onPress={compartilharLocalizacao}
               >
                 <View style={AgendaLocalStyle.actionIconContainer}>
-                  <Image style={AgendaLocalStyle.shareIcon}
-                    source={require("@/assets/images/img/compartilharvermelho.png")}
+                  <Image
+                    style={AgendaLocalStyle.shareIcon}
+                    source={require("@/assets/images/img/compartilharVermelho.png")}
                     contentFit="contain"
                     tintColor={cores.vermelho}
                   />
