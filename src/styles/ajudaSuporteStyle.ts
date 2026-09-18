@@ -131,10 +131,14 @@ const ajudaSuporteStyle = StyleSheet.create({
     transform: [{ rotate: "45deg" }],
   },
 
-  searchPlaceholder: {
+  searchInput: {
+    flex: 1,
+    height: "100%",
+    paddingVertical: 0,
     fontFamily: fontes.OpenSans_Regular,
     fontSize: 11,
-    color: cores.cinza,
+    color: cores.preto,
+    ...({ outlineStyle: "none" } as any),
   },
 
   /* CATEGORIAS */
