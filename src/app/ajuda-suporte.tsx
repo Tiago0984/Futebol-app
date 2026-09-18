@@ -372,7 +372,7 @@ export default function AjudaSuporte() {
               Entre em contato com a equipe da AACJ.
             </Text>
 
-            <Pressable>
+            <Pressable onPress={() => router.navigate("/fale-conosco")}>
               <Text style={ajudaSuporteStyle.contactLink}>
                 Entrar em contato {">"}
               </Text>

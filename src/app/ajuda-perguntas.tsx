@@ -1,8 +1,7 @@
+import TabBar from "@/components/tabBar";
 import ajudaPerguntasStyle from "@/styles/ajudaPerguntasStyle";
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle, {
-  TAB_BAR_BASE_PADDING_BOTTOM,
-} from "@/styles/menuInferiorStyle";
+import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import { router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
@@ -424,123 +423,8 @@ export default function AjudaPerguntas() {
         </View>
       </ScrollView>
 
-      {/* MENU INFERIOR */}
-      <View
-        style={[
-          menuInferiorStyle.tabBar,
-          {
-            paddingBottom:
-              TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom,
-          },
-        ]}
-      >
-        {/* HOME */}
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/home")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-
-          <Image
-            source={require("@/assets/images/img/homeBranca.png")}
-            style={menuInferiorStyle.tabIcon}
-            tintColor={cores.branco}
-            resizeMode="contain"
-          />
-
-          <Text style={menuInferiorStyle.tabLabel}>
-            Home
-          </Text>
-        </Pressable>
-
-        {/* AGENDA */}
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/agenda")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-
-          <Image
-            source={require(
-              "@/assets/images/img/agendaBranca.png",
-            )}
-            style={menuInferiorStyle.tabIcon}
-            tintColor={cores.branco}
-            resizeMode="contain"
-          />
-
-          <Text style={menuInferiorStyle.tabLabel}>
-            Agenda
-          </Text>
-        </Pressable>
-
-        {/* CAMPEONATOS */}
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/campeonatos")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-
-          <Image
-            source={require(
-              "@/assets/images/img/campeonatosbranco.png",
-            )}
-            style={menuInferiorStyle.tabIcon}
-            tintColor={cores.branco}
-            resizeMode="contain"
-          />
-
-          <Text style={menuInferiorStyle.tabLabel}>
-            Campeonatos
-          </Text>
-        </Pressable>
-
-        {/* DESEMPENHO */}
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/desempenho")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-
-          <Image
-            source={require(
-              "@/assets/images/img/desempenhoBranco.png",
-            )}
-            style={menuInferiorStyle.tabIcon}
-            tintColor={cores.branco}
-            resizeMode="contain"
-          />
-
-          <Text style={menuInferiorStyle.tabLabel}>
-            Desempenho
-          </Text>
-        </Pressable>
-
-        {/* USUÁRIO */}
-        <View style={menuInferiorStyle.tabItem}>
-          <View
-            style={[
-              menuInferiorStyle.tabIndicator,
-              menuInferiorStyle.tabIndicatorActive,
-            ]}
-          />
-
-          <Image
-            source={require(
-              "@/assets/images/img/perfilbranco.png",
-            )}
-            style={menuInferiorStyle.tabIcon}
-            tintColor={cores.vermelho}
-            resizeMode="contain"
-          />
-
-          <Text
-            style={menuInferiorStyle.tabLabelActive}
-          >
-            Usuário
-          </Text>
-        </View>
-      </View>
+      {/* TabBar unificada */}
+      <TabBar abaAtiva="perfil" />
     </View>
   );
 }
