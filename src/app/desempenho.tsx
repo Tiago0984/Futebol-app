@@ -3,6 +3,7 @@ import desempenhoStyle from "@/styles/desempenhoStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
   Image,
@@ -197,7 +198,7 @@ export default function Desempenho() {
           <View style={desempenhoStyle.generalIndicators}>
             <View style={desempenhoStyle.generalIndicator}>
               <Image
-                source={require("@/assets/images/img/userPreto.png")}
+                source={require("@/assets/images/img/userVerdeClaro.png")}
                 style={desempenhoStyle.generalIndicatorIcon}
                 tintColor={cores.verde}
                 resizeMode="contain"
@@ -216,7 +217,7 @@ export default function Desempenho() {
 
             <View style={desempenhoStyle.generalIndicator}>
               <Image
-                source={require("@/assets/images/img/raiovermelho.png")}
+                source={require("@/assets/images/img/pesovermelho.png")}
                 style={desempenhoStyle.generalIndicatorIcon}
                 tintColor={cores.vermelho}
                 resizeMode="contain"
@@ -253,7 +254,7 @@ export default function Desempenho() {
 
             <View style={desempenhoStyle.generalIndicator}>
               <Image
-                source={require("@/assets/images/img/checkvermelho.png")}
+                source={require("@/assets/images/img/pranchetaVermelha.png")}
                 style={desempenhoStyle.generalIndicatorIcon}
                 resizeMode="contain"
               />
@@ -270,7 +271,7 @@ export default function Desempenho() {
 
           <View style={desempenhoStyle.generalBottomDivider} />
 
-          <Pressable>
+          <Pressable onPress={() => router.navigate("/evolucao")}>
             <Text style={desempenhoStyle.generalLink}>
               Ver evolução {">"}
             </Text>
@@ -287,7 +288,7 @@ export default function Desempenho() {
             <View style={desempenhoStyle.indicatorItem}>
               <View style={desempenhoStyle.indicatorIconCircle}>
                 <Image
-                  source={require("@/assets/images/img/userPreto.png")}
+                  source={require("@/assets/images/img/userVerdeClaro.png")}
                   style={desempenhoStyle.indicatorIcon}
                   tintColor={cores.verde}
                   resizeMode="contain"
@@ -304,7 +305,7 @@ export default function Desempenho() {
                 </Text>
               </View>
 
-              <Text style={desempenhoStyle.indicatorArrow}>
+              <Text style={desempenhoStyle.indicatorArrow} onPress={() => router.navigate("/indicadores")}>
                 {">"}
               </Text>
             </View>
@@ -329,7 +330,7 @@ export default function Desempenho() {
                 </Text>
               </View>
 
-              <Text style={desempenhoStyle.indicatorArrow}>
+              <Text style={desempenhoStyle.indicatorArrow} onPress={() => router.navigate("/indicadores")}>
                 {">"}
               </Text>
             </View>
@@ -337,7 +338,7 @@ export default function Desempenho() {
             <View style={desempenhoStyle.indicatorItem}>
               <View style={desempenhoStyle.indicatorIconCircle}>
                 <Image
-                  source={require("@/assets/images/img/alvovermelho.png")}
+                  source={require("@/assets/images/img/desempenhoVerde.png")}
                   style={desempenhoStyle.indicatorIcon}
                   tintColor={cores.verde}
                   resizeMode="contain"
@@ -354,7 +355,7 @@ export default function Desempenho() {
                 </Text>
               </View>
 
-              <Text style={desempenhoStyle.indicatorArrow}>
+              <Text style={desempenhoStyle.indicatorArrow} onPress={() => router.navigate("/indicadores")}>
                 {">"}
               </Text>
             </View>
@@ -362,7 +363,7 @@ export default function Desempenho() {
             <View style={desempenhoStyle.indicatorItem}>
               <View style={desempenhoStyle.indicatorIconCircle}>
                 <Image
-                  source={require("@/assets/images/img/checkvermelho.png")}
+                  source={require("@/assets/images/img/disciplinaVerdeClaro.png")}
                   style={desempenhoStyle.indicatorIcon}
                   tintColor={cores.verde}
                   resizeMode="contain"
@@ -379,7 +380,7 @@ export default function Desempenho() {
                 </Text>
               </View>
 
-              <Text style={desempenhoStyle.indicatorArrow}>
+              <Text style={desempenhoStyle.indicatorArrow} onPress={() => router.navigate("/indicadores")}>
                 {">"}
               </Text>
             </View>
@@ -432,7 +433,7 @@ export default function Desempenho() {
               </View>
             </View>
 
-            <Pressable style={desempenhoStyle.goalLinkButton}>
+            <Pressable style={desempenhoStyle.goalLinkButton} onPress={() => router.navigate("/metas")}>
               <Text style={desempenhoStyle.goalLink}>
                 Ver metas {">"}
               </Text>
@@ -448,7 +449,7 @@ export default function Desempenho() {
 
           <View style={desempenhoStyle.evaluationContent}>
             <Image
-              source={require("@/assets/images/img/checkvermelho.png")}
+              source={require("@/assets/images/img/pranchetaVermelha.png")}
               style={desempenhoStyle.evaluationIcon}
               resizeMode="contain"
             />
@@ -473,7 +474,7 @@ export default function Desempenho() {
               </Text>
             </View>
 
-            <Pressable style={desempenhoStyle.evaluationLinkButton}>
+            <Pressable style={desempenhoStyle.evaluationLinkButton} onPress={() => router.navigate("/historico-avaliacao")}>
               <Text style={desempenhoStyle.evaluationLink}>
                 Ver detalhes {">"}
               </Text>
@@ -488,7 +489,7 @@ export default function Desempenho() {
           </Text>
 
           <View style={desempenhoStyle.achievementsRow}>
-            <View style={desempenhoStyle.achievementPill}>
+            <Pressable style={desempenhoStyle.achievementPill} onPress={() => router.navigate("/conquistas")}>
               <Image
                 source={require("@/assets/images/img/medalhadourada.png")}
                 style={desempenhoStyle.achievementIcon}
@@ -498,9 +499,9 @@ export default function Desempenho() {
               <Text style={desempenhoStyle.achievementText}>
                 100% Presença
               </Text>
-            </View>
+            </Pressable>
 
-            <View style={desempenhoStyle.achievementPill}>
+            <Pressable style={desempenhoStyle.achievementPill} onPress={() => router.navigate("/conquistas")}>
               <Image
                 source={require("@/assets/images/img/trofeu.png")}
                 style={desempenhoStyle.achievementIcon}
@@ -510,9 +511,9 @@ export default function Desempenho() {
               <Text style={desempenhoStyle.achievementText}>
                 10 Jogos
               </Text>
-            </View>
+            </Pressable>
 
-            <View style={desempenhoStyle.achievementPill}>
+            <Pressable style={desempenhoStyle.achievementPill} onPress={() => router.navigate("/conquistas")}>
               <Image
                 source={require("@/assets/images/img/medalhadourada.png")}
                 style={desempenhoStyle.achievementIcon}
@@ -522,7 +523,7 @@ export default function Desempenho() {
               <Text style={desempenhoStyle.achievementText}>
                 Primeira Convocação
               </Text>
-            </View>
+            </Pressable>
           </View>
         </View>
 
@@ -533,7 +534,7 @@ export default function Desempenho() {
               Observação da Comissão
             </Text>
 
-            <Pressable>
+            <Pressable onPress={() => router.navigate("/observacao")}>
               <Text style={desempenhoStyle.observationLink}>
                 Ver histórico {">"}
               </Text>
