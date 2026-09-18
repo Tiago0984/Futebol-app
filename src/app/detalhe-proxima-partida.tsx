@@ -28,7 +28,10 @@ export default function DetalheProximaPartida() {
               <Text style={detalheProximaPartidaStyle.backChevron}>‹</Text>
               <Text style={detalheProximaPartidaStyle.backText}>Voltar</Text>
             </Pressable>
-            <View style={detalheProximaPartidaStyle.headerTitleCol}>
+            <View
+              style={detalheProximaPartidaStyle.headerTitleCol}
+              pointerEvents="none"
+            >
               <Text style={detalheProximaPartidaStyle.headerTitle} numberOfLines={1}>
                 Próxima partida
               </Text>

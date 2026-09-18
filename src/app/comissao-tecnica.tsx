@@ -34,7 +34,7 @@ export default function ComissaoTecnica() {
               <Text style={comissaoTecnicaStyle.backChevron}>‹</Text>
               <Text style={comissaoTecnicaStyle.backText}>Voltar</Text>
             </Pressable>
-            <Text style={comissaoTecnicaStyle.headerTitle}>
+            <Text style={comissaoTecnicaStyle.headerTitle} pointerEvents="none">
               Comissão Técnica
             </Text>
             <View style={comissaoTecnicaStyle.headerIconsRow}>

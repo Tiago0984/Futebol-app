@@ -98,7 +98,9 @@ export default function AgendaLocal() {
               <Text style={agendaLocalStyle.backText}>Voltar</Text>
             </Pressable>
 
-            <Text style={agendaLocalStyle.headerTitle}>Local</Text>
+            <Text style={agendaLocalStyle.headerTitle} pointerEvents="none">
+              Local
+            </Text>
 
             <View style={agendaLocalStyle.headerIcons}>
               <Pressable style={agendaLocalStyle.headerIconButton}>
