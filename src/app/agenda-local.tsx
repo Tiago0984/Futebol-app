@@ -1,18 +1,12 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  Linking,
-  Pressable,
-  ScrollView,
-  Text,
-  View
-} from "react-native";
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 
 import TabBar from "@/components/tabBar";
 import agendaLocalStyle from "@/styles/agendaLocalStyle";
-import { cores } from "@/styles/variaveis";
 import fundoStyle from "@/styles/fundoStyle";
+import { cores } from "@/styles/variaveis";
 
 export default function AgendaLocal() {
   const [copiado, setCopiado] = useState(false);
@@ -228,7 +222,7 @@ export default function AgendaLocal() {
                 <View style={agendaLocalStyle.actionIconContainer}>
                   <Image
                     style={agendaLocalStyle.shareIcon}
-                    source={require("@/assets/images/img/compartilharvermelho.png")}
+                    source={require("@/assets/images/img/compartilharVermelho.png")}
                     contentFit="contain"
                     tintColor={cores.vermelho}
                   />

@@ -1,13 +1,9 @@
+import TabBar from "@/components/tabBar";
 import historicoAvaliacaoStyle from "@/styles/historicoAvaliacaoStyle";
 import fundoStyle from "@/styles/fundoStyle";
-import menuInferiorStyle, {
-  TAB_BAR_BASE_PADDING_BOTTOM,
-} from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
-import { useEffect, useRef } from "react";
-import { Animated, Image, Pressable, ScrollView, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 const avaliacoes = [
   {
@@ -61,17 +57,6 @@ const avaliacoes = [
 ];
 
 export default function HistoricoAvaliacao() {
-  const indicadorAnim = useRef(new Animated.Value(0)).current;
-  const insets = useSafeAreaInsets();
-
-  useEffect(() => {
-    Animated.timing(indicadorAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }, [indicadorAnim]);
-
   return (
     <View style={fundoStyle.container}>
       <Image
@@ -199,88 +184,8 @@ export default function HistoricoAvaliacao() {
         </View>
       </ScrollView>
 
-      <View
-        style={[
-          menuInferiorStyle.tabBar,
-          { paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom },
-        ]}
-      >
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/home")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/homeBranca.png")}
-            style={menuInferiorStyle.tabIcon}
-            tintColor="#FFFFFF"
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
-            Home
-          </Text>
-        </Pressable>
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/agenda")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/agendaBranca.png")}
-            style={menuInferiorStyle.tabIcon}
-            tintColor="#FFFFFF"
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
-            Agenda
-          </Text>
-        </Pressable>
-        <Pressable
-          style={menuInferiorStyle.tabItem}
-          onPress={() => router.navigate("/campeonatos")}
-        >
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/campeonatosbranco.png")}
-            style={menuInferiorStyle.tabIcon}
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
-            Campeonatos
-          </Text>
-        </Pressable>
-        <View style={menuInferiorStyle.tabItem}>
-          <Animated.View
-            style={[
-              menuInferiorStyle.tabIndicator,
-              menuInferiorStyle.tabIndicatorActive,
-              {
-                opacity: indicadorAnim,
-                transform: [{ scaleX: indicadorAnim }],
-              },
-            ]}
-          />
-          <Image
-            source={require("@/assets/images/img/desempenhoVermelho.png")}
-            style={menuInferiorStyle.tabIcon}
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabelActive} numberOfLines={1}>
-            Desempenho
-          </Text>
-        </View>
-        <View style={menuInferiorStyle.tabItem}>
-          <View style={menuInferiorStyle.tabIndicator} />
-          <Image
-            source={require("@/assets/images/img/perfilbranco.png")}
-            style={menuInferiorStyle.tabIcon}
-            resizeMode="contain"
-          />
-          <Text style={menuInferiorStyle.tabLabel} numberOfLines={1}>
-            Usuário
-          </Text>
-        </View>
-      </View>
+      {/* TabBar unificada */}
+      <TabBar abaAtiva="desempenho" />
     </View>
   );
 }
