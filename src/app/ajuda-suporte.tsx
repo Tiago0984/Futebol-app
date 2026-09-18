@@ -12,6 +12,7 @@ import {
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -54,13 +55,10 @@ export default function AjudaSuporte() {
 
   const [perguntaAberta, setPerguntaAberta] = useState<number | null>(null);
 
-  const animacoes = useRef(
-    perguntas.map(() => new Animated.Value(0))
-  ).current;
+  const animacoes = useRef(perguntas.map(() => new Animated.Value(0))).current;
 
   const alternarPergunta = (index: number) => {
-    const novaPerguntaAberta =
-      perguntaAberta === index ? null : index;
+    const novaPerguntaAberta = perguntaAberta === index ? null : index;
 
     if (perguntaAberta !== null) {
       Animated.parallel([
@@ -102,8 +100,7 @@ export default function AjudaSuporte() {
         contentContainerStyle={[
           ajudaSuporteStyle.scrollContent,
           {
-            paddingBottom:
-              TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom + 24,
+            paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom + 24,
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -114,9 +111,7 @@ export default function AjudaSuporte() {
             style={ajudaSuporteStyle.backButton}
             onPress={() => router.back()}
           >
-            <Text style={ajudaSuporteStyle.backText}>
-              {"<"} Voltar
-            </Text>
+            <Text style={ajudaSuporteStyle.backText}>{"<"} Voltar</Text>
           </Pressable>
 
           <View style={ajudaSuporteStyle.headerRight}>
@@ -128,11 +123,7 @@ export default function AjudaSuporte() {
               />
 
               <View style={ajudaSuporteStyle.notificationBadge}>
-                <Text
-                  style={ajudaSuporteStyle.notificationBadgeText}
-                >
-                  2
-                </Text>
+                <Text style={ajudaSuporteStyle.notificationBadgeText}>2</Text>
               </View>
             </View>
           </View>
@@ -140,9 +131,7 @@ export default function AjudaSuporte() {
 
         {/* TÍTULO */}
         <View style={ajudaSuporteStyle.titleSection}>
-          <Text style={ajudaSuporteStyle.screenTitle}>
-            Ajuda &amp; Suporte
-          </Text>
+          <Text style={ajudaSuporteStyle.screenTitle}>Ajuda &amp; Suporte</Text>
 
           <Text style={ajudaSuporteStyle.screenSubtitle}>
             Estamos aqui para ajudar
@@ -156,9 +145,13 @@ export default function AjudaSuporte() {
             <View style={ajudaSuporteStyle.searchIconHandle} />
           </View>
 
-          <Text style={ajudaSuporteStyle.searchPlaceholder}>
-            Buscar uma dúvida
-          </Text>
+          <TextInput
+            style={ajudaSuporteStyle.searchInput}
+            placeholder="Buscar uma dúvida"
+            placeholderTextColor={cores.cinza}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
         </View>
 
         {/* CATEGORIAS */}
@@ -167,7 +160,17 @@ export default function AjudaSuporte() {
             Como podemos ajudar?
           </Text>
 
-          <Pressable style={ajudaSuporteStyle.categoryRow}>
+          <Pressable
+            style={ajudaSuporteStyle.categoryRow}
+            onPress={() =>
+              router.navigate({
+                pathname: "/ajuda-perguntas",
+                params: {
+                  categoria: "conta",
+                },
+              })
+            }
+          >
             <View style={ajudaSuporteStyle.categoryIconBox}>
               <Image
                 source={require("@/assets/images/img/userPreto.png")}
@@ -182,15 +185,23 @@ export default function AjudaSuporte() {
                 Conta e Perfil
               </Text>
 
-              <Text
-                style={ajudaSuporteStyle.categoryDescription}
-              >
+              <Text style={ajudaSuporteStyle.categoryDescription}>
                 Dados pessoais, acesso e segurança
               </Text>
             </View>
           </Pressable>
 
-          <Pressable style={ajudaSuporteStyle.categoryRow}>
+          <Pressable
+            style={ajudaSuporteStyle.categoryRow}
+            onPress={() =>
+              router.navigate({
+                pathname: "/ajuda-perguntas",
+                params: {
+                  categoria: "campeonatos",
+                },
+              })
+            }
+          >
             <View style={ajudaSuporteStyle.categoryIconBox}>
               <Image
                 source={require("@/assets/images/img/trofeu.png")}
@@ -201,19 +212,25 @@ export default function AjudaSuporte() {
             </View>
 
             <View style={ajudaSuporteStyle.categoryTextCol}>
-              <Text style={ajudaSuporteStyle.categoryTitle}>
-                Campeonatos
-              </Text>
+              <Text style={ajudaSuporteStyle.categoryTitle}>Campeonatos</Text>
 
-              <Text
-                style={ajudaSuporteStyle.categoryDescription}
-              >
+              <Text style={ajudaSuporteStyle.categoryDescription}>
                 Competições, jogos e classificação
               </Text>
             </View>
           </Pressable>
 
-          <Pressable style={ajudaSuporteStyle.categoryRow}>
+          <Pressable
+            style={ajudaSuporteStyle.categoryRow}
+            onPress={() =>
+              router.navigate({
+                pathname: "/ajuda-perguntas",
+                params: {
+                  categoria: "desempenho",
+                },
+              })
+            }
+          >
             <View style={ajudaSuporteStyle.categoryIconBox}>
               <Image
                 source={require("@/assets/images/img/desempenhoBranco.png")}
@@ -224,19 +241,25 @@ export default function AjudaSuporte() {
             </View>
 
             <View style={ajudaSuporteStyle.categoryTextCol}>
-              <Text style={ajudaSuporteStyle.categoryTitle}>
-                Desempenho
-              </Text>
+              <Text style={ajudaSuporteStyle.categoryTitle}>Desempenho</Text>
 
-              <Text
-                style={ajudaSuporteStyle.categoryDescription}
-              >
+              <Text style={ajudaSuporteStyle.categoryDescription}>
                 Avaliações, metas e evolução
               </Text>
             </View>
           </Pressable>
 
-          <Pressable style={ajudaSuporteStyle.categoryRow}>
+          <Pressable
+            style={ajudaSuporteStyle.categoryRow}
+            onPress={() =>
+              router.navigate({
+                pathname: "/ajuda-perguntas",
+                params: {
+                  categoria: "agenda",
+                },
+              })
+            }
+          >
             <View style={ajudaSuporteStyle.categoryIconBox}>
               <Image
                 source={require("@/assets/images/img/agendaBranca.png")}
@@ -247,13 +270,9 @@ export default function AjudaSuporte() {
             </View>
 
             <View style={ajudaSuporteStyle.categoryTextCol}>
-              <Text style={ajudaSuporteStyle.categoryTitle}>
-                Agenda
-              </Text>
+              <Text style={ajudaSuporteStyle.categoryTitle}>Agenda</Text>
 
-              <Text
-                style={ajudaSuporteStyle.categoryDescription}
-              >
+              <Text style={ajudaSuporteStyle.categoryDescription}>
                 Treinos, compromissos e eventos
               </Text>
             </View>
@@ -275,17 +294,15 @@ export default function AjudaSuporte() {
                 outputRange: [0, 70],
               });
 
-              const opacidadeResposta =
-                animacoes[index].interpolate({
-                  inputRange: [0, 0.35, 1],
-                  outputRange: [0, 0, 1],
-                });
+              const opacidadeResposta = animacoes[index].interpolate({
+                inputRange: [0, 0.35, 1],
+                outputRange: [0, 0, 1],
+              });
 
-              const deslocamentoResposta =
-                animacoes[index].interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [-5, 0],
-                });
+              const deslocamentoResposta = animacoes[index].interpolate({
+                inputRange: [0, 1],
+                outputRange: [-5, 0],
+              });
 
               return (
                 <Pressable
@@ -293,9 +310,7 @@ export default function AjudaSuporte() {
                   style={ajudaSuporteStyle.faqItem}
                   onPress={() => alternarPergunta(index)}
                 >
-                  <View
-                    style={ajudaSuporteStyle.faqQuestionRow}
-                  >
+                  <View style={ajudaSuporteStyle.faqQuestionRow}>
                     <Text style={ajudaSuporteStyle.faqQuestion}>
                       {item.pergunta}
                     </Text>
@@ -303,8 +318,7 @@ export default function AjudaSuporte() {
                     <Text
                       style={[
                         ajudaSuporteStyle.faqArrow,
-                        aberta &&
-                          ajudaSuporteStyle.faqArrowOpen,
+                        aberta && ajudaSuporteStyle.faqArrowOpen,
                       ]}
                     >
                       {aberta ? "^" : ">"}
@@ -358,7 +372,7 @@ export default function AjudaSuporte() {
               Entre em contato com a equipe da AACJ.
             </Text>
 
-            <Pressable>
+            <Pressable onPress={() => router.navigate("/fale-conosco")}>
               <Text style={ajudaSuporteStyle.contactLink}>
                 Entrar em contato {">"}
               </Text>
