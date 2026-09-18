@@ -184,7 +184,7 @@ const evolucaoStyle = StyleSheet.create({
   chartCaption: {
     flexShrink: 1,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: 10,
     color: cores.branco70,
     marginLeft: 8,
   },
@@ -273,13 +273,13 @@ const evolucaoStyle = StyleSheet.create({
   },
   fundamentoLabel: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: "700",
     color: cores.branco,
   },
   fundamentoValor: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "800",
     color: cores.branco,
     marginTop: 6,
