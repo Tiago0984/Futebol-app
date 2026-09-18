@@ -263,7 +263,7 @@ export default function Evolucao() {
         </View>
       </ScrollView>
 
-      <TabBar abaAtiva="desempenho" animateActiveIndicator />
+      <TabBar abaAtiva="desempenho" />
     </View>
   );
 }

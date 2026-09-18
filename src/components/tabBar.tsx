@@ -3,15 +3,13 @@ import menuInferiorStyle, {
 } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
-import { useEffect, useRef } from "react";
-import { Animated, Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export type TabName = "home" | "agenda" | "campeonatos" | "desempenho" | "perfil";
 
 interface TabBarProps {
   abaAtiva: TabName;
-  animateActiveIndicator?: boolean;
 }
 
 const ICONES: Record<TabName, number> = {
@@ -30,24 +28,8 @@ const ABAS: { nome: TabName; label: string; rota?: "/home" | "/agenda" | "/campe
   { nome: "perfil", label: "Usuário", rota: "/perfil" },
 ];
 
-export default function TabBar({
-  abaAtiva,
-  animateActiveIndicator = false,
-}: TabBarProps) {
+export default function TabBar({ abaAtiva }: TabBarProps) {
   const insets = useSafeAreaInsets();
-  const indicadorAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (!animateActiveIndicator) {
-      return;
-    }
-
-    Animated.timing(indicadorAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }, [animateActiveIndicator, indicadorAnim]);
 
   return (
     <View
@@ -65,25 +47,12 @@ export default function TabBar({
             style={menuInferiorStyle.tabItem}
             onPress={() => aba.rota && router.navigate(aba.rota)}
           >
-            {ativa && animateActiveIndicator ? (
-              <Animated.View
-                style={[
-                  menuInferiorStyle.tabIndicator,
-                  menuInferiorStyle.tabIndicatorActive,
-                  {
-                    opacity: indicadorAnim,
-                    transform: [{ scaleX: indicadorAnim }],
-                  },
-                ]}
-              />
-            ) : (
-              <View
-                style={[
-                  menuInferiorStyle.tabIndicator,
-                  ativa && menuInferiorStyle.tabIndicatorActive,
-                ]}
-              />
-            )}
+            <View
+              style={[
+                menuInferiorStyle.tabIndicator,
+                ativa && menuInferiorStyle.tabIndicatorActive,
+              ]}
+            />
             <Image
               source={ICONES[aba.nome]}
               style={menuInferiorStyle.tabIcon}

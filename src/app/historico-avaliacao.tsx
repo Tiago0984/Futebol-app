@@ -184,7 +184,7 @@ export default function HistoricoAvaliacao() {
         </View>
       </ScrollView>
 
-      <TabBar abaAtiva="desempenho" animateActiveIndicator />
+      <TabBar abaAtiva="desempenho" />
     </View>
   );
 }

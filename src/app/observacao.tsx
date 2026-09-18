@@ -106,7 +106,7 @@ export default function Observacao() {
         </View>
       </ScrollView>
 
-      <TabBar abaAtiva="desempenho" animateActiveIndicator />
+      <TabBar abaAtiva="desempenho" />
     </View>
   );
 }

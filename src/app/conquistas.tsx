@@ -178,7 +178,7 @@ export default function Conquistas() {
         </View>
       </ScrollView>
 
-      <TabBar abaAtiva="desempenho" animateActiveIndicator />
+      <TabBar abaAtiva="desempenho" />
     </View>
   );
 }

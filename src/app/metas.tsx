@@ -178,7 +178,7 @@ export default function Metas() {
         </View>
       </ScrollView>
 
-      <TabBar abaAtiva="desempenho" animateActiveIndicator />
+      <TabBar abaAtiva="desempenho" />
     </View>
   );
 }
