@@ -152,7 +152,7 @@ export default function Configuracoes() {
           <Text style={configuracoesStyle.sectionTitle}>Suporte</Text>
 
           <View style={configuracoesStyle.card}>
-            <View style={configuracoesStyle.row}>
+            <Pressable style={configuracoesStyle.row} onPress={() => router.navigate("/ajuda-suporte")}>
               <Image
                 source={require("@/assets/images/img/ajudaEsuporte.png")}
                 style={configuracoesStyle.rowIcon}
@@ -163,9 +163,9 @@ export default function Configuracoes() {
               <Text style={configuracoesStyle.rowLabel}>Ajuda & Suporte</Text>
 
               <Text style={configuracoesStyle.rowArrow}>{">"}</Text>
-            </View>
+            </Pressable>
 
-            <View style={configuracoesStyle.row}>
+            <Pressable style={configuracoesStyle.row} onPress={() => router.navigate("/fale-conosco")}>
               <Image
                 source={require("@/assets/images/img/faleConosco.png")}
                 style={configuracoesStyle.rowIcon}
@@ -176,9 +176,9 @@ export default function Configuracoes() {
               <Text style={configuracoesStyle.rowLabel}>Fale Conosco</Text>
 
               <Text style={configuracoesStyle.rowArrow}>{">"}</Text>
-            </View>
+            </Pressable>
 
-            <View style={[configuracoesStyle.row, configuracoesStyle.rowLast]}>
+            <Pressable style={[configuracoesStyle.row, configuracoesStyle.rowLast]} onPress={() => router.navigate("/sobre-a-aacj")}>
               <Image
                 source={require("@/assets/images/img/atencaoPreto.png")}
                 style={configuracoesStyle.rowIcon}
@@ -189,13 +189,13 @@ export default function Configuracoes() {
               <Text style={configuracoesStyle.rowLabel}>Sobre a AACJ</Text>
 
               <Text style={configuracoesStyle.rowArrow}>{">"}</Text>
-            </View>
+            </Pressable>
           </View>
         </View>
 
         {/* SAIR DA CONTA */}
         <View style={configuracoesStyle.logoutSection}>
-          <Pressable style={configuracoesStyle.logoutButton}>
+          <Pressable style={configuracoesStyle.logoutButton} onPress={() => router.navigate("/")}>
             <Image
               source={require("@/assets/images/img/sairDaContaVermelho.png")}
               style={configuracoesStyle.logoutIcon}

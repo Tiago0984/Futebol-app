@@ -202,7 +202,7 @@ export default function Perfil() {
               <Text style={perfilStyle.menuArrow}>{">"}</Text>
             </Pressable>
 
-            <View style={perfilStyle.infoRow}>
+            <Pressable style={perfilStyle.infoRow} onPress={() => router.navigate("/ajuda-suporte")}>
               <Image
                 source={require("@/assets/images/img/ajudaEsuporte.png")}
                 style={perfilStyle.infoIcon}
@@ -213,9 +213,9 @@ export default function Perfil() {
               <Text style={perfilStyle.infoLabel}>Ajuda e suporte</Text>
 
               <Text style={perfilStyle.menuArrow}>{">"}</Text>
-            </View>
+            </Pressable>
 
-            <View style={perfilStyle.infoRow}>
+            <Pressable style={perfilStyle.infoRow} onPress={() => router.navigate("/sobre-a-aacj")}>
               <Image
                 source={require("@/assets/images/img/atencaoPreto.png")}
                 style={perfilStyle.infoIcon}
@@ -226,7 +226,7 @@ export default function Perfil() {
               <Text style={perfilStyle.infoLabel}>Sobre a AACJ</Text>
 
               <Text style={perfilStyle.menuArrow}>{">"}</Text>
-            </View>
+            </Pressable>
 
             <View style={[perfilStyle.infoRow, perfilStyle.infoRowLast]}>
               <Image
