@@ -1,6 +1,6 @@
 import TabBar from "@/components/tabBar";
-import fundoStyle from "@/styles/fundoStyle";
 import detalheProximaPartidaStyle from "@/styles/detalheProximaPartidaStyle";
+import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
@@ -32,7 +32,10 @@ export default function DetalheProximaPartida() {
               style={detalheProximaPartidaStyle.headerTitleCol}
               pointerEvents="none"
             >
-              <Text style={detalheProximaPartidaStyle.headerTitle} numberOfLines={1}>
+              <Text
+                style={detalheProximaPartidaStyle.headerTitle}
+                numberOfLines={1}
+              >
                 Próxima partida
               </Text>
               <Text
@@ -57,7 +60,9 @@ export default function DetalheProximaPartida() {
                   resizeMode="contain"
                 />
                 <View style={detalheProximaPartidaStyle.notificationBadge}>
-                  <Text style={detalheProximaPartidaStyle.notificationBadgeText}>
+                  <Text
+                    style={detalheProximaPartidaStyle.notificationBadgeText}
+                  >
                     2
                   </Text>
                 </View>
@@ -74,7 +79,10 @@ export default function DetalheProximaPartida() {
                 style={detalheProximaPartidaStyle.teamCrest}
                 resizeMode="contain"
               />
-              <Text style={detalheProximaPartidaStyle.teamName} numberOfLines={1}>
+              <Text
+                style={detalheProximaPartidaStyle.teamName}
+                numberOfLines={1}
+              >
                 AACJ
               </Text>
             </View>
@@ -85,7 +93,10 @@ export default function DetalheProximaPartida() {
                 style={detalheProximaPartidaStyle.teamCrest}
                 resizeMode="contain"
               />
-              <Text style={detalheProximaPartidaStyle.teamName} numberOfLines={1}>
+              <Text
+                style={detalheProximaPartidaStyle.teamName}
+                numberOfLines={1}
+              >
                 Time preto
               </Text>
             </View>
@@ -145,7 +156,9 @@ export default function DetalheProximaPartida() {
           </View>
 
           <View style={detalheProximaPartidaStyle.confirmedPill}>
-            <Text style={detalheProximaPartidaStyle.confirmedText}>Confirmado</Text>
+            <Text style={detalheProximaPartidaStyle.confirmedText}>
+              Confirmado
+            </Text>
           </View>
         </View>
 
@@ -156,7 +169,9 @@ export default function DetalheProximaPartida() {
 
           <View style={detalheProximaPartidaStyle.detailsCard}>
             <View style={detalheProximaPartidaStyle.detailsRow}>
-              <Text style={detalheProximaPartidaStyle.detailsLabel}>Status</Text>
+              <Text style={detalheProximaPartidaStyle.detailsLabel}>
+                Status
+              </Text>
               <View style={detalheProximaPartidaStyle.statusPill}>
                 <Text style={detalheProximaPartidaStyle.statusPillText}>
                   Convocado
@@ -182,7 +197,9 @@ export default function DetalheProximaPartida() {
                 detalheProximaPartidaStyle.detailsRowDivider,
               ]}
             >
-              <Text style={detalheProximaPartidaStyle.detailsLabel}>Posição</Text>
+              <Text style={detalheProximaPartidaStyle.detailsLabel}>
+                Posição
+              </Text>
               <Text style={detalheProximaPartidaStyle.detailsValue}>Meia</Text>
             </View>
 
@@ -211,7 +228,10 @@ export default function DetalheProximaPartida() {
                 resizeMode="contain"
               />
             </View>
-            <Text style={detalheProximaPartidaStyle.sectionTitle} numberOfLines={1}>
+            <Text
+              style={detalheProximaPartidaStyle.sectionTitle}
+              numberOfLines={1}
+            >
               Ações rápidas
             </Text>
           </View>
@@ -296,7 +316,7 @@ export default function DetalheProximaPartida() {
               >
                 <View style={detalheProximaPartidaStyle.quickActionTopRow}>
                   <Image
-                    source={require("@/assets/images/img/compartilharvermelho.png")}
+                    source={require("@/assets/images/img/compartilharVermelho.png")}
                     style={detalheProximaPartidaStyle.quickActionIcon}
                     resizeMode="contain"
                   />
