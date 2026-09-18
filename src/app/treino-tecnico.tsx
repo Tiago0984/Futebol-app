@@ -440,7 +440,7 @@ export default function TreinoTecnico() {
               >
                 <View style={treinoTecnicoStyle.quickActionTopRow}>
                   <Image
-                    source={require("@/assets/images/img/compartilharVermelho.png")}
+                    source={require("@/assets/images/img/compartilharvermelho.png")}
                     style={treinoTecnicoStyle.quickActionIcon}
                     resizeMode="contain"
                   />
