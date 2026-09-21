@@ -145,7 +145,10 @@ export default function Home() {
               </View>
               <Text style={homeStyle.quickAccessLabel}>Campeonatos</Text>
             </Pressable>
-            <View style={homeStyle.quickAccessItem}>
+            <Pressable
+              style={homeStyle.quickAccessItem}
+              onPress={() => router.navigate("/desempenho")}
+            >
               <View style={homeStyle.quickAccessIconCircle}>
                 <Image
                   source={require("@/assets/images/img/desempenhoCinza.png")}
@@ -154,8 +157,11 @@ export default function Home() {
                 />
               </View>
               <Text style={homeStyle.quickAccessLabel}>Desempenho</Text>
-            </View>
-            <View style={homeStyle.quickAccessItem}>
+            </Pressable>
+            <Pressable
+              style={homeStyle.quickAccessItem}
+              onPress={() => router.navigate("/perfil")}
+            >
               <View style={homeStyle.quickAccessIconCircle}>
                 <Image
                   source={require("@/assets/images/img/perfilCinza.png")}
@@ -164,7 +170,7 @@ export default function Home() {
                 />
               </View>
               <Text style={homeStyle.quickAccessLabel}>Perfil</Text>
-            </View>
+            </Pressable>
           </View>
         </View>
 
