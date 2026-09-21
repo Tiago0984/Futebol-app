@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes, iconSizes } from "./variaveis";
 
 const editarPerfilStyle = StyleSheet.create({
   scrollContent: {
@@ -36,7 +36,7 @@ const editarPerfilStyle = StyleSheet.create({
 
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "600",
     color: cores.branco,
   },
@@ -47,7 +47,7 @@ const editarPerfilStyle = StyleSheet.create({
     right: 0,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "800",
     color: cores.branco,
   },
@@ -62,8 +62,8 @@ const editarPerfilStyle = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
 
   notificationBadge: {
@@ -72,8 +72,8 @@ const editarPerfilStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
@@ -81,7 +81,7 @@ const editarPerfilStyle = StyleSheet.create({
 
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -155,13 +155,13 @@ const editarPerfilStyle = StyleSheet.create({
 
   fieldLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.cinza,
   },
 
   fieldValue: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     color: cores.preto,
     marginTop: 2,
     padding: 0,
@@ -185,7 +185,7 @@ const editarPerfilStyle = StyleSheet.create({
 
   saveButtonText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
   },

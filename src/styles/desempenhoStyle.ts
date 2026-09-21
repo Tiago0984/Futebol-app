@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes, iconSizes } from "./variaveis";
 
 const desempenhoStyle = StyleSheet.create({
   scrollView: {
@@ -27,7 +27,7 @@ const desempenhoStyle = StyleSheet.create({
 
   screenTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 21,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },
@@ -40,21 +40,21 @@ const desempenhoStyle = StyleSheet.create({
 
   seasonText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.branco,
   },
 
   separatorText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     color: cores.branco70,
     marginHorizontal: 7,
   },
 
   categoryText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     color: cores.branco,
   },
 
@@ -70,8 +70,8 @@ const desempenhoStyle = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 25,
-    height: 25,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
 
   notificationBadge: {
@@ -89,7 +89,7 @@ const desempenhoStyle = StyleSheet.create({
 
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -118,7 +118,7 @@ const desempenhoStyle = StyleSheet.create({
 
   filterPillText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     color: cores.preto,
   },
 
@@ -142,7 +142,7 @@ const desempenhoStyle = StyleSheet.create({
 
   generalTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     textAlign: "center",
     color: cores.preto,
@@ -150,7 +150,7 @@ const desempenhoStyle = StyleSheet.create({
 
   generalScore: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 31,
+    fontSize: fontSizes.numeroGrande,
     fontWeight: "800",
     lineHeight: 35,
     textAlign: "center",
@@ -160,7 +160,7 @@ const desempenhoStyle = StyleSheet.create({
 
   generalEvolution: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "700",
     textAlign: "center",
     color: cores.verde,
@@ -189,14 +189,14 @@ const desempenhoStyle = StyleSheet.create({
 
   evolutionText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.verde,
   },
 
   evolutionPeriod: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     textAlign: "center",
     color: cores.cinza,
     marginTop: 2,
@@ -222,20 +222,20 @@ const desempenhoStyle = StyleSheet.create({
   },
 
   generalIndicatorIcon: {
-    width: 25,
-    height: 25,
+    width: iconSizes.estatistica,
+    height: iconSizes.estatistica,
     marginBottom: 3,
   },
 
   generalIndicatorLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     color: cores.preto,
   },
 
   generalIndicatorValue: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "800",
     color: cores.preto,
     marginTop: 1,
@@ -254,7 +254,7 @@ const desempenhoStyle = StyleSheet.create({
 
   generalLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     textAlign: "center",
     color: cores.vermelho,
@@ -274,8 +274,9 @@ const desempenhoStyle = StyleSheet.create({
   },
 
   sectionTitle: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.titulo,
+    fontWeight: "700",
     color: cores.branco,
     marginBottom: 7,
   },
@@ -309,8 +310,8 @@ const desempenhoStyle = StyleSheet.create({
   },
 
   indicatorIcon: {
-    width: 18,
-    height: 18,
+    width: iconSizes.pequeno,
+    height: iconSizes.pequeno,
   },
 
   indicatorTextCol: {
@@ -320,14 +321,14 @@ const desempenhoStyle = StyleSheet.create({
 
   indicatorValue: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "800",
     color: cores.branco,
   },
 
   indicatorLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     color: cores.branco70,
     marginTop: -1,
   },
@@ -353,7 +354,7 @@ const desempenhoStyle = StyleSheet.create({
 
   whiteCardTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.preto,
     marginBottom: 6,
@@ -386,7 +387,7 @@ const desempenhoStyle = StyleSheet.create({
 
   goalPercent: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "800",
     color: cores.preto,
   },
@@ -397,13 +398,13 @@ const desempenhoStyle = StyleSheet.create({
 
   goalSmallLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7,
+    fontSize: fontSizes.minusculo,
     color: cores.cinza,
   },
 
   goalValue: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.preto,
     marginTop: 3,
@@ -439,7 +440,7 @@ const desempenhoStyle = StyleSheet.create({
 
   goalLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.vermelho,
   },
@@ -453,8 +454,8 @@ const desempenhoStyle = StyleSheet.create({
   },
 
   evaluationIcon: {
-    width: 34,
-    height: 34,
+    width: iconSizes.media,
+    height: iconSizes.media,
   },
 
   evaluationMain: {
@@ -463,13 +464,13 @@ const desempenhoStyle = StyleSheet.create({
 
   evaluationType: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7,
+    fontSize: fontSizes.minusculo,
     color: cores.cinza,
   },
 
   evaluationScore: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "800",
     color: cores.preto,
     marginTop: 1,
@@ -483,13 +484,13 @@ const desempenhoStyle = StyleSheet.create({
 
   evaluationDateText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     color: cores.cinza,
   },
 
   evaluationDateValue: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7,
+    fontSize: fontSizes.minusculo,
     color: cores.cinza,
     marginLeft: 4,
   },
@@ -500,7 +501,7 @@ const desempenhoStyle = StyleSheet.create({
 
   evaluationLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.vermelho,
   },
@@ -533,7 +534,7 @@ const desempenhoStyle = StyleSheet.create({
   achievementText: {
     flexShrink: 1,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 6.5,
+    fontSize: fontSizes.minusculo,
     color: cores.preto,
   },
 
@@ -557,28 +558,28 @@ const desempenhoStyle = StyleSheet.create({
 
   observationTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.preto,
   },
 
   observationLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.vermelho,
   },
 
   observationText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 6.5,
+    fontSize: fontSizes.minusculo,
     color: cores.preto,
     marginTop: 4,
   },
 
   observationAuthor: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 6.5,
+    fontSize: fontSizes.minusculo,
     color: cores.cinza,
     marginTop: 5,
   },

@@ -108,7 +108,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   },
   requirementsTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13.5,
+    fontSize: 14,
     fontWeight: "700",
     color: cores.branco,
     marginBottom: 10,
@@ -125,7 +125,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   },
   requirementText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12.5,
+    fontSize: 13,
     color: cores.cinza,
   },
 
@@ -148,7 +148,7 @@ const redefinirSenhaStyle = StyleSheet.create({
   backToLoginText: {
     fontFamily: fontes.OpenSans_Bold,
     alignSelf: "center",
-    fontSize: 13.5,
+    fontSize: 14,
     fontWeight: "700",
     color: cores.vermelho,
   },

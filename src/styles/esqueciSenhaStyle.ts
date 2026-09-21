@@ -77,7 +77,7 @@ const esqueciSenhaStyle = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: cores.branco,
-    borderRadius: 12,
+    borderRadius: 10,
     height: 50,
     paddingHorizontal: 16,
     marginBottom: 12,
@@ -98,7 +98,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   sendButton: {
     backgroundColor: cores.vermelho,
     borderRadius: 10,
-    height: 55,
+    height: 48,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 30,
@@ -115,7 +115,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   backToLoginText: {
     fontFamily: fontes.OpenSans_Bold,
     alignSelf: "center",
-    fontSize: 13.5,
+    fontSize: 14,
     fontWeight: "700",
     color: cores.vermelho,
     marginBottom: 18,
@@ -164,7 +164,7 @@ const esqueciSenhaStyle = StyleSheet.create({
   },
   modalText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13.5,
+    fontSize: 14,
     lineHeight: 19,
     color: cores.cinza,
     marginBottom: 14,

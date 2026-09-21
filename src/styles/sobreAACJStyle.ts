@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes } from "./variaveis";
 
 const sobreAACJStyle = StyleSheet.create({
   scrollView: {
@@ -25,7 +25,7 @@ const sobreAACJStyle = StyleSheet.create({
 
   backText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     color: cores.branco,
   },
 
@@ -33,7 +33,7 @@ const sobreAACJStyle = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -64,7 +64,7 @@ const sobreAACJStyle = StyleSheet.create({
   institutionName: {
     marginTop: 4,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     color: cores.branco,
     textAlign: "center",
   },
@@ -137,7 +137,7 @@ const sobreAACJStyle = StyleSheet.create({
 
   infoAnswer: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     lineHeight: 15,
     color: cores.branco70,
     paddingBottom: 13,

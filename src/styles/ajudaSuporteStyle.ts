@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes, iconSizes } from "./variaveis";
 
 const ajudaSuporteStyle = StyleSheet.create({
   scrollView: {
@@ -27,7 +27,7 @@ const ajudaSuporteStyle = StyleSheet.create({
 
   backText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     color: cores.branco,
   },
 
@@ -45,16 +45,16 @@ const ajudaSuporteStyle = StyleSheet.create({
   },
 
   notificationIcon: {
-    width: 25,
-    height: 25,
+    width: iconSizes.estatistica,
+    height: iconSizes.estatistica,
   },
 
   notificationBadge: {
     position: "absolute",
     top: -2,
     right: -5,
-    minWidth: 14,
-    height: 14,
+    minWidth: 15,
+    height: 15,
     paddingHorizontal: 3,
     borderRadius: 8,
     alignItems: "center",
@@ -64,7 +64,7 @@ const ajudaSuporteStyle = StyleSheet.create({
 
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -78,14 +78,14 @@ const ajudaSuporteStyle = StyleSheet.create({
 
   screenTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 21,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },
 
   screenSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco,
     marginTop: 2,
   },
@@ -136,7 +136,7 @@ const ajudaSuporteStyle = StyleSheet.create({
     height: "100%",
     paddingVertical: 0,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     color: cores.preto,
     ...({ outlineStyle: "none" } as any),
   },
@@ -150,7 +150,7 @@ const ajudaSuporteStyle = StyleSheet.create({
 
   sectionTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -180,13 +180,13 @@ const ajudaSuporteStyle = StyleSheet.create({
 
   categoryTitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco,
   },
 
   categoryDescription: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     color: cores.branco,
     marginTop: 3,
   },
@@ -221,7 +221,7 @@ const ajudaSuporteStyle = StyleSheet.create({
   faqQuestion: {
     flex: 1,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 9.5,
+    fontSize: fontSizes.apoio,
     color: cores.branco,
   },
 
@@ -229,7 +229,7 @@ const ajudaSuporteStyle = StyleSheet.create({
     width: 18,
     textAlign: "right",
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.branco70,
   },
 
@@ -243,7 +243,7 @@ const ajudaSuporteStyle = StyleSheet.create({
 
   faqAnswer: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     lineHeight: 13,
     color: cores.branco70,
     paddingTop: 7,
@@ -271,21 +271,21 @@ const ajudaSuporteStyle = StyleSheet.create({
 
   contactTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.branco,
   },
 
   contactDescription: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     color: cores.branco,
     marginTop: 5,
   },
 
   contactLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9.5,
+    fontSize: fontSizes.apoio,
     fontWeight: "700",
     color: cores.vermelho,
     marginTop: 6,

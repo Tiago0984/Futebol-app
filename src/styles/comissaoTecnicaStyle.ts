@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const comissaoTecnicaStyle = StyleSheet.create({
   scrollContent: {
@@ -30,7 +30,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
   },
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "600",
     color: cores.branco,
   },
@@ -40,7 +40,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
     right: 0,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -52,8 +52,8 @@ const comissaoTecnicaStyle = StyleSheet.create({
     marginLeft: 16,
   },
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
   notificationBadge: {
     position: "absolute",
@@ -61,15 +61,15 @@ const comissaoTecnicaStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -100,13 +100,13 @@ const comissaoTecnicaStyle = StyleSheet.create({
   },
   profileName: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "800",
     color: cores.branco,
   },
   profileRole: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
     color: cores.vermelho,
     marginTop: 4,
@@ -128,7 +128,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
   },
   confirmedText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.verde,
   },
@@ -157,12 +157,12 @@ const comissaoTecnicaStyle = StyleSheet.create({
   },
   detailsLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
   },
   detailsValue: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 14.5,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "700",
     color: cores.branco,
     marginTop: 2,
@@ -188,7 +188,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
   },
   categoryPillText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 12.5,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "600",
     color: cores.branco70,
   },
@@ -204,7 +204,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
   },
   contatoTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -223,7 +223,7 @@ const comissaoTecnicaStyle = StyleSheet.create({
   },
   contatoLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
   },
   contatoValue: {

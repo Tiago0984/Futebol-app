@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const agendaLocalStyle = StyleSheet.create({
   container: {
@@ -49,7 +49,7 @@ const agendaLocalStyle = StyleSheet.create({
     right: 0,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -70,8 +70,8 @@ const agendaLocalStyle = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
 
   notificationBadge: {
@@ -89,7 +89,7 @@ const agendaLocalStyle = StyleSheet.create({
 
   notificationText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -129,7 +129,7 @@ const agendaLocalStyle = StyleSheet.create({
   locationSubtitle: {
     marginTop: 3,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.cinza,
   },
 
@@ -149,7 +149,7 @@ const agendaLocalStyle = StyleSheet.create({
   addressText: {
     flex: 1,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     lineHeight: 18,
     color: cores.cinza,
   },
@@ -164,7 +164,7 @@ const agendaLocalStyle = StyleSheet.create({
     marginLeft: 10,
     marginBottom: 10,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -219,7 +219,7 @@ const agendaLocalStyle = StyleSheet.create({
   actionDescription: {
     marginTop: 3,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     lineHeight: 16,
     color: cores.cinza,
   },

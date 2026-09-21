@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const metasStyle = StyleSheet.create({
   scrollContent: {
@@ -28,7 +28,7 @@ const metasStyle = StyleSheet.create({
   },
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "600",
     color: cores.branco,
   },
@@ -38,13 +38,13 @@ const metasStyle = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },
   headerSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
     marginTop: 2,
   },
@@ -56,8 +56,8 @@ const metasStyle = StyleSheet.create({
     marginLeft: 16,
   },
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
   notificationBadge: {
     position: "absolute",
@@ -65,15 +65,15 @@ const metasStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -102,7 +102,7 @@ const metasStyle = StyleSheet.create({
   },
   resumoSubtitulo: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.branco70,
     marginTop: 4,
   },
@@ -145,7 +145,7 @@ const metasStyle = StyleSheet.create({
   },
   metaPillText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.verde,
   },
@@ -158,7 +158,7 @@ const metasStyle = StyleSheet.create({
   },
   metaContagem: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
     marginRight: 10,
   },
@@ -176,7 +176,7 @@ const metasStyle = StyleSheet.create({
   },
   metaPercentual: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "800",
     color: cores.branco,
     marginLeft: 10,
@@ -210,7 +210,7 @@ const metasStyle = StyleSheet.create({
   },
   proximaMetaLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     color: cores.preto,
   },
   proximaMetaValor: {

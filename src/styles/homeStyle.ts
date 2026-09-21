@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const homeStyle = StyleSheet.create({
   scrollContent: {
@@ -36,8 +36,8 @@ const homeStyle = StyleSheet.create({
     marginLeft: 16,
   },
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
   notificationBadge: {
     position: "absolute",
@@ -45,15 +45,15 @@ const homeStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -72,13 +72,13 @@ const homeStyle = StyleSheet.create({
     alignItems: "center",
   },
   categoriaIcon: {
-    width: 20,
-    height: 20,
+    width: iconSizes.padrao,
+    height: iconSizes.padrao,
     marginRight: 5,
   },
   categoriaText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -105,16 +105,16 @@ const homeStyle = StyleSheet.create({
     marginHorizontal: 6,
   },
   avatarCircle: {
-    width: 80,
-    height: 80,
+    width: iconSizes.avatarGrande,
+    height: iconSizes.avatarGrande,
     borderRadius: 50,
     backgroundColor: cores.branco,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarIcon: {
-    width: 50,
-    height: 50,
+    width: iconSizes.avatar,
+    height: iconSizes.avatar,
   },
 
   card: {
@@ -125,8 +125,8 @@ const homeStyle = StyleSheet.create({
     padding: 18,
   },
   cardLabel: {
-    fontFamily: fontes.OpenSans_Bold, 
-    fontSize: 12,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.corpoMedio,
     color: cores.cinza,
     marginBottom: 12,
   },
@@ -135,8 +135,8 @@ const homeStyle = StyleSheet.create({
     alignItems: "center",
   },
   cardIcon: {
-    width: 50,
-    height: 50,
+    width: iconSizes.avatar,
+    height: iconSizes.avatar,
     marginRight: 14,
   },
   cardTextCol: {
@@ -144,7 +144,7 @@ const homeStyle = StyleSheet.create({
   },
   cardTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 20,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.preto,
     marginBottom: 6,
@@ -155,13 +155,13 @@ const homeStyle = StyleSheet.create({
     marginTop: 3,
   },
   cardInfoIcon: {
-    width: 13,
-    height: 13,
+    width: iconSizes.minusculo,
+    height: iconSizes.minusculo,
     marginRight: 5,
   },
   cardInfoText: {
-    fontFamily: fontes.OpenSans_Regular, 
-    fontSize: 12,
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpoMedio,
     color: cores.cinza,
   },
   cardInfoDot: {
@@ -197,26 +197,26 @@ const homeStyle = StyleSheet.create({
   },
   confirmedText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.verde,
   },
   detailsLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
     color: cores.vermelho,
   },
 
   sectionTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
   },
   sectionLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
     color: cores.vermelho,
   },
@@ -248,7 +248,7 @@ const homeStyle = StyleSheet.create({
   },
   quickAccessLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.cinza,
     marginTop: 8,
     textAlign: "center",
@@ -268,7 +268,7 @@ const homeStyle = StyleSheet.create({
   },
   activityDate: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12.5,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
     color: cores.vermelho,
     marginBottom: 6,
@@ -283,19 +283,19 @@ const homeStyle = StyleSheet.create({
   },
   activityTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "700",
     color: cores.branco,
   },
   activitySubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12.5,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.cinza,
     marginTop: 2,
   },
   activityTime: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.cinza,
   },
   activityDivider: {

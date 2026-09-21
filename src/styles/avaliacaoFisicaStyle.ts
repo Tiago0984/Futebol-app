@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const ANEL_TAMANHO = 130;
 const ANEL_ESPESSURA = 12;
@@ -32,7 +32,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "600",
     color: cores.branco,
   },
@@ -42,13 +42,13 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },
   headerSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
     marginTop: 2,
   },
@@ -60,8 +60,8 @@ const avaliacaoFisicaStyle = StyleSheet.create({
     marginLeft: 16,
   },
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
   notificationBadge: {
     position: "absolute",
@@ -69,15 +69,15 @@ const avaliacaoFisicaStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -146,13 +146,13 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   indiceNumero: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 30,
+    fontSize: fontSizes.numeroGrande,
     fontWeight: "800",
     color: cores.preto,
   },
   indiceNumeroLabel: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 20,
+    fontSize: fontSizes.tituloHeader,
     color: cores.preto,
     marginTop: -2,
   },
@@ -163,7 +163,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   indiceStatusText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 20,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.preto,
   },
@@ -187,7 +187,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   fundamentosLabel: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
     marginBottom: 14,
@@ -222,7 +222,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 30,
+    fontSize: fontSizes.numeroGrande,
     fontWeight: "800",
     color: cores.preto,
   },
@@ -241,7 +241,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   comparacaoTitulo: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.preto,
     marginBottom: 10,
   },
@@ -298,7 +298,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   comparacaoPontosLabel: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "800",
     color: cores.preto,
     marginTop: 4,
@@ -310,7 +310,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   resumoTemporada: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "800",
     color: cores.branco,
   },
@@ -345,7 +345,7 @@ const avaliacaoFisicaStyle = StyleSheet.create({
   },
   resumoCardValor: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "800",
     color: cores.preto,
     marginTop: 4,

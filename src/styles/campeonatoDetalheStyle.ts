@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes, iconSizes } from "./variaveis";
 
 const campeonatoDetalheStyle = StyleSheet.create({
   scrollView: {
@@ -28,7 +28,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   backText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     color: cores.branco,
   },
 
@@ -39,14 +39,14 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   screenTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "800",
     color: cores.branco,
   },
 
   screenSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     color: cores.branco,
     marginTop: 1,
   },
@@ -63,8 +63,8 @@ const campeonatoDetalheStyle = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 24,
-    height: 24,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
 
   notificationBadge: {
@@ -82,7 +82,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -131,7 +131,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   statusPillText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     color: cores.verde,
   },
 
@@ -148,14 +148,14 @@ const campeonatoDetalheStyle = StyleSheet.create({
   infoLabel: {
     width: 76,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     color: cores.cinza,
   },
 
   infoValue: {
     flex: 1,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     color: cores.preto,
   },
 
@@ -168,7 +168,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   sectionTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
     marginBottom: 9,
@@ -190,21 +190,21 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   progressLabel: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     fontWeight: "700",
     color: cores.branco,
   },
 
   progressValue: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     color: cores.branco70,
     marginLeft: 28,
   },
 
   progressPercent: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     color: cores.branco70,
   },
 
@@ -224,7 +224,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   nextPhaseText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     color: cores.branco70,
     marginTop: 9,
   },
@@ -257,7 +257,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   statValue: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "800",
     color: cores.branco,
     lineHeight: 15,
@@ -265,7 +265,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   statLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7.5,
+    fontSize: fontSizes.legenda,
     color: cores.branco70,
     marginTop: 1,
   },
@@ -284,7 +284,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   matchCardTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.preto,
     marginBottom: 12,
@@ -309,7 +309,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   teamName: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     fontWeight: "700",
     color: cores.preto,
     marginTop: 4,
@@ -322,13 +322,13 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   matchDay: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     color: cores.preto,
   },
 
   matchTime: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 20,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.preto,
     marginTop: 1,
@@ -336,7 +336,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   matchLocation: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     color: cores.cinza,
     marginTop: 1,
   },
@@ -353,7 +353,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   confirmedText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.verde,
   },
@@ -365,7 +365,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   matchDetailsText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     fontWeight: "700",
     color: cores.vermelho,
   },
@@ -401,14 +401,14 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   tableTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
 
   tableLink: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 7.5,
+    fontSize: fontSizes.legenda,
     color: cores.vermelho,
   },
 
@@ -425,7 +425,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
   position: {
     width: 11,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -441,7 +441,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
   classificationTeam: {
     flex: 1,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -450,7 +450,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
     width: 20,
     textAlign: "right",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -465,7 +465,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
   resultTeams: {
     flexShrink: 1,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 7.5,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -473,7 +473,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
   resultScore: {
     flexShrink: 0,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 7.5,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
     marginHorizontal: 4,
@@ -493,7 +493,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   resultWinText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7,
+    fontSize: fontSizes.minusculo,
     color: cores.verde,
   },
 
@@ -511,7 +511,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   resultDrawText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7,
+    fontSize: fontSizes.minusculo,
     color: cores.branco70,
   },
 
@@ -529,7 +529,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   resultLossText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7,
+    fontSize: fontSizes.minusculo,
     color: cores.laranja,
   },
 
@@ -550,7 +550,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   upcomingHeaderText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 7.5,
+    fontSize: fontSizes.legenda,
     color: cores.branco70,
   },
 
@@ -565,7 +565,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
   upcomingDate: {
     width: 31,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -573,7 +573,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
   upcomingGame: {
     flex: 1,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
     marginLeft: 5,
@@ -583,7 +583,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
     width: 38,
     textAlign: "right",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
   },

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes, iconSizes } from "./variaveis";
 
 const configuracoesStyle = StyleSheet.create({
   scrollContent: {
@@ -36,7 +36,7 @@ const configuracoesStyle = StyleSheet.create({
 
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "600",
     color: cores.branco,
   },
@@ -47,7 +47,7 @@ const configuracoesStyle = StyleSheet.create({
     right: 0,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "800",
     color: cores.branco,
   },
@@ -62,8 +62,8 @@ const configuracoesStyle = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
 
   notificationBadge: {
@@ -72,8 +72,8 @@ const configuracoesStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
@@ -81,7 +81,7 @@ const configuracoesStyle = StyleSheet.create({
 
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -100,7 +100,7 @@ const configuracoesStyle = StyleSheet.create({
 
   sectionTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "800",
     color: cores.branco,
     marginBottom: 10,
@@ -140,7 +140,7 @@ const configuracoesStyle = StyleSheet.create({
 
   rowValue: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.cinza,
     marginRight: 6,
   },

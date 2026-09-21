@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const indicadoresStyle = StyleSheet.create({
   scrollContent: {
@@ -28,7 +28,7 @@ const indicadoresStyle = StyleSheet.create({
   },
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "600",
     color: cores.branco,
   },
@@ -38,13 +38,13 @@ const indicadoresStyle = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },
   headerSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
     marginTop: 2,
   },
@@ -56,8 +56,8 @@ const indicadoresStyle = StyleSheet.create({
     marginLeft: 16,
   },
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
   notificationBadge: {
     position: "absolute",
@@ -65,15 +65,15 @@ const indicadoresStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -144,7 +144,7 @@ const indicadoresStyle = StyleSheet.create({
   },
   percentualTexto: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "800",
     color: cores.verde,
   },

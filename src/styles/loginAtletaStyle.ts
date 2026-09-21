@@ -102,7 +102,7 @@ const loginAtletaStyle = StyleSheet.create({
   forgotPasswordText: {
     fontFamily: fontes.OpenSans_SemiBold,
     alignSelf: "flex-end",
-    fontSize: 12.5,
+    fontSize: 13,
     fontWeight: "600",
     color: cores.vermelho,
     marginBottom: 16,

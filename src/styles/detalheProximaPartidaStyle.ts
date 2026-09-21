@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const BASE_WIDTH = 428;
@@ -48,13 +48,13 @@ const detalheProximaPartidaStyle = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 16,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
   },
   headerSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     color: cores.branco70,
     marginTop: 2,
   },
@@ -66,8 +66,8 @@ const detalheProximaPartidaStyle = StyleSheet.create({
     marginLeft: 16,
   },
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
   notificationBadge: {
     position: "absolute",
@@ -75,15 +75,15 @@ const detalheProximaPartidaStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -118,7 +118,7 @@ const detalheProximaPartidaStyle = StyleSheet.create({
   },
   vsText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "800",
     color: cores.preto,
     marginHorizontal: 8,
@@ -171,7 +171,7 @@ const detalheProximaPartidaStyle = StyleSheet.create({
   },
   confirmedText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.verde,
   },
@@ -182,7 +182,7 @@ const detalheProximaPartidaStyle = StyleSheet.create({
   },
   participacaoTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -201,7 +201,7 @@ const detalheProximaPartidaStyle = StyleSheet.create({
   },
   detailsLabel: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.branco70,
   },
   detailsValue: {
@@ -219,7 +219,7 @@ const detalheProximaPartidaStyle = StyleSheet.create({
   },
   statusPillText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.verde,
   },

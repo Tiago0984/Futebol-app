@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes } from "./variaveis";
 
 const faleConoscoStyle = StyleSheet.create({
   scrollView: {
@@ -28,7 +28,7 @@ const faleConoscoStyle = StyleSheet.create({
 
   backText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     color: cores.branco,
   },
 
@@ -36,7 +36,7 @@ const faleConoscoStyle = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -78,7 +78,7 @@ const faleConoscoStyle = StyleSheet.create({
     paddingVertical: 0,
     marginLeft: 15,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.preto,
     ...({ outlineStyle: "none" } as any),
   },
@@ -99,7 +99,7 @@ const faleConoscoStyle = StyleSheet.create({
     paddingRight: 4,
     marginLeft: 15,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.preto,
     ...({ outlineStyle: "none" } as any),
   },
@@ -118,7 +118,7 @@ const faleConoscoStyle = StyleSheet.create({
 
   sendButtonText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -155,7 +155,7 @@ const faleConoscoStyle = StyleSheet.create({
 
   attendanceValue: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.cinza,
     marginTop: 1,
   },

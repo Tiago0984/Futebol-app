@@ -38,9 +38,10 @@ const loginResponsavelStyle = StyleSheet.create({
     letterSpacing: 2.5,
   },
   subtitle: {
-    fontFamily: fontes.OpenSans_Regular,
+    fontFamily: fontes.OpenSans_Bold,
     fontSize: 12,
     color: cores.cinza,
+    fontWeight: "bold",
     letterSpacing: 0.5,
   },
   badge: {
@@ -59,7 +60,7 @@ const loginResponsavelStyle = StyleSheet.create({
   },
   badgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "bold",
     color: cores.branco,
   },
@@ -102,7 +103,7 @@ const loginResponsavelStyle = StyleSheet.create({
   forgotPasswordText: {
     fontFamily: fontes.OpenSans_SemiBold,
     alignSelf: "flex-end",
-    fontSize: 12.5,
+    fontSize: 13,
     fontWeight: "600",
     color: cores.vermelho,
     marginBottom: 16,

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes, iconSizes } from "./variaveis";
 
 const ajudaPerguntasStyle = StyleSheet.create({
   scrollView: {
@@ -28,7 +28,7 @@ const ajudaPerguntasStyle = StyleSheet.create({
 
   backText: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     color: cores.branco,
   },
 
@@ -57,16 +57,16 @@ const ajudaPerguntasStyle = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 25,
-    height: 25,
+    width: iconSizes.estatistica,
+    height: iconSizes.estatistica,
   },
 
   notificationBadge: {
     position: "absolute",
     top: -2,
     right: -4,
-    minWidth: 14,
-    height: 14,
+    minWidth: 15,
+    height: 15,
     paddingHorizontal: 3,
     borderRadius: 8,
     alignItems: "center",
@@ -76,7 +76,7 @@ const ajudaPerguntasStyle = StyleSheet.create({
 
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 8,
+    fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -120,7 +120,7 @@ const ajudaPerguntasStyle = StyleSheet.create({
   question: {
     flex: 1,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 10,
+    fontSize: fontSizes.apoio,
     color: cores.branco,
   },
 
@@ -143,7 +143,7 @@ const ajudaPerguntasStyle = StyleSheet.create({
 
   answer: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 8.5,
+    fontSize: fontSizes.pequeno,
     lineHeight: 13,
     color: cores.branco70,
     paddingTop: 6,

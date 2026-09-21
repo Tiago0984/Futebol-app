@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { cores, fontes } from "./variaveis";
+import { cores, fontes, fontSizes, iconSizes } from "./variaveis";
 
 const perfilStyle = StyleSheet.create({
   scrollView: {
@@ -28,14 +28,14 @@ const perfilStyle = StyleSheet.create({
 
   screenTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 21,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },
 
   screenSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco,
     marginTop: 2,
   },
@@ -52,8 +52,8 @@ const perfilStyle = StyleSheet.create({
   },
 
   headerIcon: {
-    width: 25,
-    height: 25,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
 
   notificationBadge: {
@@ -71,7 +71,7 @@ const perfilStyle = StyleSheet.create({
 
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 9,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -113,7 +113,7 @@ const perfilStyle = StyleSheet.create({
 
   profileDetail: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
     marginTop: 4,
   },
@@ -125,7 +125,7 @@ const perfilStyle = StyleSheet.create({
 
   editProfileText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.vermelho,
   },
@@ -139,7 +139,7 @@ const perfilStyle = StyleSheet.create({
 
   sectionTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 15,
+    fontSize: fontSizes.titulo,
     fontWeight: "700",
     color: cores.branco,
     marginBottom: 10,
@@ -179,7 +179,7 @@ const perfilStyle = StyleSheet.create({
 
   infoValue: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     color: cores.cinza,
   },
 

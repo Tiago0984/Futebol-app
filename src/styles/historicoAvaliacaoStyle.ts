@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { fontes, cores } from "./variaveis";
+import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const historicoAvaliacaoStyle = StyleSheet.create({
   scrollContent: {
@@ -28,7 +28,7 @@ const historicoAvaliacaoStyle = StyleSheet.create({
   },
   backText: {
     fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 15,
+    fontSize: fontSizes.subtitulo,
     fontWeight: "600",
     color: cores.branco,
   },
@@ -38,13 +38,13 @@ const historicoAvaliacaoStyle = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 18,
+    fontSize: fontSizes.tituloSecao,
     fontWeight: "800",
     color: cores.branco,
   },
   headerSubtitle: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     color: cores.branco70,
     marginTop: 2,
   },
@@ -56,8 +56,8 @@ const historicoAvaliacaoStyle = StyleSheet.create({
     marginLeft: 16,
   },
   headerIcon: {
-    width: 22,
-    height: 22,
+    width: iconSizes.acaoHeader,
+    height: iconSizes.acaoHeader,
   },
   notificationBadge: {
     position: "absolute",
@@ -65,15 +65,15 @@ const historicoAvaliacaoStyle = StyleSheet.create({
     right: -6,
     backgroundColor: cores.vermelho,
     borderRadius: 8,
-    minWidth: 16,
-    height: 16,
+    minWidth: 15,
+    height: 15,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 3,
   },
   notificationBadgeText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 10,
+    fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -93,13 +93,13 @@ const historicoAvaliacaoStyle = StyleSheet.create({
   },
   dateDay: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 12,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.branco,
   },
   dateWeekday: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     color: cores.branco70,
   },
   lineCol: {
@@ -138,19 +138,19 @@ const historicoAvaliacaoStyle = StyleSheet.create({
   },
   avaliacaoData: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     color: cores.branco70,
   },
   avaliacaoTitulo: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
     color: cores.branco,
     marginTop: 2,
   },
   avaliacaoPontos: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: 11,
+    fontSize: fontSizes.corpo,
     color: cores.branco70,
     marginTop: 2,
   },
@@ -164,7 +164,7 @@ const historicoAvaliacaoStyle = StyleSheet.create({
   },
   avaliacaoPillText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 11.5,
+    fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
   },
   avaliacaoPillExcelente: {
