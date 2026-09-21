@@ -4,15 +4,22 @@ import { fontes, cores } from "./variaveis";
 
 const preloaderStyle = StyleSheet.create({
   container: {
-    flex: 1,
+    ...StyleSheet.absoluteFill,
 
+    alignItems: "center",
+    justifyContent: "center",
+
+    backgroundColor: "#111111",
+  },
+
+  content: {
     width: "100%",
     maxWidth: 440,
 
     alignItems: "center",
     justifyContent: "center",
 
-    backgroundColor: "#111111",
+    paddingHorizontal: 24,
   },
 
   logoContainer: {

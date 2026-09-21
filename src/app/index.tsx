@@ -2,11 +2,14 @@ import { Image } from "expo-image";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, Text, View } from "react-native";
 import { router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import preloaderStyle from "@/styles/preloaderStyle";
 import fundoStyle from "@/styles/fundoStyle";
 
 export default function Index() {
+  const insets = useSafeAreaInsets();
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.92)).current;
   const progressAnim = useRef(new Animated.Value(0)).current;
@@ -49,51 +52,53 @@ export default function Index() {
   return (
     <View style={fundoStyle.container}>
       <View style={preloaderStyle.container}>
-        {/* Logo AACJ */}
-        <Animated.View
-          style={[
-            preloaderStyle.logoContainer,
-            {
-              opacity: fadeAnim,
-              transform: [
-                {
-                  scale: scaleAnim,
-                },
-              ],
-            },
-          ]}
-        >
-          <Image
-            source={require("@/assets/images/img/logo/logo-aacj.png")}
-            style={preloaderStyle.logo}
-            contentFit="contain"
-          />
-        </Animated.View>
-
-        {/* Nome da instituição */}
-        <Animated.View
-          style={{
-            opacity: fadeAnim,
-          }}
-        >
-          <Text style={preloaderStyle.titulo}>Centro de Formação</Text>
-
-          <Text style={preloaderStyle.subtitulo}>DE ATLETAS</Text>
-        </Animated.View>
-
-        {/* Barra de carregamento */}
-        <View style={preloaderStyle.progressContainer}>
+        <View style={preloaderStyle.content}>
+          {/* Logo AACJ */}
           <Animated.View
             style={[
-              preloaderStyle.progressBar,
+              preloaderStyle.logoContainer,
               {
-                width: progressAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ["0%", "100%"],
-                }),
+                opacity: fadeAnim,
+                transform: [
+                  {
+                    scale: scaleAnim,
+                  },
+                ],
               },
             ]}
-          />
+          >
+            <Image
+              source={require("@/assets/images/img/logo/logo-aacj.png")}
+              style={preloaderStyle.logo}
+              contentFit="contain"
+            />
+          </Animated.View>
+
+          {/* Nome da instituição */}
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
+            }}
+          >
+            <Text style={preloaderStyle.titulo}>Centro de Formação</Text>
+
+            <Text style={preloaderStyle.subtitulo}>DE ATLETAS</Text>
+          </Animated.View>
+
+          {/* Barra de carregamento */}
+          <View style={preloaderStyle.progressContainer}>
+            <Animated.View
+              style={[
+                preloaderStyle.progressBar,
+                {
+                  width: progressAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["0%", "100%"],
+                  }),
+                },
+              ]}
+            />
+          </View>
         </View>
 
         {/* Rodapé */}
@@ -102,6 +107,7 @@ export default function Index() {
             preloaderStyle.footer,
             {
               opacity: fadeAnim,
+              bottom: 45 + insets.bottom,
             },
           ]}
         >
