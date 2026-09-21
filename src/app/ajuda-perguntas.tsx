@@ -4,7 +4,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import { router, useLocalSearchParams } from "expo-router";
-import { useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Animated,
   Easing,
@@ -183,9 +183,10 @@ export default function AjudaPerguntas() {
     null,
   );
 
-  const animacoes = useRef(
-    perguntas.map(() => new Animated.Value(0)),
-  ).current;
+  const animacoes = useMemo(
+    () => perguntas.map(() => new Animated.Value(0)),
+    [perguntas],
+  );
 
   const trocarCategoria = (novaCategoria: Categoria) => {
     setPerguntaAberta(null);
