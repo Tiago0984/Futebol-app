@@ -215,7 +215,7 @@ export default function Agenda() {
                 </Text>
                 <View style={agendaStyle.nextCardInfoRow}>
                   <Image
-                    source={require("@/assets/images/img/localizaçãopreto.png")}
+                    source={require("@/assets/images/img/localizacaoPreto.png")}
                     style={agendaStyle.nextCardInfoIcon}
                     resizeMode="contain"
                   />
@@ -307,7 +307,7 @@ export default function Agenda() {
               </Text>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
-                  source={require("@/assets/images/img/localizaçãocinza.png")}
+                  source={require("@/assets/images/img/localizacaoCinza.png")}
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
@@ -338,10 +338,7 @@ export default function Agenda() {
             </View>
             <View style={agendaStyle.timelineStatusCol}>
               <View
-                style={[
-                  agendaStyle.statusPill,
-                  { borderColor: cores.laranja },
-                ]}
+                style={[agendaStyle.statusPill, { borderColor: cores.laranja }]}
               >
                 <View
                   style={[
@@ -355,7 +352,9 @@ export default function Agenda() {
                     resizeMode="contain"
                   />
                 </View>
-                <Text style={[agendaStyle.statusText, { color: cores.laranja }]}>
+                <Text
+                  style={[agendaStyle.statusText, { color: cores.laranja }]}
+                >
                   Alterado
                 </Text>
               </View>
@@ -398,7 +397,7 @@ export default function Agenda() {
               </Text>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
-                  source={require("@/assets/images/img/localizaçãocinza.png")}
+                  source={require("@/assets/images/img/localizacaoCinza.png")}
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />
@@ -429,10 +428,7 @@ export default function Agenda() {
             </View>
             <View style={agendaStyle.timelineStatusCol}>
               <View
-                style={[
-                  agendaStyle.statusPill,
-                  { borderColor: cores.verde },
-                ]}
+                style={[agendaStyle.statusPill, { borderColor: cores.verde }]}
               >
                 <View
                   style={[
@@ -488,7 +484,7 @@ export default function Agenda() {
               </Text>
               <View style={agendaStyle.timelineInfoRow}>
                 <Image
-                  source={require("@/assets/images/img/localizaçãocinza.png")}
+                  source={require("@/assets/images/img/localizacaoCinza.png")}
                   style={agendaStyle.timelineInfoIcon}
                   resizeMode="contain"
                 />

@@ -94,7 +94,7 @@ export default function Home() {
               </View>
               <View style={homeStyle.cardInfoRow}>
                 <Image
-                  source={require("@/assets/images/img/localizaçãopreto.png")}
+                  source={require("@/assets/images/img/localizacaoPreto.png")}
                   style={homeStyle.cardInfoIcon}
                   resizeMode="contain"
                 />
@@ -193,9 +193,7 @@ export default function Home() {
           </View>
 
           <View style={homeStyle.activityItem}>
-            <Text style={homeStyle.activityDate}>
-              Segunda-Feira 03/08/2026
-            </Text>
+            <Text style={homeStyle.activityDate}>Segunda-Feira 03/08/2026</Text>
             <View style={homeStyle.activityRow}>
               <View style={homeStyle.activityTextCol}>
                 <Text style={homeStyle.activityTitle}>Avaliação Física</Text>
@@ -212,9 +210,7 @@ export default function Home() {
             <Text style={homeStyle.activityDate}>Sábado 08/08/2026</Text>
             <View style={homeStyle.activityRow}>
               <View style={homeStyle.activityTextCol}>
-                <Text style={homeStyle.activityTitle}>
-                  Campeonato Regional
-                </Text>
+                <Text style={homeStyle.activityTitle}>Campeonato Regional</Text>
                 <Text style={homeStyle.activitySubtitle}>AACJ</Text>
               </View>
               <Text style={homeStyle.activityTime}>17:00</Text>

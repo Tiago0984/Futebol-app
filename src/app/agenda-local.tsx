@@ -146,7 +146,7 @@ export default function AgendaLocal() {
 
             <View style={agendaLocalStyle.addressRow}>
               <Image
-                source={require("@/assets/images/img/localizaçãocinza.png")}
+                source={require("@/assets/images/img/localizacaoCinza.png")}
                 style={agendaLocalStyle.locationIcon}
                 contentFit="contain"
                 tintColor={cores.cinza}
@@ -165,7 +165,7 @@ export default function AgendaLocal() {
               <Pressable style={agendaLocalStyle.actionRow} onPress={abrirMapa}>
                 <View style={agendaLocalStyle.actionIconContainer}>
                   <Image
-                    source={require("@/assets/images/img/localizaçãovermelho.png")}
+                    source={require("@/assets/images/img/localizacaoVermelho.png")}
                     style={agendaLocalStyle.actionIcon}
                     contentFit="contain"
                     tintColor={cores.vermelho}

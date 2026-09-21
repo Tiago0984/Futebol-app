@@ -149,7 +149,7 @@ export default function TreinoTecnico() {
           </View>
           <View style={treinoTecnicoStyle.infoCol}>
             <Image
-              source={require("@/assets/images/img/localizaçãovermelho.png")}
+              source={require("@/assets/images/img/localizacaoVermelho.png")}
               style={treinoTecnicoStyle.infoIcon}
               resizeMode="contain"
             />

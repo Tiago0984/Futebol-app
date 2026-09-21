@@ -140,7 +140,7 @@ export default function DetalheProximaPartida() {
             <View style={detalheProximaPartidaStyle.matchInfoDivider} />
             <View style={detalheProximaPartidaStyle.matchInfoCol}>
               <Image
-                source={require("@/assets/images/img/localizaçãopreto.png")}
+                source={require("@/assets/images/img/localizacaoPreto.png")}
                 style={detalheProximaPartidaStyle.matchInfoIcon}
                 resizeMode="contain"
               />
