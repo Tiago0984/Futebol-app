@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import metasStyle from "@/styles/metasStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
@@ -77,16 +78,7 @@ export default function Metas() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={metasStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={metasStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={metasStyle.notificationBadge}>
-                  <Text style={metasStyle.notificationBadgeText}>2</Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>
         </View>

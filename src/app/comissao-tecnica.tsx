@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import comissaoTecnicaStyle from "@/styles/comissaoTecnicaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
@@ -45,18 +46,7 @@ export default function ComissaoTecnica() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={comissaoTecnicaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={comissaoTecnicaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={comissaoTecnicaStyle.notificationBadge}>
-                  <Text style={comissaoTecnicaStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="agenda" />
             </View>
           </View>
         </View>

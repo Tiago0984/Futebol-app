@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import detalheProximaPartidaStyle from "@/styles/detalheProximaPartidaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
@@ -53,20 +54,7 @@ export default function DetalheProximaPartida() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={detalheProximaPartidaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={detalheProximaPartidaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={detalheProximaPartidaStyle.notificationBadge}>
-                  <Text
-                    style={detalheProximaPartidaStyle.notificationBadgeText}
-                  >
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>
         </View>

@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import historicoAvaliacaoStyle from "@/styles/historicoAvaliacaoStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
@@ -101,18 +102,7 @@ export default function HistoricoAvaliacao() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={historicoAvaliacaoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={historicoAvaliacaoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={historicoAvaliacaoStyle.notificationBadge}>
-                  <Text style={historicoAvaliacaoStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>
         </View>

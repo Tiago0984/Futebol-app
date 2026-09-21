@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
 import { router } from "expo-router";
@@ -32,16 +33,7 @@ export default function Home() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={homeStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={homeStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={homeStyle.notificationBadge}>
-                  <Text style={homeStyle.notificationBadgeText}>2</Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="home" />
             </View>
           </View>
 

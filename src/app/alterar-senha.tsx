@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import alterarSenhaStyle from "@/styles/alterarSenhaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
@@ -74,19 +75,7 @@ export default function AlterarSenha() {
                 />
               </View>
 
-              <View style={alterarSenhaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={alterarSenhaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-
-                <View style={alterarSenhaStyle.notificationBadge}>
-                  <Text style={alterarSenhaStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="perfil" />
             </View>
           </View>
         </View>

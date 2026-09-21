@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import agendaStyle from "@/styles/agendaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
@@ -50,16 +51,7 @@ export default function Agenda() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={agendaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={agendaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={agendaStyle.notificationBadge}>
-                  <Text style={agendaStyle.notificationBadgeText}>2</Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="agenda" />
             </View>
           </View>
 

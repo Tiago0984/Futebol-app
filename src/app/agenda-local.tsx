@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import agendaLocalStyle from "@/styles/agendaLocalStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
@@ -106,18 +107,7 @@ export default function AgendaLocal() {
                 />
               </Pressable>
 
-              <Pressable style={agendaLocalStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={agendaLocalStyle.headerIcon}
-                  contentFit="contain"
-                  tintColor={cores.branco}
-                />
-
-                <View style={agendaLocalStyle.notificationBadge}>
-                  <Text style={agendaLocalStyle.notificationText}>2</Text>
-                </View>
-              </Pressable>
+              <BotaoNotificacoes abaAtiva="agenda" />
             </View>
           </View>
 

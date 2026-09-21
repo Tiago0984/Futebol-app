@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import conquistasStyle from "@/styles/conquistasStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
@@ -83,16 +84,7 @@ export default function Conquistas() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={conquistasStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={conquistasStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={conquistasStyle.notificationBadge}>
-                  <Text style={conquistasStyle.notificationBadgeText}>2</Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>
         </View>

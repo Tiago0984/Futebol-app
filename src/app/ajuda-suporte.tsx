@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import ajudaSuporteStyle from "@/styles/ajudaSuporteStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
@@ -115,17 +116,7 @@ export default function AjudaSuporte() {
           </Pressable>
 
           <View style={ajudaSuporteStyle.headerRight}>
-            <View style={ajudaSuporteStyle.notificationButton}>
-              <Image
-                source={require("@/assets/images/img/sinoBranco.png")}
-                style={ajudaSuporteStyle.notificationIcon}
-                resizeMode="contain"
-              />
-
-              <View style={ajudaSuporteStyle.notificationBadge}>
-                <Text style={ajudaSuporteStyle.notificationBadgeText}>2</Text>
-              </View>
-            </View>
+            <BotaoNotificacoes abaAtiva="perfil" />
           </View>
         </View>
 

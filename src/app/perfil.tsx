@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import perfilStyle from "@/styles/perfilStyle";
@@ -46,17 +47,7 @@ export default function Perfil() {
               />
             </View>
 
-            <View style={perfilStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/sinoBranco.png")}
-                style={perfilStyle.headerIcon}
-                resizeMode="contain"
-              />
-
-              <View style={perfilStyle.notificationBadge}>
-                <Text style={perfilStyle.notificationBadgeText}>2</Text>
-              </View>
-            </View>
+            <BotaoNotificacoes abaAtiva="perfil" />
           </View>
         </View>
 

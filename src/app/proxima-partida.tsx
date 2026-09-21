@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import fundoStyle from "@/styles/fundoStyle";
 import proximaPartidaStyle from "@/styles/proximaPartidaStyle";
 import { router } from "expo-router";
@@ -132,18 +133,7 @@ export default function ProximaPartida() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={proximaPartidaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={proximaPartidaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={proximaPartidaStyle.notificationBadge}>
-                  <Text style={proximaPartidaStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>
         </View>

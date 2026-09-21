@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import ajudaPerguntasStyle from "@/styles/ajudaPerguntasStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
@@ -271,25 +272,7 @@ export default function AjudaPerguntas() {
               />
             </View>
 
-            <View style={ajudaPerguntasStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/sinoBranco.png")}
-                style={ajudaPerguntasStyle.headerIcon}
-                resizeMode="contain"
-              />
-
-              <View
-                style={ajudaPerguntasStyle.notificationBadge}
-              >
-                <Text
-                  style={
-                    ajudaPerguntasStyle.notificationBadgeText
-                  }
-                >
-                  2
-                </Text>
-              </View>
-            </View>
+            <BotaoNotificacoes abaAtiva="perfil" />
           </View>
         </View>
 

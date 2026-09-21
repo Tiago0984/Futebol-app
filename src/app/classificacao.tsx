@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import classificacaoStyle from "@/styles/classificacaoStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
@@ -70,18 +71,7 @@ export default function Classificacao() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={classificacaoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={classificacaoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={classificacaoStyle.notificationBadge}>
-                  <Text style={classificacaoStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>
         </View>

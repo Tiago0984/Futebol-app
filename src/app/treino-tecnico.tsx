@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import fundoStyle from "@/styles/fundoStyle";
 import treinoTecnicoStyle from "@/styles/treinoTecnicoStyle";
 import { router } from "expo-router";
@@ -55,18 +56,7 @@ export default function TreinoTecnico() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={treinoTecnicoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={treinoTecnicoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={treinoTecnicoStyle.notificationBadge}>
-                  <Text style={treinoTecnicoStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="agenda" />
             </View>
           </View>
         </View>

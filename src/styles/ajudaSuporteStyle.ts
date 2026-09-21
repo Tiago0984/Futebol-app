@@ -36,38 +36,9 @@ const ajudaSuporteStyle = StyleSheet.create({
     justifyContent: "center",
   },
 
-  notificationButton: {
-    position: "relative",
-    width: 28,
-    height: 30,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  notificationIcon: {
-    width: iconSizes.estatistica,
-    height: iconSizes.estatistica,
-  },
 
-  notificationBadge: {
-    position: "absolute",
-    top: -2,
-    right: -5,
-    minWidth: 15,
-    height: 15,
-    paddingHorizontal: 3,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: cores.vermelho,
-  },
 
-  notificationBadgeText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.legenda,
-    fontWeight: "700",
-    color: cores.branco,
-  },
 
   /* TÍTULO */
 

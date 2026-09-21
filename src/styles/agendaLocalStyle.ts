@@ -74,25 +74,7 @@ const agendaLocalStyle = StyleSheet.create({
     height: iconSizes.acaoHeader,
   },
 
-  notificationBadge: {
-    position: "absolute",
-    top: -3,
-    right: -5,
-    minWidth: 15,
-    height: 15,
-    borderRadius: 8,
-    paddingHorizontal: 3,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: cores.vermelho,
-  },
 
-  notificationText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.pequeno,
-    fontWeight: "700",
-    color: cores.branco,
-  },
 
   // MAPA
   mapContainer: {

@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import desempenhoStyle from "@/styles/desempenhoStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
@@ -70,19 +71,7 @@ export default function Desempenho() {
               />
             </View>
 
-            <View style={desempenhoStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/sinoBranco.png")}
-                style={desempenhoStyle.headerIcon}
-                resizeMode="contain"
-              />
-
-              <View style={desempenhoStyle.notificationBadge}>
-                <Text style={desempenhoStyle.notificationBadgeText}>
-                  2
-                </Text>
-              </View>
-            </View>
+            <BotaoNotificacoes abaAtiva="desempenho" />
           </View>
         </View>
 

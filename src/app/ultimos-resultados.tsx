@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import fundoStyle from "@/styles/fundoStyle";
 import ultimosResultadosStyle from "@/styles/ultimosResultadosStyle";
 import { cores } from "@/styles/variaveis";
@@ -108,18 +109,7 @@ export default function UltimosResultados() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={ultimosResultadosStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={ultimosResultadosStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={ultimosResultadosStyle.notificationBadge}>
-                  <Text style={ultimosResultadosStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>
         </View>

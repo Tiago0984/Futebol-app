@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import avaliacaoFisicaStyle from "@/styles/avaliacaoFisicaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { LinearGradient } from "expo-linear-gradient";
@@ -117,18 +118,7 @@ export default function AvaliacaoFisica() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={avaliacaoFisicaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={avaliacaoFisicaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={avaliacaoFisicaStyle.notificationBadge}>
-                  <Text style={avaliacaoFisicaStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>
         </View>

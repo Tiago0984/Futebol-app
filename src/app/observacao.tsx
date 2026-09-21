@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import observacaoStyle from "@/styles/observacaoStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
@@ -67,16 +68,7 @@ export default function Observacao() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={observacaoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={observacaoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={observacaoStyle.notificationBadge}>
-                  <Text style={observacaoStyle.notificationBadgeText}>2</Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>
         </View>

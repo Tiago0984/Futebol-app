@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import campeonatosStyle from "@/styles/campeonatosStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
@@ -56,18 +57,7 @@ export default function Campeonatos() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={campeonatosStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={campeonatosStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={campeonatosStyle.notificationBadge}>
-                  <Text style={campeonatosStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>
         </View>

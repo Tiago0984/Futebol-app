@@ -55,24 +55,6 @@ const comissaoTecnicaStyle = StyleSheet.create({
     width: iconSizes.acaoHeader,
     height: iconSizes.acaoHeader,
   },
-  notificationBadge: {
-    position: "absolute",
-    top: -5,
-    right: -6,
-    backgroundColor: cores.vermelho,
-    borderRadius: 8,
-    minWidth: 15,
-    height: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 3,
-  },
-  notificationBadgeText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.pequeno,
-    fontWeight: "700",
-    color: cores.branco,
-  },
 
   profileSection: {
     flexDirection: "row",

@@ -61,25 +61,7 @@ const ajudaPerguntasStyle = StyleSheet.create({
     height: iconSizes.estatistica,
   },
 
-  notificationBadge: {
-    position: "absolute",
-    top: -2,
-    right: -4,
-    minWidth: 15,
-    height: 15,
-    paddingHorizontal: 3,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: cores.vermelho,
-  },
 
-  notificationBadgeText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.legenda,
-    fontWeight: "700",
-    color: cores.branco,
-  },
 
   /* TÍTULO */
 

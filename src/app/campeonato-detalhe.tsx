@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import campeonatoDetalheStyle from "@/styles/campeonatoDetalheStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
@@ -60,19 +61,7 @@ export default function CampeonatoDetalhe() {
               />
             </View>
 
-            <View style={campeonatoDetalheStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/sinoBranco.png")}
-                style={campeonatoDetalheStyle.headerIcon}
-                resizeMode="contain"
-              />
-
-              <View style={campeonatoDetalheStyle.notificationBadge}>
-                <Text style={campeonatoDetalheStyle.notificationBadgeText}>
-                  2
-                </Text>
-              </View>
-            </View>
+            <BotaoNotificacoes abaAtiva="campeonatos" />
           </View>
         </View>
 

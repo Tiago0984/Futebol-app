@@ -1,4 +1,5 @@
 import TabBar from "@/components/tabBar";
+import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import indicadoresStyle from "@/styles/indicadoresStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { LinearGradient } from "expo-linear-gradient";
@@ -174,18 +175,7 @@ export default function Indicadores() {
                   resizeMode="contain"
                 />
               </View>
-              <View style={indicadoresStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/sinoBranco.png")}
-                  style={indicadoresStyle.headerIcon}
-                  resizeMode="contain"
-                />
-                <View style={indicadoresStyle.notificationBadge}>
-                  <Text style={indicadoresStyle.notificationBadgeText}>
-                    2
-                  </Text>
-                </View>
-              </View>
+              <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>
         </View>
