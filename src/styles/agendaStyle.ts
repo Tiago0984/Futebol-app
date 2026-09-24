@@ -217,6 +217,8 @@ const agendaStyle = StyleSheet.create({
     columnGap: 10,
   },
   filterPill: {
+    flexDirection: "row",
+    columnGap: 6,
     paddingHorizontal: 16,
     height: 34,
     borderRadius: 20,
@@ -230,6 +232,12 @@ const agendaStyle = StyleSheet.create({
     borderColor: cores.vermelho,
   },
   filterPillText: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.destaqueLeve,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+  filterPillCount: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",
@@ -320,6 +328,14 @@ const agendaStyle = StyleSheet.create({
     height: 13,
     marginRight: 5,
   },
+  nextStatusIconCircle: {
+    width: 13,
+    height: 13,
+    borderRadius: 7,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 5,
+  },
   nextConfirmedText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.corpo,
@@ -387,6 +403,14 @@ const agendaStyle = StyleSheet.create({
     bottom: -18,
     width: 2,
     backgroundColor: "rgba(255,255,255,0.15)",
+  },
+  timelineItemContent: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  // Compromissos que já passaram ficam esmaecidos
+  passado: {
+    opacity: 0.4,
   },
   timelineIconSquare: {
     width: 40,
