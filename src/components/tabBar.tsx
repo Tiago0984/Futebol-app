@@ -24,7 +24,6 @@ const ABAS: { nome: TabName; label: string; rota?: "/home" | "/agenda" | "/campe
   { nome: "home", label: "Home", rota: "/home" },
   { nome: "agenda", label: "Agenda", rota: "/agenda" },
   { nome: "campeonatos", label: "Campeonatos", rota: "/campeonatos" },
-  { nome: "desempenho", label: "Desempenho", rota: "/desempenho" },
   { nome: "perfil", label: "Usuário", rota: "/perfil" },
 ];
 

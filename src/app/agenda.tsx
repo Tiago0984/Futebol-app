@@ -105,60 +105,6 @@ export default function Agenda() {
           })}
         </View>
 
-        <View style={agendaStyle.todayCard}>
-          <View style={agendaStyle.todayCardTopRow}>
-            <View style={agendaStyle.todayCardLeft}>
-              <View>
-                <Image
-                  source={require("@/assets/images/img/agendaVermelha.png")}
-                  style={agendaStyle.todayIcon}
-                  resizeMode="contain"
-                />
-              </View>
-              <View>
-                <Text style={agendaStyle.todayLabel}>Hoje</Text>
-                <Text style={agendaStyle.todaySubLabel}>24 de Maio</Text>
-              </View>
-            </View>
-            <View style={agendaStyle.todayCardRight}>
-              <Text style={agendaStyle.todayCountText}>3 compromissos</Text>
-              <Text style={agendaStyle.todayNextText}>Próximo às 17:30</Text>
-            </View>
-          </View>
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={agendaStyle.todayPillsScroll}
-            contentContainerStyle={agendaStyle.todayPillsRow}
-          >
-            <View style={agendaStyle.todayPill}>
-              <Image
-                source={require("@/assets/images/img/tenisvermelho.png")}
-                style={agendaStyle.todayPillIcon}
-                resizeMode="contain"
-              />
-              <Text style={agendaStyle.todayPillText}>Treino x1</Text>
-            </View>
-            <View style={agendaStyle.todayPill}>
-              <Image
-                source={require("@/assets/images/img/coracaoVermelho.png")}
-                style={agendaStyle.todayPillIcon}
-                resizeMode="contain"
-              />
-              <Text style={agendaStyle.todayPillText}>Avaliação x1</Text>
-            </View>
-            <View style={agendaStyle.todayPill}>
-              <Image
-                source={require("@/assets/images/img/grupoPessoasVermelho.png")}
-                style={agendaStyle.todayPillIcon}
-                resizeMode="contain"
-              />
-              <Text style={agendaStyle.todayPillText}>Reunião x1</Text>
-            </View>
-          </ScrollView>
-        </View>
-
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
