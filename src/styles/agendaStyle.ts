@@ -210,6 +210,8 @@ const agendaStyle = StyleSheet.create({
 
   filterScroll: {
     marginTop: 20,
+    // Fica só com a altura das pílulas; o resto do espaço é da lista
+    flexGrow: 0,
   },
   filterRow: {
     flexDirection: "row",

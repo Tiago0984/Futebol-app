@@ -4,7 +4,7 @@ import agendaStyle from "@/styles/agendaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
 import { Href, router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 const diasDaSemana = [
@@ -64,6 +64,54 @@ type Compromisso = {
 
 // Lista em ordem cronológica
 const compromissos: Compromisso[] = [
+  {
+    id: "cafe-da-manha",
+    rota: "/agenda-local",
+    categoria: "Reuniões",
+    horario: "07:30",
+    titulo: "Café da Manhã",
+    local: "Refeitório",
+    responsavel: "Nutricionista Paula",
+    status: "confirmado" as Status,
+    icone: require("@/assets/images/img/grupoPessoasVermelho.png"),
+    corIcone: cores.rosa,
+  },
+  {
+    id: "treino-regenerativo",
+    rota: "/treino-tecnico",
+    categoria: "Treinos",
+    horario: "09:00",
+    titulo: "Treino Regenerativo",
+    local: "Campo Auxiliar",
+    responsavel: "Professor Lucas",
+    status: "alterado" as Status,
+    icone: require("@/assets/images/img/coracaoVermelho.png"),
+    corIcone: cores.vermelho20,
+  },
+  {
+    id: "exame-medico",
+    rota: "/avaliacao-fisica",
+    categoria: "Avaliações",
+    horario: "11:00",
+    titulo: "Exame Médico",
+    local: "Departamento Médico",
+    responsavel: "Dr. Ricardo",
+    status: "confirmado" as Status,
+    icone: require("@/assets/images/img/desempenhoVermelho.png"),
+    corIcone: cores.pastel,
+  },
+  {
+    id: "treino-tatico",
+    rota: "/treino-tecnico",
+    categoria: "Treinos",
+    horario: "14:30",
+    titulo: "Treino Tático",
+    local: "Campo Principal",
+    responsavel: "Professor João",
+    status: "confirmado" as Status,
+    icone: require("@/assets/images/img/atletaVermelho.png"),
+    corIcone: cores.vermelho20,
+  },
   {
     id: "treino-tecnico",
     categoria: "Treinos",
@@ -126,6 +174,12 @@ const compromissos: Compromisso[] = [
   },
 ];
 
+// Quantos compromissos já passados aparecem antes do "Próximo compromisso"
+const LIMITE_PASSADOS = 3;
+
+// Espaço entre os filtros e o primeiro horário da timeline
+const ESPACO_TOPO_LISTA = 10;
+
 function horarioAtual() {
   if (HORARIO_SIMULADO) return HORARIO_SIMULADO;
   const agora = new Date();
@@ -145,6 +199,8 @@ function contarCompromissos(filtro: string) {
 
 export default function Agenda() {
   const [filtroAtivo, setFiltroAtivo] = useState("Todos");
+  const listaRef = useRef<ScrollView>(null);
+  const jaPosicionou = useRef(false);
 
   const [agora, setAgora] = useState(horarioAtual);
 
@@ -174,6 +230,8 @@ export default function Agenda() {
   );
   const proximo = indiceProximo >= 0 ? visiveis[indiceProximo] : null;
   const passados = visiveis.filter((c) => c.horario < agora);
+  // A lista abre rolada até este passado; os mais antigos ficam acima
+  const indiceInicial = Math.max(passados.length - LIMITE_PASSADOS, 0);
   const futuros = visiveis.filter((c) => c.horario >= agora && c !== proximo);
 
   return (
@@ -185,115 +243,141 @@ export default function Agenda() {
       />
       <View style={fundoStyle.backgroundOverlay} />
 
+      <View style={agendaStyle.header}>
+        <View style={agendaStyle.headerTopRow}>
+          <View>
+            <Text style={agendaStyle.screenTitle}>Agenda</Text>
+            <Text style={agendaStyle.screenSubtitle}>
+              Sua programação esportiva
+            </Text>
+          </View>
+          <View style={agendaStyle.headerIconsRow}>
+            <View style={agendaStyle.headerIconButton}>
+              <Image
+                source={require("@/assets/images/img/shoppingbranco.png")}
+                style={agendaStyle.headerIcon}
+                resizeMode="contain"
+              />
+            </View>
+            <BotaoNotificacoes abaAtiva="agenda" />
+          </View>
+        </View>
+
+        <View style={agendaStyle.monthNavRow}>
+          <View style={agendaStyle.monthNavLeft}>
+            <Text style={agendaStyle.monthChevron}>‹</Text>
+            <Text style={agendaStyle.monthText}>Agosto 2026</Text>
+            <Text style={agendaStyle.monthChevron}>›</Text>
+          </View>
+          <View style={agendaStyle.monthNavRight}>
+            <Image
+              source={require("@/assets/images/img/setaVermelha.png")}
+              style={agendaStyle.dropdownChevron}
+              resizeMode="contain"
+            />
+            <View style={agendaStyle.calendarButton}>
+              <Image
+                source={require("@/assets/images/img/agendaBranca.png")}
+                style={agendaStyle.calendarButtonIcon}
+                resizeMode="contain"
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+
+      <View style={agendaStyle.weekStrip}>
+        {diasDaSemana.map((dia) => {
+          const ativo = dia.label === "QUI";
+          return (
+            <View key={dia.label} style={agendaStyle.weekDayCol}>
+              <Text style={agendaStyle.weekDayLabel}>{dia.label}</Text>
+              <View
+                style={[
+                  agendaStyle.weekDayCircle,
+                  ativo && agendaStyle.weekDayCircleActive,
+                ]}
+              >
+                <Text
+                  style={[
+                    agendaStyle.weekDayNumber,
+                    ativo && agendaStyle.weekDayNumberActive,
+                  ]}
+                >
+                  {dia.numero}
+                </Text>
+              </View>
+              <View style={agendaStyle.weekDayDot} />
+            </View>
+          );
+        })}
+      </View>
+
       <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={agendaStyle.filterScroll}
+        contentContainerStyle={agendaStyle.filterRow}
+      >
+        {filtros.map((filtro) => {
+          const ativo = filtro === filtroAtivo;
+          return (
+            <Pressable
+              key={filtro}
+              style={[
+                agendaStyle.filterPill,
+                ativo && agendaStyle.filterPillActive,
+              ]}
+              onPress={() => {
+                setFiltroAtivo(filtro);
+                jaPosicionou.current = false;
+              }}
+            >
+              <Text style={agendaStyle.filterPillText}>{filtro}</Text>
+              <Text style={agendaStyle.filterPillCount}>
+                {contarCompromissos(filtro)}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      {/* Só a timeline rola; cabeçalho, dias e filtros ficam fixos.
+          A key remonta a lista ao trocar de filtro, voltando à posição inicial */}
+      <ScrollView
+        key={filtroAtivo}
+        ref={listaRef}
         style={{ flex: 1 }}
         contentContainerStyle={agendaStyle.scrollContent}
       >
-        <View style={agendaStyle.header}>
-          <View style={agendaStyle.headerTopRow}>
-            <View>
-              <Text style={agendaStyle.screenTitle}>Agenda</Text>
-              <Text style={agendaStyle.screenSubtitle}>
-                Sua programação esportiva
-              </Text>
-            </View>
-            <View style={agendaStyle.headerIconsRow}>
-              <View style={agendaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={agendaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
-              <BotaoNotificacoes abaAtiva="agenda" />
-            </View>
-          </View>
-
-          <View style={agendaStyle.monthNavRow}>
-            <View style={agendaStyle.monthNavLeft}>
-              <Text style={agendaStyle.monthChevron}>‹</Text>
-              <Text style={agendaStyle.monthText}>Agosto 2026</Text>
-              <Text style={agendaStyle.monthChevron}>›</Text>
-            </View>
-            <View style={agendaStyle.monthNavRight}>
-              <Image
-                source={require("@/assets/images/img/setaVermelha.png")}
-                style={agendaStyle.dropdownChevron}
-                resizeMode="contain"
-              />
-              <View style={agendaStyle.calendarButton}>
-                <Image
-                  source={require("@/assets/images/img/agendaBranca.png")}
-                  style={agendaStyle.calendarButtonIcon}
-                  resizeMode="contain"
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={agendaStyle.weekStrip}>
-          {diasDaSemana.map((dia) => {
-            const ativo = dia.label === "QUI";
-            return (
-              <View key={dia.label} style={agendaStyle.weekDayCol}>
-                <Text style={agendaStyle.weekDayLabel}>{dia.label}</Text>
-                <View
-                  style={[
-                    agendaStyle.weekDayCircle,
-                    ativo && agendaStyle.weekDayCircleActive,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      agendaStyle.weekDayNumber,
-                      ativo && agendaStyle.weekDayNumberActive,
-                    ]}
-                  >
-                    {dia.numero}
-                  </Text>
-                </View>
-                <View style={agendaStyle.weekDayDot} />
-              </View>
-            );
-          })}
-        </View>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={agendaStyle.filterScroll}
-          contentContainerStyle={agendaStyle.filterRow}
-        >
-          {filtros.map((filtro) => {
-            const ativo = filtro === filtroAtivo;
-            return (
-              <Pressable
-                key={filtro}
-                style={[
-                  agendaStyle.filterPill,
-                  ativo && agendaStyle.filterPillActive,
-                ]}
-                onPress={() => setFiltroAtivo(filtro)}
-              >
-                <Text style={agendaStyle.filterPillText}>{filtro}</Text>
-                <Text style={agendaStyle.filterPillCount}>
-                  {contarCompromissos(filtro)}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-
         {passados.length > 0 && (
-          <View style={agendaStyle.timelineSection}>
+          <View
+            style={[
+              agendaStyle.timelineSection,
+              { paddingTop: ESPACO_TOPO_LISTA },
+            ]}
+          >
             {passados.map((item, index) => (
-              <ItemTimeline
+              <View
                 key={item.id}
-                item={item}
-                passado
-                comLinha={index < passados.length - 1 || !!proximo}
-              />
+                onLayout={(e) => {
+                  // A seção é o primeiro item da lista (y = 0), então o y do
+                  // item dentro dela já é a posição de rolagem. Desconta o
+                  // espaço do topo para o item não colar nos filtros
+                  if (index !== indiceInicial || jaPosicionou.current) return;
+                  jaPosicionou.current = true;
+                  listaRef.current?.scrollTo({
+                    y: Math.max(e.nativeEvent.layout.y - ESPACO_TOPO_LISTA, 0),
+                    animated: false,
+                  });
+                }}
+              >
+                <ItemTimeline
+                  item={item}
+                  passado
+                  comLinha={index < passados.length - 1 || !!proximo}
+                />
+              </View>
             ))}
           </View>
         )}
@@ -420,7 +504,14 @@ export default function Agenda() {
           </View>
         )}
 
-        <View style={agendaStyle.timelineSection}>
+        <View
+          style={[
+            agendaStyle.timelineSection,
+            // Sem passados e sem card, os futuros abrem a lista
+            passados.length === 0 &&
+              !proximo && { paddingTop: ESPACO_TOPO_LISTA },
+          ]}
+        >
           {futuros.map((item, index) => (
             <ItemTimeline
               key={item.id}
