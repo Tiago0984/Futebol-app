@@ -131,7 +131,7 @@ function horarioAtual() {
   const agora = new Date();
   const hh = String(agora.getHours()).padStart(2, "0");
   const mm = String(agora.getMinutes()).padStart(2, "0");
-  return `${17}:${31}`;
+  return `${hh}:${mm}`;
 }
 
 function pertenceAoFiltro(categoria: string, filtro: string) {
@@ -148,22 +148,33 @@ export default function Agenda() {
 
   const [agora, setAgora] = useState(horarioAtual);
 
-  // Atualiza o horário a cada 30s para trocar o próximo compromisso sozinho
+  // Atualiza o horário sempre na virada do minuto para trocar o próximo compromisso sozinho
   useEffect(() => {
-    const intervalo = setInterval(() => setAgora(horarioAtual()), 30000);
-    return () => clearInterval(intervalo);
+    let timeout: ReturnType<typeof setTimeout>;
+    const agendar = () => {
+      const agora = new Date();
+      const msAteVirada =
+        (60 - agora.getSeconds()) * 1000 - agora.getMilliseconds();
+      timeout = setTimeout(() => {
+        setAgora(horarioAtual());
+        agendar();
+      }, msAteVirada);
+    };
+    agendar();
+    return () => clearTimeout(timeout);
   }, []);
 
   const visiveis = compromissos.filter((c) =>
     pertenceAoFiltro(c.categoria, filtroAtivo),
   );
-  // Próximo = primeiro que ainda não começou e não foi cancelado
+  // Próximo = primeiro não cancelado cujo horário ainda não passou
+  // (no próprio minuto do horário ele continua como próximo)
   const indiceProximo = visiveis.findIndex(
-    (c) => c.horario > agora && c.status !== "cancelado",
+    (c) => c.horario >= agora && c.status !== "cancelado",
   );
   const proximo = indiceProximo >= 0 ? visiveis[indiceProximo] : null;
-  const passados = visiveis.filter((c) => c.horario <= agora);
-  const futuros = visiveis.filter((c) => c.horario > agora && c !== proximo);
+  const passados = visiveis.filter((c) => c.horario < agora);
+  const futuros = visiveis.filter((c) => c.horario >= agora && c !== proximo);
 
   return (
     <View style={fundoStyle.container}>
