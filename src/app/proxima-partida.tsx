@@ -110,18 +110,18 @@ export default function ProximaPartida() {
             <Pressable
               style={proximaPartidaStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={proximaPartidaStyle.backChevron}>‹</Text>
-              <Text style={proximaPartidaStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={proximaPartidaStyle.headerTitleCol}>
-              <Text style={proximaPartidaStyle.headerTitle} numberOfLines={1}>
+              <Text style={proximaPartidaStyle.headerTitle}>
                 Próximas partidas
               </Text>
               <Text
-                style={proximaPartidaStyle.headerSubtitle}
-                numberOfLines={1}
-              >
+                style={proximaPartidaStyle.headerSubtitle}>
                 Categoria Sub-17
               </Text>
             </View>

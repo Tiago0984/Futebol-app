@@ -87,10 +87,11 @@ export default function AgendaLocal() {
             <Pressable
               style={agendaLocalStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
-              <Text style={agendaLocalStyle.backIcon}>‹</Text>
-
-              <Text style={agendaLocalStyle.backText}>Voltar</Text>
+              <Text style={agendaLocalStyle.backChevron}>‹</Text>
             </Pressable>
 
             <Text style={agendaLocalStyle.headerTitle} pointerEvents="none">

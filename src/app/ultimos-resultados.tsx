@@ -86,18 +86,18 @@ export default function UltimosResultados() {
             <Pressable
               style={ultimosResultadosStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={ultimosResultadosStyle.backChevron}>‹</Text>
-              <Text style={ultimosResultadosStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={ultimosResultadosStyle.headerTitleCol}>
-              <Text style={ultimosResultadosStyle.headerTitle} numberOfLines={1}>
+              <Text style={ultimosResultadosStyle.headerTitle}>
                 Últimos resultados
               </Text>
               <Text
-                style={ultimosResultadosStyle.headerSubtitle}
-                numberOfLines={1}
-              >
+                style={ultimosResultadosStyle.headerSubtitle}>
                 Categoria Sub-17
               </Text>
             </View>

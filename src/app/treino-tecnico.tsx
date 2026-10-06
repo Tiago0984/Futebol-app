@@ -44,9 +44,11 @@ export default function TreinoTecnico() {
             <Pressable
               style={treinoTecnicoStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={treinoTecnicoStyle.backChevron}>‹</Text>
-              <Text style={treinoTecnicoStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={treinoTecnicoStyle.headerIconsRow}>
               <View style={treinoTecnicoStyle.headerIconButton}>

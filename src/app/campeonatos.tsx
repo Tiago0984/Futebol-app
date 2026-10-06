@@ -43,6 +43,15 @@ export default function Campeonatos() {
       >
         <View style={campeonatosStyle.header}>
           <View style={campeonatosStyle.headerTopRow}>
+            <Pressable
+              style={campeonatosStyle.backButton}
+              onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
+            >
+              <Text style={campeonatosStyle.backChevron}>‹</Text>
+            </Pressable>
             <View style={campeonatosStyle.headerTitleCol}>
               <Text style={campeonatosStyle.screenTitle}>Campeonatos</Text>
               <Text style={campeonatosStyle.screenSubtitle}>
@@ -187,7 +196,8 @@ export default function Campeonatos() {
           </Pressable>
         </View>
 
-        <View style={[campeonatosStyle.card, { width: larguraCard }]}>
+        {/* Cards dos CAMPEONATOS */}
+        <Pressable style={[campeonatosStyle.card, { width: larguraCard }]} onPress={() => router.navigate("/campeonato-detalhe")}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
             style={[
@@ -253,16 +263,16 @@ export default function Campeonatos() {
                   Quartas de final
                 </Text>
               </View>
-              <Pressable onPress={() => router.navigate("/campeonato-detalhe")}>
+              <Pressable>
                 <Text style={campeonatosStyle.verCampeonatoText}>
                   Ver campeonato {">"}
                 </Text>
               </Pressable>
             </View>
           </View>
-        </View>
+        </Pressable>
 
-        <View style={[campeonatosStyle.card, { width: larguraCard }]}>
+        <Pressable style={[campeonatosStyle.card, { width: larguraCard }]} onPress={() => router.navigate("/campeonato-detalhe")}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
             style={[
@@ -337,9 +347,9 @@ export default function Campeonatos() {
               </Pressable>
             </View>
           </View>
-        </View>
+        </Pressable>
 
-        <View style={[campeonatosStyle.card, { width: larguraCard }]}>
+        <Pressable style={[campeonatosStyle.card, { width: larguraCard }]} onPress={() => router.navigate("/campeonato-detalhe")}>
           <Image
             source={require("@/assets/images/img/fundoCardCampeonatos2.png")}
             style={[
@@ -414,7 +424,7 @@ export default function Campeonatos() {
               </Pressable>
             </View>
           </View>
-        </View>
+        </Pressable>
         </>
         )}
       </ScrollView>

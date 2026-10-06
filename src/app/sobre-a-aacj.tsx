@@ -132,10 +132,11 @@ export default function SobreAACJ() {
           <Pressable
             style={sobreAACJStyle.backButton}
             onPress={() => router.back()}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
           >
-            <Text style={sobreAACJStyle.backText}>
-              {"< Voltar"}
-            </Text>
+            <Text style={sobreAACJStyle.backChevron}>‹</Text>
           </Pressable>
 
           <Text style={sobreAACJStyle.headerTitle}>

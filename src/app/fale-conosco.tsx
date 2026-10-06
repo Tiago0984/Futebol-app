@@ -47,8 +47,11 @@ export default function FaleConosco() {
           <Pressable
             style={faleConoscoStyle.backButton}
             onPress={() => router.back()}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
           >
-            <Text style={faleConoscoStyle.backText}>{"<"} Voltar</Text>
+            <Text style={faleConoscoStyle.backChevron}>‹</Text>
           </Pressable>
 
           <Text style={faleConoscoStyle.headerTitle}>Fale conosco</Text>

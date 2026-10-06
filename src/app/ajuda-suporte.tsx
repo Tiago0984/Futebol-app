@@ -111,8 +111,11 @@ export default function AjudaSuporte() {
           <Pressable
             style={ajudaSuporteStyle.backButton}
             onPress={() => router.back()}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
           >
-            <Text style={ajudaSuporteStyle.backText}>{"<"} Voltar</Text>
+            <Text style={ajudaSuporteStyle.backChevron}>‹</Text>
           </Pressable>
 
           <View style={ajudaSuporteStyle.headerRight}>

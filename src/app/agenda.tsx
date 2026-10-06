@@ -245,7 +245,16 @@ export default function Agenda() {
 
       <View style={agendaStyle.header}>
         <View style={agendaStyle.headerTopRow}>
-          <View>
+          <Pressable
+            style={agendaStyle.backButton}
+            onPress={() => router.back()}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
+          >
+            <Text style={agendaStyle.backChevron}>‹</Text>
+          </Pressable>
+          <View style={agendaStyle.headerTitleCol}>
             <Text style={agendaStyle.screenTitle}>Agenda</Text>
             <Text style={agendaStyle.screenSubtitle}>
               Sua programação esportiva

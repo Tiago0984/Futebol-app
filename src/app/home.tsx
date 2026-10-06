@@ -323,7 +323,6 @@ export default function Home() {
         </View>
 
         {/* PRÓXIMAS ATIVIDADES */}
-        {/* PRÓXIMAS ATIVIDADES */}
         <View style={homeStyle.activitiesSection}>
           <View style={homeStyle.activitiesHeaderRow}>
             <Text style={homeStyle.sectionTitle}>Próximas atividades</Text>

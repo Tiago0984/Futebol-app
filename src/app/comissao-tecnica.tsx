@@ -31,9 +31,11 @@ export default function ComissaoTecnica() {
             <Pressable
               style={comissaoTecnicaStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={comissaoTecnicaStyle.backChevron}>‹</Text>
-              <Text style={comissaoTecnicaStyle.backText}>Voltar</Text>
             </Pressable>
             <Text style={comissaoTecnicaStyle.headerTitle} pointerEvents="none">
               Comissão Técnica

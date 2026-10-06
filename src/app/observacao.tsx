@@ -48,15 +48,17 @@ export default function Observacao() {
             <Pressable
               style={observacaoStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={observacaoStyle.backChevron}>‹</Text>
-              <Text style={observacaoStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={observacaoStyle.headerTitleCol}>
-              <Text style={observacaoStyle.headerTitle} numberOfLines={1}>
+              <Text style={observacaoStyle.headerTitle}>
                 Observações Comissão
               </Text>
-              <Text style={observacaoStyle.headerSubtitle} numberOfLines={1}>
+              <Text style={observacaoStyle.headerSubtitle}>
                 Temporada 2026 - Categoria Sub-17
               </Text>
             </View>

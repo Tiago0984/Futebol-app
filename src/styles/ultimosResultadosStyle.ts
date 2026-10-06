@@ -16,25 +16,22 @@ const ultimosResultadosStyle = StyleSheet.create({
     alignItems: "center",
   },
   backButton: {
-    flexDirection: "row",
+    width: 32,
+    height: 32,
+    marginLeft: -8,
+    marginRight: 6,
     alignItems: "center",
+    justifyContent: "center",
   },
   backChevron: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 20,
+    fontSize: 34,
+    lineHeight: 36,
     fontWeight: "700",
-    color: cores.branco,
-    marginRight: 4,
-  },
-  backText: {
-    fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: fontSizes.subtitulo,
-    fontWeight: "600",
     color: cores.branco,
   },
   headerTitleCol: {
     flex: 1,
-    marginLeft: 14,
   },
   headerTitle: {
     fontFamily: fontes.OpenSans_Bold,

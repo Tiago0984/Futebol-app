@@ -98,15 +98,17 @@ export default function AvaliacaoFisica() {
             <Pressable
               style={avaliacaoFisicaStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={avaliacaoFisicaStyle.backChevron}>‹</Text>
-              <Text style={avaliacaoFisicaStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={avaliacaoFisicaStyle.headerTitleCol}>
-              <Text style={avaliacaoFisicaStyle.headerTitle} numberOfLines={1}>
+              <Text style={avaliacaoFisicaStyle.headerTitle}>
                 Avaliação Física
               </Text>
-              <Text style={avaliacaoFisicaStyle.headerSubtitle} numberOfLines={1}>
+              <Text style={avaliacaoFisicaStyle.headerSubtitle}>
                 Temporada 2026 - Categoria Sub-17
               </Text>
             </View>

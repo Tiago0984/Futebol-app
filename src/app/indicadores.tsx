@@ -155,15 +155,17 @@ export default function Indicadores() {
             <Pressable
               style={indicadoresStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={indicadoresStyle.backChevron}>‹</Text>
-              <Text style={indicadoresStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={indicadoresStyle.headerTitleCol}>
-              <Text style={indicadoresStyle.headerTitle} numberOfLines={1}>
+              <Text style={indicadoresStyle.headerTitle}>
                 Indicadores
               </Text>
-              <Text style={indicadoresStyle.headerSubtitle} numberOfLines={1}>
+              <Text style={indicadoresStyle.headerSubtitle}>
                 Temporada 2026 - Categoria Sub-17
               </Text>
             </View>

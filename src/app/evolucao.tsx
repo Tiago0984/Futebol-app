@@ -64,15 +64,17 @@ export default function Evolucao() {
             <Pressable
               style={evolucaoStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={evolucaoStyle.backChevron}>‹</Text>
-              <Text style={evolucaoStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={evolucaoStyle.headerTitleCol}>
-              <Text style={evolucaoStyle.headerTitle} numberOfLines={1}>
+              <Text style={evolucaoStyle.headerTitle}>
                 Evolução Geral
               </Text>
-              <Text style={evolucaoStyle.headerSubtitle} numberOfLines={1}>
+              <Text style={evolucaoStyle.headerSubtitle}>
                 Temporada 2026 - Categoria Sub-17
               </Text>
             </View>

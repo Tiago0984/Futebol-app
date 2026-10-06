@@ -43,9 +43,11 @@ export default function Configuracoes() {
             <Pressable
               style={configuracoesStyle.backButton}
               onPress={handleVoltar}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={configuracoesStyle.backChevron}>‹</Text>
-              <Text style={configuracoesStyle.backText}>Voltar</Text>
             </Pressable>
 
             <Text style={configuracoesStyle.headerTitle} pointerEvents="none">

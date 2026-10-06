@@ -51,15 +51,17 @@ export default function Classificacao() {
             <Pressable
               style={classificacaoStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={classificacaoStyle.backChevron}>‹</Text>
-              <Text style={classificacaoStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={classificacaoStyle.headerTitleCol}>
-              <Text style={classificacaoStyle.headerTitle} numberOfLines={1}>
+              <Text style={classificacaoStyle.headerTitle}>
                 Classificação
               </Text>
-              <Text style={classificacaoStyle.headerSubtitle} numberOfLines={1}>
+              <Text style={classificacaoStyle.headerSubtitle}>
                 Categoria Sub-17
               </Text>
             </View>

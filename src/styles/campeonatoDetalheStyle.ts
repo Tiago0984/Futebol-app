@@ -15,20 +15,25 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   header: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 22,
     minHeight: 78,
   },
 
   backButton: {
-    marginTop: 7,
-    marginRight: 20,
+    width: 32,
+    height: 32,
+    marginLeft: -8,
+    marginRight: 6,
+    alignItems: "center",
+    justifyContent: "center",
   },
-
-  backText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.subtitulo,
+  backChevron: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 34,
+    lineHeight: 36,
+    fontWeight: "700",
     color: cores.branco,
   },
 
@@ -39,7 +44,7 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   screenTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.subtitulo,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },

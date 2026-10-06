@@ -11,6 +11,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function Perfil() {
   const insets = useSafeAreaInsets();
 
+  function handleSair() {
+    // Limpa o histórico para o usuário não voltar ao app logado
+    if (router.canDismiss()) {
+      router.dismissAll();
+    }
+    router.replace("/");
+  }
+
   return (
     <View style={fundoStyle.container}>
       <Image
@@ -33,6 +41,15 @@ export default function Perfil() {
       >
         {/* HEADER */}
         <View style={perfilStyle.header}>
+          <Pressable
+            style={perfilStyle.backButton}
+            onPress={() => router.back()}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
+          >
+            <Text style={perfilStyle.backChevron}>‹</Text>
+          </Pressable>
           <View style={perfilStyle.headerTitleCol}>
             <Text style={perfilStyle.screenTitle}>Perfil</Text>
             <Text style={perfilStyle.screenSubtitle}>Minha conta</Text>
@@ -219,7 +236,10 @@ export default function Perfil() {
               <Text style={perfilStyle.menuArrow}>{">"}</Text>
             </Pressable>
 
-            <View style={[perfilStyle.infoRow, perfilStyle.infoRowLast]}>
+            <Pressable
+              style={[perfilStyle.infoRow, perfilStyle.infoRowLast]}
+              onPress={handleSair}
+            >
               <Image
                 source={require("@/assets/images/img/sairDaContaVermelho.png")}
                 style={perfilStyle.infoIcon}
@@ -228,7 +248,7 @@ export default function Perfil() {
               />
 
               <Text style={perfilStyle.logoutLabel}>Sair da conta</Text>
-            </View>
+            </Pressable>
           </View>
         </View>
       </ScrollView>

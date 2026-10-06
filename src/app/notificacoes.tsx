@@ -295,8 +295,11 @@ export default function Notificacoes() {
             <Pressable
               style={notificacoesStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
-              <Text style={notificacoesStyle.backText}>{"< Voltar"}</Text>
+              <Text style={notificacoesStyle.backChevron}>‹</Text>
             </Pressable>
 
             <Text style={notificacoesStyle.headerTitle}>Notificações</Text>

@@ -15,10 +15,26 @@ const perfilStyle = StyleSheet.create({
 
   header: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 24,
     paddingTop: 22,
+  },
+
+  backButton: {
+    width: 32,
+    height: 32,
+    marginLeft: -8,
+    marginRight: 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  backChevron: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 34,
+    lineHeight: 36,
+    fontWeight: "700",
+    color: cores.branco,
   },
 
   headerTitleCol: {

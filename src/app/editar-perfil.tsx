@@ -60,9 +60,11 @@ export default function EditarPerfil() {
             <Pressable
               style={editarPerfilStyle.backButton}
               onPress={handleVoltar}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={editarPerfilStyle.backChevron}>‹</Text>
-              <Text style={editarPerfilStyle.backText}>Voltar</Text>
             </Pressable>
 
             <Text style={editarPerfilStyle.headerTitle} pointerEvents="none">

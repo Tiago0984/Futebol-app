@@ -25,24 +25,22 @@ export default function DetalheProximaPartida() {
             <Pressable
               style={detalheProximaPartidaStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={detalheProximaPartidaStyle.backChevron}>‹</Text>
-              <Text style={detalheProximaPartidaStyle.backText}>Voltar</Text>
             </Pressable>
             <View
               style={detalheProximaPartidaStyle.headerTitleCol}
               pointerEvents="none"
             >
               <Text
-                style={detalheProximaPartidaStyle.headerTitle}
-                numberOfLines={1}
-              >
+                style={detalheProximaPartidaStyle.headerTitle}>
                 Próxima partida
               </Text>
               <Text
-                style={detalheProximaPartidaStyle.headerSubtitle}
-                numberOfLines={1}
-              >
+                style={detalheProximaPartidaStyle.headerSubtitle}>
                 Categoria Sub-17
               </Text>
             </View>

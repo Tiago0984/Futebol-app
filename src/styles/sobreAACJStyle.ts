@@ -19,13 +19,17 @@ const sobreAACJStyle = StyleSheet.create({
   },
 
   backButton: {
-    width: 90,
-    paddingVertical: 5,
+    width: 32,
+    height: 32,
+    marginLeft: -8,
+    alignItems: "center",
+    justifyContent: "center",
   },
-
-  backText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.subtitulo,
+  backChevron: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 34,
+    lineHeight: 36,
+    fontWeight: "700",
     color: cores.branco,
   },
 
@@ -33,13 +37,13 @@ const sobreAACJStyle = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.tituloSecao,
-    fontWeight: "700",
+    fontSize: fontSizes.tituloHeader,
+    fontWeight: "800",
     color: cores.branco,
   },
 
   headerSpacer: {
-    width: 90,
+    width: 24,
   },
 
   aboutContent: {

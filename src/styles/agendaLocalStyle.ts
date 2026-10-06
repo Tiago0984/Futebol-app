@@ -24,33 +24,28 @@ const agendaLocalStyle = StyleSheet.create({
   },
 
   backButton: {
-    width: 90,
-    flexDirection: "row",
+    width: 32,
+    height: 32,
+    marginLeft: -8,
     alignItems: "center",
+    justifyContent: "center",
   },
-
-  backIcon: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: 32,
-    lineHeight: 32,
-    color: cores.branco,
-    marginRight: 4,
-  },
-
-  backText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: 14,
+  backChevron: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 34,
+    lineHeight: 36,
+    fontWeight: "700",
     color: cores.branco,
   },
 
   headerTitle: {
     position: "absolute",
-    left: 0,
-    right: 0,
+    left: 72,
+    right: 72,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.tituloSecao,
-    fontWeight: "700",
+    fontSize: fontSizes.tituloHeader,
+    fontWeight: "800",
     color: cores.branco,
   },
 

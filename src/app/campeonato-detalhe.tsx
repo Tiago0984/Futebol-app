@@ -36,10 +36,11 @@ export default function CampeonatoDetalhe() {
           <Pressable
             style={campeonatoDetalheStyle.backButton}
             onPress={() => router.back()}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Voltar"
           >
-            <Text style={campeonatoDetalheStyle.backText}>
-              {"<"} Voltar
-            </Text>
+            <Text style={campeonatoDetalheStyle.backChevron}>‹</Text>
           </Pressable>
 
           <View style={campeonatoDetalheStyle.headerTitleCol}>

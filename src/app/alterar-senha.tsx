@@ -57,9 +57,11 @@ export default function AlterarSenha() {
             <Pressable
               style={alterarSenhaStyle.backButton}
               onPress={handleVoltar}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={alterarSenhaStyle.backChevron}>‹</Text>
-              <Text style={alterarSenhaStyle.backText}>Voltar</Text>
             </Pressable>
 
             <Text style={alterarSenhaStyle.headerTitle} pointerEvents="none">

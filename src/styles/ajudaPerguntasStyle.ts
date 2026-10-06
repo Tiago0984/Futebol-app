@@ -23,12 +23,15 @@ const ajudaPerguntasStyle = StyleSheet.create({
 
   backButton: {
     width: 78,
-    paddingVertical: 5,
+    height: 32,
+    alignItems: "flex-start",
+    justifyContent: "center",
   },
-
-  backText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.subtitulo,
+  backChevron: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 34,
+    lineHeight: 36,
+    fontWeight: "700",
     color: cores.branco,
   },
 
@@ -36,7 +39,8 @@ const ajudaPerguntasStyle = StyleSheet.create({
     flex: 1,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 13,
+    fontSize: fontSizes.tituloHeader,
+    fontWeight: "800",
     color: cores.branco,
   },
 

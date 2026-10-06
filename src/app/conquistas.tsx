@@ -64,15 +64,17 @@ export default function Conquistas() {
             <Pressable
               style={conquistasStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={conquistasStyle.backChevron}>‹</Text>
-              <Text style={conquistasStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={conquistasStyle.headerTitleCol}>
-              <Text style={conquistasStyle.headerTitle} numberOfLines={1}>
+              <Text style={conquistasStyle.headerTitle}>
                 Conquistas
               </Text>
-              <Text style={conquistasStyle.headerSubtitle} numberOfLines={1}>
+              <Text style={conquistasStyle.headerSubtitle}>
                 Temporada 2026 - Categoria Sub-17
               </Text>
             </View>

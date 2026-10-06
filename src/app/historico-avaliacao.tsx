@@ -76,21 +76,19 @@ export default function HistoricoAvaliacao() {
             <Pressable
               style={historicoAvaliacaoStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={historicoAvaliacaoStyle.backChevron}>‹</Text>
-              <Text style={historicoAvaliacaoStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={historicoAvaliacaoStyle.headerTitleCol}>
               <Text
-                style={historicoAvaliacaoStyle.headerTitle}
-                numberOfLines={1}
-              >
+                style={historicoAvaliacaoStyle.headerTitle}>
                 Histórico de Avaliações
               </Text>
               <Text
-                style={historicoAvaliacaoStyle.headerSubtitle}
-                numberOfLines={1}
-              >
+                style={historicoAvaliacaoStyle.headerSubtitle}>
                 Temporada 2026 - Categoria Sub-17
               </Text>
             </View>

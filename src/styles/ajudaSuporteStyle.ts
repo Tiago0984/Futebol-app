@@ -22,12 +22,17 @@ const ajudaSuporteStyle = StyleSheet.create({
   },
 
   backButton: {
-    paddingVertical: 5,
+    width: 32,
+    height: 32,
+    marginLeft: -8,
+    alignItems: "center",
+    justifyContent: "center",
   },
-
-  backText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.subtitulo,
+  backChevron: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 34,
+    lineHeight: 36,
+    fontWeight: "700",
     color: cores.branco,
   },
 

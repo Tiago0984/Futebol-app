@@ -58,15 +58,17 @@ export default function Metas() {
             <Pressable
               style={metasStyle.backButton}
               onPress={() => router.back()}
+              hitSlop={10}
+              accessibilityRole="button"
+              accessibilityLabel="Voltar"
             >
               <Text style={metasStyle.backChevron}>‹</Text>
-              <Text style={metasStyle.backText}>Voltar</Text>
             </Pressable>
             <View style={metasStyle.headerTitleCol}>
-              <Text style={metasStyle.headerTitle} numberOfLines={1}>
+              <Text style={metasStyle.headerTitle}>
                 Metas
               </Text>
-              <Text style={metasStyle.headerSubtitle} numberOfLines={1}>
+              <Text style={metasStyle.headerSubtitle}>
                 Temporada 2026 - Categoria Sub-17
               </Text>
             </View>

@@ -14,11 +14,29 @@ const agendaStyle = StyleSheet.create({
   headerTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
+  },
+  backButton: {
+    width: 32,
+    height: 32,
+    marginLeft: -8,
+    marginRight: 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  backChevron: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 34,
+    lineHeight: 36,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+  headerTitleCol: {
+    flex: 1,
   },
   screenTitle: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.numeroGrande,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },

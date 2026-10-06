@@ -22,32 +22,27 @@ const alterarSenhaStyle = StyleSheet.create({
   },
 
   backButton: {
-    flexDirection: "row",
+    width: 32,
+    height: 32,
+    marginLeft: -8,
     alignItems: "center",
+    justifyContent: "center",
   },
-
   backChevron: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: 20,
+    fontSize: 34,
+    lineHeight: 36,
     fontWeight: "700",
-    color: cores.branco,
-    marginRight: 4,
-  },
-
-  backText: {
-    fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: fontSizes.subtitulo,
-    fontWeight: "600",
     color: cores.branco,
   },
 
   headerTitle: {
     position: "absolute",
-    left: 0,
-    right: 0,
+    left: 72,
+    right: 72,
     textAlign: "center",
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.tituloSecao,
+    fontSize: fontSizes.tituloHeader,
     fontWeight: "800",
     color: cores.branco,
   },
