@@ -210,6 +210,8 @@ const homeStyle = StyleSheet.create({
   bannerTeam: {
     flexDirection: "row",
     alignItems: "center",
+    // Nomes longos de time encolhem em vez de estourar o banner
+    flexShrink: 1,
   },
 
   bannerTeamIcon: {
@@ -223,6 +225,7 @@ const homeStyle = StyleSheet.create({
     fontSize: fontSizes.pequeno,
     fontWeight: "700",
     color: cores.branco,
+    flexShrink: 1,
   },
 
   bannerVersus: {
@@ -237,6 +240,7 @@ const homeStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Regular,
     fontSize: fontSizes.pequeno,
     color: cores.branco70,
+    flexShrink: 1,
   },
 
   bannerFooter: {

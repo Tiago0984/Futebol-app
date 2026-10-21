@@ -46,39 +46,98 @@ type Atleta = {
   }[];
 };
 
+type TimeJogo = {
+  id_time: number;
+  nome_time: string;
+  logo_url: string | null;
+};
+
+// Só os campos de um evento de GET /api/v1/agenda usados na Home
+type Evento = {
+  id_evento: number;
+  tipo: string;
+  data: string;
+  horario_inicio: string | null;
+  situacao: string;
+  jogo: {
+    amistoso: boolean;
+    campeonato: { id_campeonato: number; nome_campeonato: string } | null;
+    time_casa: TimeJogo;
+    time_visitante: TimeJogo;
+    time_do_atleta: TimeJogo | null;
+  } | null;
+};
+
+const MESES = [
+  "JAN", "FEV", "MAR", "ABR", "MAI", "JUN",
+  "JUL", "AGO", "SET", "OUT", "NOV", "DEZ",
+];
+
+// "2026-10-15T00:00:00-03:00" + "10:00" -> "15 OUT · 10:00"
+// Recorta o texto da data (já vem no horário de Brasília) para não depender do fuso do aparelho
+function formatarDataJogo(data: string, horario: string | null) {
+  const dia = data.slice(8, 10);
+  const mes = MESES[Number(data.slice(5, 7)) - 1];
+  return `${dia} ${mes} · ${horario ?? "A definir"}`;
+}
+
 export default function Home() {
   const [atleta, setAtleta] = useState<Atleta | null>(null);
+  const [proximoJogo, setProximoJogo] = useState<Evento | null>(null);
 
   useEffect(() => {
-    async function carregarAtleta() {
+    async function carregarDados() {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
         router.replace("/selecao-perfil");
         return;
       }
+      const headers = {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      };
       try {
-        const resposta = await fetch(`${API}/atleta`, {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const [respostaAtleta, respostaAgenda] = await Promise.all([
+          fetch(`${API}/atleta`, { headers }),
+          fetch(`${API}/agenda`, { headers }),
+        ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
-        if (resposta.status === 401 || resposta.status === 403) {
+        if (respostaAtleta.status === 401 || respostaAtleta.status === 403) {
           await AsyncStorage.multiRemove(["token", "perfil"]);
           router.replace("/selecao-perfil");
           return;
         }
 
-        const json = await resposta.json();
-        if (json.success) setAtleta(json.data);
+        const jsonAtleta = await respostaAtleta.json();
+        if (jsonAtleta.success) setAtleta(jsonAtleta.data);
+
+        // Banner: primeiro jogo não cancelado entre os próximos eventos
+        const jsonAgenda = await respostaAgenda.json();
+        if (jsonAgenda.success) {
+          const jogo = (jsonAgenda.data.proximos as Evento[]).find(
+            (e) => e.tipo === "JOGO" && e.jogo && e.situacao !== "CANCELADO",
+          );
+          setProximoJogo(jogo ?? null);
+        }
       } catch (erro) {
-        console.log("Erro ao buscar dados do atleta:", erro);
+        console.log("Erro ao buscar dados da Home:", erro);
       }
     }
-    carregarAtleta();
+    carregarDados();
   }, []);
+
+  // Mostra primeiro o time em que o atleta está escalado; sem escalação, o time da casa
+  const jogo = proximoJogo?.jogo;
+  const meuTime = jogo ? (jogo.time_do_atleta ?? jogo.time_casa) : null;
+  const adversario = jogo
+    ? meuTime?.id_time === jogo.time_visitante.id_time
+      ? jogo.time_casa
+      : jogo.time_visitante
+    : null;
+
+  const hora = new Date().getHours();
+  const saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
 
   // Enquanto carrega (ou se falhar), mantém os textos padrão
   const primeiroNome = atleta?.nome_atleta.split(" ")[0] ?? "Atleta";
@@ -222,7 +281,7 @@ export default function Home() {
         <View style={homeStyle.header}>
           <View style={homeStyle.headerTopRow}>
             <View>
-              <Text style={homeStyle.greeting}>Bom dia</Text>
+              <Text style={homeStyle.greeting}>{saudacao}</Text>
 
               <Text style={homeStyle.greetingName}>{primeiroNome}</Text>
             </View>
@@ -285,53 +344,69 @@ export default function Home() {
           </View>
         </View>
 
-        {/* BANNER */}
-        <Pressable
-          style={homeStyle.banner}
-          onPress={() => router.navigate("/campeonatos")}
-        >
-          <Image
-            source={require("@/assets/images/img/fundoCardCampeonatos.png")}
-            style={homeStyle.bannerImage}
-            resizeMode="cover"
-          />
+        {/* BANNER: próximo jogo do atleta (some quando não há jogo marcado) */}
+        {proximoJogo && jogo && meuTime && adversario && (
+          <Pressable
+            style={homeStyle.banner}
+            onPress={() => router.navigate("/campeonatos")}
+          >
+            <Image
+              source={require("@/assets/images/img/fundoCardCampeonatos.png")}
+              style={homeStyle.bannerImage}
+              resizeMode="cover"
+            />
 
-          <View style={homeStyle.bannerOverlay} />
+            <View style={homeStyle.bannerOverlay} />
 
-          <View style={homeStyle.bannerContent}>
-            <View style={homeStyle.bannerTag}>
-              <Text style={homeStyle.bannerTagText}>CAMPEONATO</Text>
-            </View>
-
-            <Text style={homeStyle.bannerTitle}>Copa Escola 2026</Text>
-
-            <Text style={homeStyle.bannerSubtitle}>
-              Próximo desafio da equipe
-            </Text>
-
-            <View style={homeStyle.bannerMatchRow}>
-              <View style={homeStyle.bannerTeam}>
-                <Image
-                  source={require("@/assets/images/img/escudovermelho.png")}
-                  style={homeStyle.bannerTeamIcon}
-                  resizeMode="contain"
-                />
-
-                <Text style={homeStyle.bannerTeamText}>AACJ</Text>
+            <View style={homeStyle.bannerContent}>
+              <View style={homeStyle.bannerTag}>
+                <Text style={homeStyle.bannerTagText}>
+                  {jogo.amistoso ? "AMISTOSO" : "CAMPEONATO"}
+                </Text>
               </View>
 
-              <Text style={homeStyle.bannerVersus}>X</Text>
+              <Text style={homeStyle.bannerTitle} numberOfLines={1}>
+                {jogo.campeonato?.nome_campeonato ?? "Amistoso"}
+              </Text>
 
-              <Text style={homeStyle.bannerOpponent}>Adversário</Text>
+              <Text style={homeStyle.bannerSubtitle}>
+                Próximo desafio da equipe
+              </Text>
+
+              <View style={homeStyle.bannerMatchRow}>
+                <View style={homeStyle.bannerTeam}>
+                  <Image
+                    source={
+                      meuTime.logo_url
+                        ? { uri: meuTime.logo_url }
+                        : require("@/assets/images/img/escudovermelho.png")
+                    }
+                    style={homeStyle.bannerTeamIcon}
+                    resizeMode="contain"
+                  />
+
+                  <Text style={homeStyle.bannerTeamText} numberOfLines={1}>
+                    {meuTime.nome_time}
+                  </Text>
+                </View>
+
+                <Text style={homeStyle.bannerVersus}>X</Text>
+
+                <Text style={homeStyle.bannerOpponent} numberOfLines={1}>
+                  {adversario.nome_time}
+                </Text>
+              </View>
+
+              <View style={homeStyle.bannerFooter}>
+                <Text style={homeStyle.bannerDate}>
+                  {formatarDataJogo(proximoJogo.data, proximoJogo.horario_inicio)}
+                </Text>
+
+                <Text style={homeStyle.bannerLink}>Ver detalhes {">"}</Text>
+              </View>
             </View>
-
-            <View style={homeStyle.bannerFooter}>
-              <Text style={homeStyle.bannerDate}>03 AGO · 09:00</Text>
-
-              <Text style={homeStyle.bannerLink}>Ver detalhes {">"}</Text>
-            </View>
-          </View>
-        </Pressable>
+          </Pressable>
+        )}
 
         {/* ESTATÍSTICAS */}
         <View style={homeStyle.statsSection}>
