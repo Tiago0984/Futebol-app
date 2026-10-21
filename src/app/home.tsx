@@ -1,4 +1,5 @@
-import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import {
   Image,
   ImageSourcePropType,
@@ -12,6 +13,7 @@ import { router } from "expo-router";
 
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
+import { API } from "@/config/api";
 
 import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
@@ -30,7 +32,62 @@ type Estatistica = {
   tipoIcone?: "amarelo" | "vermelho" | "goleiro";
 };
 
+// Só os campos de GET /api/v1/atleta usados na Home
+type Atleta = {
+  nome_atleta: string;
+  foto_url: string | null;
+  posicao_atleta: string | null;
+  categorias: {
+    nome_categoria: string;
+    pivot: {
+      status_categoria_atleta: string;
+      data_fim_categoria_atleta: string | null;
+    };
+  }[];
+};
+
 export default function Home() {
+  const [atleta, setAtleta] = useState<Atleta | null>(null);
+
+  useEffect(() => {
+    async function carregarAtleta() {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        router.replace("/selecao-perfil");
+        return;
+      }
+      try {
+        const resposta = await fetch(`${API}/atleta`, {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // Token vencido, encerrado ou atleta inativado: volta para o login
+        if (resposta.status === 401 || resposta.status === 403) {
+          await AsyncStorage.multiRemove(["token", "perfil"]);
+          router.replace("/selecao-perfil");
+          return;
+        }
+
+        const json = await resposta.json();
+        if (json.success) setAtleta(json.data);
+      } catch (erro) {
+        console.log("Erro ao buscar dados do atleta:", erro);
+      }
+    }
+    carregarAtleta();
+  }, []);
+
+  // Enquanto carrega (ou se falhar), mantém os textos padrão
+  const primeiroNome = atleta?.nome_atleta.split(" ")[0] ?? "Atleta";
+  const categoriaAtual = atleta?.categorias.find(
+    (c) =>
+      c.pivot.status_categoria_atleta === "ATIVO" &&
+      !c.pivot.data_fim_categoria_atleta,
+  );
+
   const [modalEstatisticasVisivel, setModalEstatisticasVisivel] =
     useState(false);
 
@@ -41,15 +98,9 @@ export default function Home() {
 
   const [seletorTimeAberto, setSeletorTimeAberto] = useState(false);
 
-  /*
-   * Definido como "linha" para representar o atleta atual.
-   *
-   * O "as TipoAtleta" mantém o tipo como uma união
-   * ("linha" | "goleiro"), permitindo que a lógica abaixo
-   * também trabalhe com "goleiro" quando os dados reais
-   * forem conectados.
-   */
-  const tipoAtleta = "linha" as TipoAtleta;
+  // Vem da posição principal do atleta na API
+  const tipoAtleta: TipoAtleta =
+    atleta?.posicao_atleta === "GOLEIRO" ? "goleiro" : "linha";
 
   const abrirEstatisticas = () => {
     setModalEstatisticasVisivel(true);
@@ -173,7 +224,7 @@ export default function Home() {
             <View>
               <Text style={homeStyle.greeting}>Bom dia</Text>
 
-              <Text style={homeStyle.greetingName}>Atleta</Text>
+              <Text style={homeStyle.greetingName}>{primeiroNome}</Text>
             </View>
 
             <View style={homeStyle.headerIconsRow}>
@@ -198,7 +249,11 @@ export default function Home() {
                   resizeMode="contain"
                 />
 
-                <Text style={homeStyle.categoriaText}>Categoria sub - 17</Text>
+                <Text style={homeStyle.categoriaText}>
+                  {categoriaAtual
+                    ? `Categoria ${categoriaAtual.nome_categoria}`
+                    : "Categoria"}
+                </Text>
               </View>
 
               <Text style={homeStyle.centroTexto}>Centro de formação</Text>
@@ -213,11 +268,19 @@ export default function Home() {
             </View>
 
             <View style={homeStyle.avatarCircle}>
-              <Image
-                source={require("@/assets/images/img/perfilPreto.png")}
-                style={homeStyle.avatarIcon}
-                resizeMode="contain"
-              />
+              {atleta?.foto_url ? (
+                <Image
+                  source={{ uri: atleta.foto_url }}
+                  style={homeStyle.avatarFoto}
+                  resizeMode="cover"
+                />
+              ) : (
+                <Image
+                  source={require("@/assets/images/img/perfilPreto.png")}
+                  style={homeStyle.avatarIcon}
+                  resizeMode="contain"
+                />
+              )}
             </View>
           </View>
         </View>

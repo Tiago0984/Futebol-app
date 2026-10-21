@@ -125,6 +125,13 @@ const homeStyle = StyleSheet.create({
     height: iconSizes.avatar,
   },
 
+  // Foto do atleta vinda da API, ocupando o círculo inteiro
+  avatarFoto: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
+  },
+
   /* =========================
      BANNER
   ========================= */

@@ -117,6 +117,21 @@ const loginAtletaStyle = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 18,
   },
+  enterButtonPressed: {
+    opacity: 0.8,
+  },
+  // Enquanto o login está em andamento
+  enterButtonDisabled: {
+    opacity: 0.6,
+  },
+  // Mensagem de erro do login, acima do botão Entrar
+  mensagemText: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 13,
+    color: cores.vermelho,
+    textAlign: "center",
+    marginBottom: 12,
+  },
   enterButtonText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,

@@ -1,8 +1,10 @@
+import { API } from "@/config/api";
 import loginAtletaStyle from "@/styles/loginAtletaStyle";
 import { cores } from "@/styles/variaveis";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image,
   Pressable,
@@ -13,9 +15,76 @@ import {
 } from "react-native";
 
 export default function LoginAtleta() {
+  const [verSenha, setVerSenha] = useState(false);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [senhaVisivel, setSenhaVisivel] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  const [carregando, setCarregando] = useState(false);
+
+  const timerMensagem = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cancela o timer da mensagem se a tela for fechada
+  useEffect(() => {
+    return () => {
+      if (timerMensagem.current) clearTimeout(timerMensagem.current);
+    };
+  }, []);
+
+  function mostrarMensagem(texto: string) {
+    // Cancela o timer anterior para não apagar a mensagem nova antes da hora
+    if (timerMensagem.current) clearTimeout(timerMensagem.current);
+    setMensagem(texto);
+    timerMensagem.current = setTimeout(() => setMensagem(""), 5000);
+  }
+
+  // Id único por instalação, enviado como device_name no login
+  async function nomeDoDispositivo() {
+    let id = await AsyncStorage.getItem("device_id");
+    if (!id) {
+      id = `app-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      await AsyncStorage.setItem("device_id", id);
+    }
+    return id;
+  }
+
+  async function fazerLogin() {
+    if (!email.trim() || !senha) {
+      mostrarMensagem("Informe e-mail e senha.");
+      return;
+    }
+    setCarregando(true);
+    try {
+      const resposta = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          senha: senha,
+          perfil: "atleta",
+          device_name: await nomeDoDispositivo(),
+        }),
+      });
+      const json = await resposta.json();
+
+      // 401 senha errada | 403 inativo | 422 campos | 429 tentativas
+      if (!resposta.ok || !json.success) {
+        mostrarMensagem(json.message);
+        return;
+      }
+
+      await AsyncStorage.setItem("token", json.data.token);
+      await AsyncStorage.setItem("perfil", "atleta");
+      router.replace("/home");
+    } catch (erro) {
+      console.log("Erro ao realizar login:", erro);
+      mostrarMensagem("Não foi possível conectar ao servidor.");
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   return (
     <View style={loginAtletaStyle.container}>
@@ -94,12 +163,12 @@ export default function LoginAtleta() {
               placeholderTextColor="#8D8D8D"
               value={senha}
               onChangeText={setSenha}
-              secureTextEntry={!senhaVisivel}
+              secureTextEntry={!verSenha}
             />
-            <Pressable onPress={() => setSenhaVisivel(!senhaVisivel)}>
+            <Pressable onPress={() => setVerSenha(!verSenha)}>
               <Image
                 source={
-                  senhaVisivel
+                  verSenha
                     ? require("@/assets/images/img/olhofechado.png")
                     : require("@/assets/images/img/olhoaberto.png")
                 }
@@ -122,11 +191,22 @@ export default function LoginAtleta() {
             </Text>
           </Pressable>
 
+          {mensagem !== "" && (
+            <Text style={loginAtletaStyle.mensagemText}>{mensagem}</Text>
+          )}
+
           <Pressable
-            style={loginAtletaStyle.enterButton}
-            onPress={() => router.navigate("/home")}
+            style={({ pressed }) => [
+              loginAtletaStyle.enterButton,
+              pressed && loginAtletaStyle.enterButtonPressed,
+              carregando && loginAtletaStyle.enterButtonDisabled,
+            ]}
+            onPress={fazerLogin}
+            disabled={carregando}
           >
-            <Text style={loginAtletaStyle.enterButtonText}>Entrar</Text>
+            <Text style={loginAtletaStyle.enterButtonText}>
+              {carregando ? "Entrando..." : "Entrar"}
+            </Text>
           </Pressable>
 
           <Pressable
