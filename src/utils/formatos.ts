@@ -17,6 +17,40 @@ export function formatarDataNascimento(iso: string | null | undefined) {
   return `${partes[3]}/${partes[2]}/${partes[1]}`;
 }
 
+// Máscara de digitação do CPF: 123.456.789-09
+export function mascaraCpf(texto: string) {
+  const numeros = texto.replace(/\D/g, "").slice(0, 11);
+  return numeros
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+}
+
+// Máscara de digitação da data: 14/05/2014
+export function mascaraData(texto: string) {
+  const numeros = texto.replace(/\D/g, "").slice(0, 8);
+  return numeros
+    .replace(/(\d{2})(\d)/, "$1/$2")
+    .replace(/(\d{2})(\d)/, "$1/$2");
+}
+
+// "14/05/2014" -> "2014-05-14"; data inexistente (31/02) ou incompleta -> null
+export function dataBrParaIso(texto: string) {
+  const partes = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!partes) return null;
+  const [, dia, mes, ano] = partes;
+  // new Date corrige 31/02 para 03/03; se mudou, a data não existe
+  const data = new Date(Number(ano), Number(mes) - 1, Number(dia));
+  if (
+    data.getFullYear() !== Number(ano) ||
+    data.getMonth() !== Number(mes) - 1 ||
+    data.getDate() !== Number(dia)
+  ) {
+    return null;
+  }
+  return `${ano}-${mes}-${dia}`;
+}
+
 // Máscara de digitação: (11) 3456-7890 para fixo e (11) 98765-4321 para celular
 export function formatarTelefone(texto: string) {
   const numeros = texto.replace(/\D/g, "").slice(0, 11);

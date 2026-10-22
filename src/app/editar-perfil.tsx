@@ -6,10 +6,13 @@ import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import {
+  dataBrParaIso,
   exibirTelefone,
   formatarCpf,
   formatarDataNascimento,
   formatarTelefone,
+  mascaraCpf,
+  mascaraData,
   mensagensDeErro,
 } from "@/utils/formatos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -45,8 +48,11 @@ type Atleta = {
 export default function EditarPerfil() {
   const insets = useSafeAreaInsets();
   const [atleta, setAtleta] = useState<Atleta | null>(null);
+  const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [dataNascimento, setDataNascimento] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [mensagemSucesso, setMensagemSucesso] = useState("");
   const [erroGeral, setErroGeral] = useState("");
@@ -69,8 +75,11 @@ export default function EditarPerfil() {
 
   function preencherCampos(dados: Atleta) {
     setAtleta(dados);
+    setNome(dados.nome_atleta ?? "");
     setTelefone(exibirTelefone(dados.telefone_atleta));
     setEmail(dados.email_atleta ?? "");
+    setCpf(formatarCpf(dados.cpf_atleta));
+    setDataNascimento(formatarDataNascimento(dados.data_nasc_atleta));
   }
 
   useEffect(() => {
@@ -106,6 +115,17 @@ export default function EditarPerfil() {
 
     // Manda só o que mudou; a API aceita receber parte dos campos
     const alteracoes: Record<string, string> = {};
+    // Erros encontrados antes de enviar, com as mesmas chaves que a API usa
+    const errosLocais: Record<string, string> = {};
+
+    const nomeNovo = nome.trim();
+    if (nomeNovo !== atleta.nome_atleta) {
+      if (nomeNovo.length < 3) {
+        errosLocais.nome_atleta = "Informe o nome completo.";
+      } else {
+        alteracoes.nome_atleta = nomeNovo;
+      }
+    }
     if (telefone !== exibirTelefone(atleta.telefone_atleta)) {
       alteracoes.telefone_atleta = telefone;
     }
@@ -113,10 +133,29 @@ export default function EditarPerfil() {
     if (emailNovo !== (atleta.email_atleta ?? "")) {
       alteracoes.email_atleta = emailNovo;
     }
+    // Só confere os 11 dígitos; os dígitos verificadores a API valida
+    if (cpf !== formatarCpf(atleta.cpf_atleta)) {
+      if (cpf.replace(/\D/g, "").length !== 11) {
+        errosLocais.cpf_atleta = "Informe um CPF com 11 dígitos.";
+      } else {
+        alteracoes.cpf_atleta = cpf;
+      }
+    }
+    // A API só aceita mudar dia e mês; ano diferente volta 422 com a mensagem dela
+    if (dataNascimento !== formatarDataNascimento(atleta.data_nasc_atleta)) {
+      const dataIso = dataBrParaIso(dataNascimento);
+      if (!dataIso) {
+        errosLocais.data_nasc_atleta = "Informe uma data válida.";
+      } else {
+        alteracoes.data_nasc_atleta = dataIso;
+      }
+    }
 
     setErroGeral("");
-    setErrosCampos({});
+    setErrosCampos(errosLocais);
     setMensagemSucesso("");
+
+    if (Object.keys(errosLocais).length > 0) return;
 
     if (Object.keys(alteracoes).length === 0) {
       setErroGeral("Nenhuma alteração para salvar.");
@@ -258,17 +297,21 @@ export default function EditarPerfil() {
 
         {/* FORMULÁRIO */}
         <View style={editarPerfilStyle.form}>
-          {/* Nome, CPF, nascimento, categoria e matrícula só a secretaria muda */}
-          <View
-            style={[editarPerfilStyle.fieldCard, editarPerfilStyle.fieldCardDisabled]}
-          >
+          {/* Categoria e matrícula só a secretaria muda */}
+          <View style={editarPerfilStyle.fieldCard}>
             <Text style={editarPerfilStyle.fieldLabel}>Nome completo</Text>
-            <Text
-              style={[editarPerfilStyle.fieldValue, editarPerfilStyle.fieldValueDisabled]}
-            >
-              {atleta?.nome_atleta ?? ""}
-            </Text>
+            <TextInput
+              style={editarPerfilStyle.fieldValue}
+              value={nome}
+              onChangeText={setNome}
+              autoCapitalize="words"
+            />
           </View>
+          {errosCampos.nome_atleta && (
+            <Text style={editarPerfilStyle.fieldError}>
+              {errosCampos.nome_atleta}
+            </Text>
+          )}
 
           <View style={editarPerfilStyle.fieldCard}>
             <Text style={editarPerfilStyle.fieldLabel}>Telefone</Text>
@@ -304,27 +347,41 @@ export default function EditarPerfil() {
             </Text>
           )}
 
-          <View
-            style={[editarPerfilStyle.fieldCard, editarPerfilStyle.fieldCardDisabled]}
-          >
+          <View style={editarPerfilStyle.fieldCard}>
             <Text style={editarPerfilStyle.fieldLabel}>CPF</Text>
-            <Text
-              style={[editarPerfilStyle.fieldValue, editarPerfilStyle.fieldValueDisabled]}
-            >
-              {formatarCpf(atleta?.cpf_atleta)}
-            </Text>
+            <TextInput
+              style={editarPerfilStyle.fieldValue}
+              value={cpf}
+              onChangeText={(texto) => setCpf(mascaraCpf(texto))}
+              keyboardType="number-pad"
+              maxLength={14}
+              placeholder="000.000.000-00"
+              placeholderTextColor={cores.cinza}
+            />
           </View>
+          {errosCampos.cpf_atleta && (
+            <Text style={editarPerfilStyle.fieldError}>
+              {errosCampos.cpf_atleta}
+            </Text>
+          )}
 
-          <View
-            style={[editarPerfilStyle.fieldCard, editarPerfilStyle.fieldCardDisabled]}
-          >
+          <View style={editarPerfilStyle.fieldCard}>
             <Text style={editarPerfilStyle.fieldLabel}>Data de nascimento</Text>
-            <Text
-              style={[editarPerfilStyle.fieldValue, editarPerfilStyle.fieldValueDisabled]}
-            >
-              {formatarDataNascimento(atleta?.data_nasc_atleta)}
-            </Text>
+            <TextInput
+              style={editarPerfilStyle.fieldValue}
+              value={dataNascimento}
+              onChangeText={(texto) => setDataNascimento(mascaraData(texto))}
+              keyboardType="number-pad"
+              maxLength={10}
+              placeholder="DD/MM/AAAA"
+              placeholderTextColor={cores.cinza}
+            />
           </View>
+          {errosCampos.data_nasc_atleta && (
+            <Text style={editarPerfilStyle.fieldError}>
+              {errosCampos.data_nasc_atleta}
+            </Text>
+          )}
 
           {/* Responsável volta quando GET /api/v1/atleta passar a trazê-lo */}
 
