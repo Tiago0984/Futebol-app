@@ -10,6 +10,7 @@ import {
   formatarCpf,
   formatarDataNascimento,
 } from "@/utils/formatos";
+import { sairDaConta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -36,6 +37,7 @@ type Atleta = {
 export default function Perfil() {
   const insets = useSafeAreaInsets();
   const [atleta, setAtleta] = useState<Atleta | null>(null);
+  const [saindo, setSaindo] = useState(false);
 
   // Recarrega ao voltar da tela de edição, para mostrar o que acabou de ser salvo
   useFocusEffect(
@@ -77,12 +79,10 @@ export default function Perfil() {
       !c.pivot.data_fim_categoria_atleta,
   );
 
-  function handleSair() {
-    // Limpa o histórico para o usuário não voltar ao app logado
-    if (router.canDismiss()) {
-      router.dismissAll();
-    }
-    router.replace("/");
+  async function handleSair() {
+    if (saindo) return;
+    setSaindo(true);
+    await sairDaConta();
   }
 
   return (

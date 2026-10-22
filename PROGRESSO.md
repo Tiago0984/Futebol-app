@@ -63,6 +63,7 @@ com o `SERVIDOR` em produção.
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
 | Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`: `total` e `por_time` (seletor de time). `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
+| Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga `token` e `perfil` mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |
 | Agenda (só visual) | Timeline com dados **fixos**: "Próximo compromisso" troca na virada do minuto, a lista abre rolada nos 3 últimos passados e só a timeline rola | `agenda.tsx` |
 | Desempenho | Desativado: saiu do menu, da Home e da Ajuda. As telas continuam no projeto | — |
@@ -80,15 +81,13 @@ com o `SERVIDOR` em produção.
    - horário `null` aparece como "A definir".
 2. **Avisos**: contador do sino em `components/botaoNotificacoes.tsx` (hoje o padrão é 2) com `GET /notificacoes/nao-lidas`;
    tela `notificacoes.tsx` (dados fixos) com `GET /notificacoes`, `PATCH /notificacoes/{id}/lida` e `PATCH /notificacoes/lidas`.
-3. **Sair da conta** (`configuracoes.tsx`): hoje só navega para `/`. Precisa chamar `POST /auth/logout`, apagar `token` e
-   `perfil` e ir para `/selecao-perfil`.
-4. **Esqueci minha senha** (`esqueci-senha.tsx`, recebe `perfil` por parâmetro): `POST /auth/esqueci-senha` com `email` e `perfil`.
+3. **Esqueci minha senha** (`esqueci-senha.tsx`, recebe `perfil` por parâmetro): `POST /auth/esqueci-senha` com `email` e `perfil`.
    A resposta é sempre a mesma, exista ou não o e-mail.
-5. **Responsáveis no Perfil** (`perfil.tsx` tem um comentário marcando o lugar): `GET /atleta` traz
+4. **Responsáveis no Perfil** (`perfil.tsx` tem um comentário marcando o lugar): `GET /atleta` traz
    `responsaveis: [{ nome, grau_parentesco }]`.
-6. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
+5. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
    (`GET /responsavel/atletas`) e as mesmas telas do atleta em modo leitura, sob `/responsavel/atletas/{idAtleta}/...`.
-7. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
+6. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
 
 ## Pendências do lado do backend
 

@@ -4,12 +4,21 @@ import configuracoesStyle from "@/styles/configuracoesStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
+import { sairDaConta } from "@/utils/sessao";
 import { router } from "expo-router";
+import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Configuracoes() {
   const insets = useSafeAreaInsets();
+  const [saindo, setSaindo] = useState(false);
+
+  async function handleSair() {
+    if (saindo) return;
+    setSaindo(true);
+    await sairDaConta();
+  }
 
   function handleVoltar() {
     if (router.canGoBack()) {
@@ -186,7 +195,7 @@ export default function Configuracoes() {
 
         {/* SAIR DA CONTA */}
         <View style={configuracoesStyle.logoutSection}>
-          <Pressable style={configuracoesStyle.logoutButton} onPress={() => router.navigate("/")}>
+          <Pressable style={configuracoesStyle.logoutButton} onPress={handleSair}>
             <Image
               source={require("@/assets/images/img/sairDaContaVermelho.png")}
               style={configuracoesStyle.logoutIcon}
