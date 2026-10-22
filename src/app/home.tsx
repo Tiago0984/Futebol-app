@@ -81,9 +81,41 @@ function formatarDataJogo(data: string, horario: string | null) {
   return `${dia} ${mes} · ${horario ?? "A definir"}`;
 }
 
+// Números de GET /api/v1/atleta/estatisticas; gols e assistencias null = ainda não registrado
+type Numeros = {
+  partidas: number;
+  convocacoes: number;
+  cartoes_amarelos: number;
+  cartoes_vermelhos: number;
+  gols: number | null;
+  assistencias: number | null;
+};
+
+type NumerosDoTime = Numeros & {
+  id_time: number;
+  nome_time: string;
+  logo_url: string | null;
+  categoria: string;
+};
+
+type Estatisticas = {
+  total: Numeros;
+  por_time: NumerosDoTime[];
+};
+
+// null (não registrado) ou ainda carregando aparece como "—", diferente de 0
+function exibirNumero(valor: number | null | undefined) {
+  return valor == null ? "—" : String(valor);
+}
+
 export default function Home() {
   const [atleta, setAtleta] = useState<Atleta | null>(null);
   const [proximoJogo, setProximoJogo] = useState<Evento | null>(null);
+  const [estatisticasApi, setEstatisticasApi] = useState<Estatisticas | null>(
+    null,
+  );
+  // id_time escolhido no seletor do modal
+  const [timeSelecionado, setTimeSelecionado] = useState<number | null>(null);
 
   useEffect(() => {
     async function carregarDados() {
@@ -97,10 +129,12 @@ export default function Home() {
         Authorization: `Bearer ${token}`,
       };
       try {
-        const [respostaAtleta, respostaAgenda] = await Promise.all([
-          fetch(`${API}/atleta`, { headers }),
-          fetch(`${API}/agenda`, { headers }),
-        ]);
+        const [respostaAtleta, respostaAgenda, respostaEstatisticas] =
+          await Promise.all([
+            fetch(`${API}/atleta`, { headers }),
+            fetch(`${API}/agenda`, { headers }),
+            fetch(`${API}/atleta/estatisticas`, { headers }),
+          ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
         if (respostaAtleta.status === 401 || respostaAtleta.status === 403) {
@@ -119,6 +153,15 @@ export default function Home() {
             (e) => e.tipo === "JOGO" && e.jogo && e.situacao !== "CANCELADO",
           );
           setProximoJogo(jogo ?? null);
+        }
+
+        // Sem a rota (ou com erro), os números ficam "—"
+        const jsonEstatisticas = await respostaEstatisticas.json();
+        if (jsonEstatisticas.success) {
+          const dados: Estatisticas = jsonEstatisticas.data;
+          setEstatisticasApi(dados);
+          // O primeiro time é o que tem mais partidas
+          setTimeSelecionado(dados.por_time[0]?.id_time ?? null);
         }
       } catch (erro) {
         console.log("Erro ao buscar dados da Home:", erro);
@@ -153,8 +196,6 @@ export default function Home() {
   const [modoEstatistica, setModoEstatistica] =
     useState<ModoEstatistica>("porTime");
 
-  const [timeSelecionado, setTimeSelecionado] = useState("Sub-17 A");
-
   const [seletorTimeAberto, setSeletorTimeAberto] = useState(false);
 
   // Vem da posição principal do atleta na API
@@ -176,85 +217,95 @@ export default function Home() {
     setSeletorTimeAberto(false);
   };
 
-  const selecionarTime = (time: string) => {
-    setTimeSelecionado(time);
+  const selecionarTime = (idTime: number) => {
+    setTimeSelecionado(idTime);
     setSeletorTimeAberto(false);
   };
+
+  const timesDoAtleta = estatisticasApi?.por_time ?? [];
+  const timeAtual =
+    timesDoAtleta.find((t) => t.id_time === timeSelecionado) ?? null;
+  // Atleta que ainda não jogou por nenhum time: "Por time" mostra o total (tudo 0)
+  const numeros =
+    modoEstatistica === "porTime"
+      ? (timeAtual ?? estatisticasApi?.total)
+      : estatisticasApi?.total;
 
   const estatisticasLinha: Estatistica[] = [
     {
       id: "gols",
       titulo: "Gols",
-      valor: modoEstatistica === "porTime" ? "8" : "12",
+      valor: exibirNumero(numeros?.gols),
       icone: require("@/assets/images/img/bolaVermelha.png"),
     },
     {
       id: "assistencias",
       titulo: "Assistências",
-      valor: modoEstatistica === "porTime" ? "5" : "8",
+      valor: exibirNumero(numeros?.assistencias),
       icone: require("@/assets/images/img/tenisvermelho.png"),
     },
     {
       id: "partidas",
       titulo: "Partidas",
-      valor: modoEstatistica === "porTime" ? "10" : "16",
+      valor: exibirNumero(numeros?.partidas),
       icone: require("@/assets/images/img/agendaVermelha.png"),
     },
     {
       id: "convocacoes",
       titulo: "Convocações",
-      valor: modoEstatistica === "porTime" ? "5" : "8",
+      valor: exibirNumero(numeros?.convocacoes),
       icone: require("@/assets/images/img/bandeiravermelha.png"),
     },
     {
       id: "amarelos",
       titulo: "Cartões amarelos",
-      valor: modoEstatistica === "porTime" ? "1" : "2",
+      valor: exibirNumero(numeros?.cartoes_amarelos),
       tipoIcone: "amarelo",
     },
     {
       id: "vermelhos",
       titulo: "Cartões vermelhos",
-      valor: "0",
+      valor: exibirNumero(numeros?.cartoes_vermelhos),
       tipoIcone: "vermelho",
     },
   ];
 
+  // A API ainda não traz defesas nem gols sofridos: ficam "—" (não registrado)
   const estatisticasGoleiro: Estatistica[] = [
     {
       id: "defesas",
       titulo: "Defesas",
-      valor: modoEstatistica === "porTime" ? "24" : "38",
+      valor: exibirNumero(null),
       tipoIcone: "goleiro",
     },
     {
       id: "golsSofridos",
       titulo: "Gols sofridos",
-      valor: modoEstatistica === "porTime" ? "4" : "6",
+      valor: exibirNumero(null),
       icone: require("@/assets/images/img/bolaVermelha.png"),
     },
     {
       id: "partidas",
       titulo: "Partidas",
-      valor: modoEstatistica === "porTime" ? "10" : "16",
+      valor: exibirNumero(numeros?.partidas),
       icone: require("@/assets/images/img/agendaVermelha.png"),
     },
     {
       id: "convocacoes",
       titulo: "Convocações",
-      valor: modoEstatistica === "porTime" ? "5" : "8",
+      valor: exibirNumero(numeros?.convocacoes),
       icone: require("@/assets/images/img/bandeiravermelha.png"),
     },
     {
       id: "amarelos",
       titulo: "Cartões amarelos",
-      valor: modoEstatistica === "porTime" ? "1" : "2",
+      valor: exibirNumero(numeros?.cartoes_amarelos),
       tipoIcone: "amarelo",
     },
     {
       id: "vermelhos",
       titulo: "Cartões vermelhos",
-      valor: "0",
+      valor: exibirNumero(numeros?.cartoes_vermelhos),
       tipoIcone: "vermelho",
     },
   ];
@@ -427,7 +478,9 @@ export default function Home() {
                 tintColor={cores.cinza}
               />
 
-              <Text style={homeStyle.statSummaryValue}>12</Text>
+              <Text style={homeStyle.statSummaryValue}>
+                {exibirNumero(estatisticasApi?.total.gols)}
+              </Text>
 
               <Text style={homeStyle.statSummaryLabel}>Gols</Text>
             </View>
@@ -440,7 +493,9 @@ export default function Home() {
                 tintColor={cores.cinza}
               />
 
-              <Text style={homeStyle.statSummaryValue}>16</Text>
+              <Text style={homeStyle.statSummaryValue}>
+                {exibirNumero(estatisticasApi?.total.partidas)}
+              </Text>
 
               <Text style={homeStyle.statSummaryLabel}>Partidas</Text>
             </View>
@@ -453,7 +508,9 @@ export default function Home() {
                 tintColor={cores.cinza}
               />
 
-              <Text style={homeStyle.statSummaryValue}>8</Text>
+              <Text style={homeStyle.statSummaryValue}>
+                {exibirNumero(estatisticasApi?.total.convocacoes)}
+              </Text>
 
               <Text style={homeStyle.statSummaryLabel}>Convocações</Text>
             </View>
@@ -604,34 +661,36 @@ export default function Home() {
               <View style={homeStyle.teamSelectorArea}>
                 <Text style={homeStyle.teamSelectorLabel}>Time</Text>
 
+                {/* Sem nenhum time, o seletor não abre */}
                 <Pressable
                   style={homeStyle.teamSelector}
                   onPress={() =>
                     setSeletorTimeAberto((estadoAtual) => !estadoAtual)
                   }
+                  disabled={timesDoAtleta.length === 0}
                 >
                   <Text style={homeStyle.teamSelectorText}>
-                    {timeSelecionado}
+                    {timeAtual?.nome_time ?? "Nenhum time ainda"}
                   </Text>
 
-                  <Text style={homeStyle.teamSelectorArrow}>▼</Text>
+                  {timesDoAtleta.length > 0 && (
+                    <Text style={homeStyle.teamSelectorArrow}>▼</Text>
+                  )}
                 </Pressable>
 
                 {seletorTimeAberto && (
                   <View style={homeStyle.teamDropdown}>
-                    <Pressable
-                      style={homeStyle.teamOption}
-                      onPress={() => selecionarTime("Sub-17 A")}
-                    >
-                      <Text style={homeStyle.teamOptionText}>Sub-17 A</Text>
-                    </Pressable>
-
-                    <Pressable
-                      style={homeStyle.teamOption}
-                      onPress={() => selecionarTime("Sub-17 B")}
-                    >
-                      <Text style={homeStyle.teamOptionText}>Sub-17 B</Text>
-                    </Pressable>
+                    {timesDoAtleta.map((time) => (
+                      <Pressable
+                        key={time.id_time}
+                        style={homeStyle.teamOption}
+                        onPress={() => selecionarTime(time.id_time)}
+                      >
+                        <Text style={homeStyle.teamOptionText}>
+                          {time.nome_time}
+                        </Text>
+                      </Pressable>
+                    ))}
                   </View>
                 )}
               </View>
@@ -639,7 +698,7 @@ export default function Home() {
 
             <Text style={homeStyle.statsModalTitle}>
               {modoEstatistica === "porTime"
-                ? `Estatísticas — ${timeSelecionado}`
+                ? `Estatísticas — ${timeAtual?.nome_time ?? "Nenhum time ainda"}`
                 : "Estatísticas — Todos os times"}
             </Text>
 
