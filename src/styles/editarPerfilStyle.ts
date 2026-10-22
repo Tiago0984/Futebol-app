@@ -149,6 +149,15 @@ const editarPerfilStyle = StyleSheet.create({
     fontWeight: "700",
   },
 
+  fieldError: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.vermelho,
+    marginTop: -4,
+    marginBottom: 10,
+    marginLeft: 4,
+  },
+
   /* SALVAR */
 
   saveButton: {
@@ -160,9 +169,28 @@ const editarPerfilStyle = StyleSheet.create({
     marginTop: 10,
   },
 
+  saveButtonDisabled: {
+    opacity: 0.6,
+  },
+
   saveButtonText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.titulo,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
+  errorMessage: {
+    backgroundColor: cores.vermelho20,
+    borderRadius: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginTop: 12,
+  },
+
+  errorText: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 14,
     fontWeight: "700",
     color: cores.branco,
   },
@@ -184,6 +212,7 @@ const editarPerfilStyle = StyleSheet.create({
   },
 
   successText: {
+    flex: 1,
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,
     fontWeight: "700",
