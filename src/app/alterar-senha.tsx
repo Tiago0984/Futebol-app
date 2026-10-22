@@ -1,9 +1,11 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
+import { API } from "@/config/api";
 import alterarSenhaStyle from "@/styles/alterarSenhaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -24,6 +26,79 @@ export default function AlterarSenha() {
   const [novaSenhaVisivel, setNovaSenhaVisivel] = useState(false);
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [confirmarSenhaVisivel, setConfirmarSenhaVisivel] = useState(false);
+  const [carregando, setCarregando] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  const [sucesso, setSucesso] = useState("");
+
+  // Única regra de senha da API: pelo menos 8 caracteres
+  const temMinimo = novaSenha.length >= 8;
+  const camposPreenchidos = !!senhaAtual && !!novaSenha && !!confirmarSenha;
+
+  async function alterarSenha() {
+    setSucesso("");
+    if (!senhaAtual || !novaSenha || !confirmarSenha) {
+      setMensagem("Preencha todos os campos.");
+      return;
+    }
+    if (novaSenha.length < 8) {
+      setMensagem("A nova senha deve ter pelo menos 8 caracteres.");
+      return;
+    }
+    if (novaSenha !== confirmarSenha) {
+      setMensagem("A confirmação da senha não corresponde à nova senha.");
+      return;
+    }
+
+    setCarregando(true);
+    setMensagem("");
+
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        router.replace("/selecao-perfil");
+        return;
+      }
+
+      const resposta = await fetch(`${API}/atleta/senha`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          senha_atual: senhaAtual,
+          nova_senha: novaSenha,
+          nova_senha_confirmation: confirmarSenha,
+        }),
+      });
+
+      // Token vencido, encerrado ou atleta inativado: volta para o login
+      if (resposta.status === 401 || resposta.status === 403) {
+        await AsyncStorage.multiRemove(["token", "perfil"]);
+        router.replace("/selecao-perfil");
+        return;
+      }
+
+      // 422: "Senha atual incorreta." ou a regra de um campo
+      const json = await resposta.json();
+      if (!resposta.ok || !json.success) {
+        setMensagem(json.message || "Erro ao alterar a senha.");
+        return;
+      }
+
+      // O token deste aparelho continua valendo; os outros aparelhos saem
+      setSenhaAtual("");
+      setNovaSenha("");
+      setConfirmarSenha("");
+      setSucesso(json.message || "Senha alterada com sucesso.");
+    } catch (erro) {
+      console.log("Erro ao alterar senha:", erro);
+      setMensagem("Não foi possível conectar ao servidor.");
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   function handleVoltar() {
     if (router.canGoBack()) {
@@ -180,58 +255,52 @@ export default function AlterarSenha() {
             Requisitos da senha
           </Text>
 
+          {/* Fica verde assim que a nova senha chega a 8 caracteres */}
           <View style={alterarSenhaStyle.requirementRow}>
-            <Image
-              source={require("@/assets/images/img/checkVerde.png")}
-              style={alterarSenhaStyle.requirementCheckIcon}
-              resizeMode="contain"
-            />
+            {temMinimo ? (
+              <Image
+                source={require("@/assets/images/img/checkVerde.png")}
+                style={alterarSenhaStyle.requirementCheckIcon}
+                resizeMode="contain"
+              />
+            ) : (
+              <View style={alterarSenhaStyle.requirementRadioOuter}>
+                <View style={alterarSenhaStyle.requirementRadioDot} />
+              </View>
+            )}
 
-            <Text style={alterarSenhaStyle.requirementTextMet}>
-              Minimo 8 caracteres
-            </Text>
-          </View>
-
-          <View style={alterarSenhaStyle.requirementRow}>
-            <Image
-              source={require("@/assets/images/img/checkVerde.png")}
-              style={alterarSenhaStyle.requirementCheckIcon}
-              resizeMode="contain"
-            />
-
-            <Text style={alterarSenhaStyle.requirementTextMet}>
-              Uma letra maiúscula
-            </Text>
-          </View>
-
-          <View style={alterarSenhaStyle.requirementRow}>
-            <Image
-              source={require("@/assets/images/img/checkVerde.png")}
-              style={alterarSenhaStyle.requirementCheckIcon}
-              resizeMode="contain"
-            />
-
-            <Text style={alterarSenhaStyle.requirementTextMet}>
-              Um número
-            </Text>
-          </View>
-
-          <View style={alterarSenhaStyle.requirementRow}>
-            <View style={alterarSenhaStyle.requirementRadioOuter}>
-              <View style={alterarSenhaStyle.requirementRadioDot} />
-            </View>
-
-            <Text style={alterarSenhaStyle.requirementTextPending}>
-              Uma senha forte
+            <Text
+              style={
+                temMinimo
+                  ? alterarSenhaStyle.requirementTextMet
+                  : alterarSenhaStyle.requirementTextPending
+              }
+            >
+              Mínimo 8 caracteres
             </Text>
           </View>
         </View>
 
         {/* SALVAR */}
         <View style={alterarSenhaStyle.saveSection}>
-          <Pressable style={alterarSenhaStyle.saveButton} disabled>
+          {mensagem ? (
+            <Text style={alterarSenhaStyle.erroSalvar}>{mensagem}</Text>
+          ) : null}
+
+          {sucesso ? (
+            <Text style={alterarSenhaStyle.sucessoSalvar}>{sucesso}</Text>
+          ) : null}
+
+          <Pressable
+            style={[
+              alterarSenhaStyle.saveButton,
+              camposPreenchidos && !carregando && alterarSenhaStyle.saveButtonAtivo,
+            ]}
+            onPress={alterarSenha}
+            disabled={carregando}
+          >
             <Text style={alterarSenhaStyle.saveButtonText}>
-              Alterar senha
+              {carregando ? "Salvando..." : "Alterar senha"}
             </Text>
           </Pressable>
         </View>

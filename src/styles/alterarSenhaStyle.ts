@@ -199,6 +199,28 @@ const alterarSenhaStyle = StyleSheet.create({
     justifyContent: "center",
   },
 
+  // Vermelho quando os três campos estão preenchidos
+  saveButtonAtivo: {
+    backgroundColor: cores.vermelho,
+  },
+
+  // Mensagens acima do botão: erro da validação ou da API, e sucesso
+  erroSalvar: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 14,
+    color: cores.vermelho,
+    textAlign: "center",
+    marginBottom: 12,
+  },
+
+  sucessoSalvar: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 14,
+    color: cores.verde,
+    textAlign: "center",
+    marginBottom: 12,
+  },
+
   saveButtonText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.titulo,
