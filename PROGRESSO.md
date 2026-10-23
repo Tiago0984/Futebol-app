@@ -35,8 +35,9 @@
 - **Commits sem coautoria** (sem a linha `Co-Authored-By`). Mensagem em português com prefixo `feat:` ou `fix:`.
   Commit e push só quando ele pedir.
 - **Antes de qualquer commit ou deploy, conferir:**
-  - `SERVIDOR` em `src/config/api.ts` está no endereço de **produção**;
-  - `HORARIO_SIMULADO` em `src/app/agenda.tsx` está `null` (é um horário fixo usado só para teste).
+  - `SERVIDOR` em `src/config/api.ts` está no endereço de **produção**.
+- O projeto usa o **React Compiler** (`app.json`): rode `npx eslint` nos arquivos alterados. Não leia `ref.current`
+  durante a renderização nem chame `setState` dentro de efeito; isso dá erro nas regras `react-hooks`.
 - Na dúvida sobre regra de negócio ou formato da API, **perguntar antes** de inventar campo ou rota. Se faltar algo na API,
   escrever um prompt para o Claude do backend em vez de contornar no app.
 - Mostrar o plano e esperar aprovação em tarefas grandes. Ao terminar, rodar `npx tsc --noEmit` e dizer o que foi e o que não foi testado.
@@ -65,20 +66,13 @@ com o `SERVIDOR` em produção.
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
 | Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga `token` e `perfil` mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |
-| Agenda (só visual) | Timeline com dados **fixos**: "Próximo compromisso" troca na virada do minuto, a lista abre rolada nos 3 últimos passados e só a timeline rola | `agenda.tsx` |
+| Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos; "Ver detalhes" está **escondido** até as telas de detalhe usarem a API. A linha de pessoa mostra `responsavel` (pedido ao backend) ou, até lá, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário volta para hoje | `agenda.tsx` |
 | Desempenho | Desativado: saiu do menu, da Home e da Ajuda. As telas continuam no projeto | — |
 
 ## O que falta (sugestão de ordem)
 
-1. **Agenda real** (`agenda.tsx`, hoje com o array fixo `compromissos`). Dados de `GET /agenda?page=N`: `proximos` paginados
-   (20 por página, bloco `paginacao`) e `passados` (os 3 últimos). Pontos a decidir **com o Tiago** antes de codar:
-   - a tela mostra uma faixa de semana e o mês fixos ("Agosto 2026"), mas a API manda uma lista de vários dias.
-     Decidir se a faixa de dias filtra pela data ou se a lista vira por data;
-   - mapear `tipo` (JOGO, TREINO, CAMPEONATO, EVENTO, REUNIAO, CONFRATERNIZACAO, AVALIACAO) para os filtros do app
-     (Todos, Treinos, Campeonatos, Avaliações, Reuniões) e decidir onde entram EVENTO e CONFRATERNIZACAO;
-   - `situacao` só vem `CONFIRMADO` ou `CANCELADO`: o status "Alterado" do app deve sumir, porque a mudança chega como aviso;
-   - mostrar `descricao` e, no jogo, "Chegar às HH:MM" (`jogo.horario_chegada`);
-   - horário `null` aparece como "A definir".
+1. **Testar a Agenda com dados reais**: a Joana local tem treinos de 03/11 a 14/11; a do servidor tem jogos.
+   Conferir a navegação de semana e mês e a rolagem até o dia.
 2. **Avisos**: contador do sino em `components/botaoNotificacoes.tsx` (hoje o padrão é 2) com `GET /notificacoes/nao-lidas`;
    tela `notificacoes.tsx` (dados fixos) com `GET /notificacoes`, `PATCH /notificacoes/{id}/lida` e `PATCH /notificacoes/lidas`.
 3. **Esqueci minha senha** (`esqueci-senha.tsx`, recebe `perfil` por parâmetro): `POST /auth/esqueci-senha` com `email` e `perfil`.
@@ -93,3 +87,6 @@ com o `SERVIDOR` em produção.
 
 - Gols e assistências por atleta (hoje `null`) dependem do painel registrar quem fez cada gol.
 - `defesas` e `gols_sofridos` do goleiro não existem na rota de estatísticas. Pedir só se o Tiago quiser.
+- **Responsável do evento** (`responsavel` em cada evento de `GET /agenda`): o prompt já foi passado ao backend. Ele vem da Grade
+  de Treinos ("Novo Horário") e é copiado pelo "Gerar agenda do mês". O app já mostra o campo quando ele vier.
+- Treino com categoria "Geral (sem categoria)" vem com `categoria: null` de propósito.

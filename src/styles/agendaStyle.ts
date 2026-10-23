@@ -108,8 +108,17 @@ const agendaStyle = StyleSheet.create({
   weekStrip: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    alignItems: "center",
+    paddingHorizontal: 8,
     marginTop: 18,
+  },
+  // Setas de voltar e avançar semana, nas pontas da faixa, na altura dos números
+  weekSeta: {
+    paddingTop: 16,
+  },
+  // Seta que não pode ser usada (antes da semana ou do mês de hoje)
+  setaDesativada: {
+    opacity: 0.3,
   },
   weekDayCol: {
     alignItems: "center",
@@ -122,8 +131,8 @@ const agendaStyle = StyleSheet.create({
     marginBottom: 8,
   },
   weekDayCircle: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
     borderRadius: 12,
     backgroundColor: cores.branco30,
     alignItems: "center",
@@ -147,6 +156,10 @@ const agendaStyle = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: cores.vermelho,
     marginTop: 6,
+  },
+  // Dia sem compromisso: a bolinha some, mas guarda o espaço para a faixa não pular
+  weekDayDotVazio: {
+    backgroundColor: "transparent",
   },
 
   todayCard: {
@@ -362,6 +375,20 @@ const agendaStyle = StyleSheet.create({
     fontWeight: "700",
     color: cores.verde,
   },
+  // "Chegar às 09:00" nos jogos
+  nextCardChegada: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.corpo,
+    color: cores.vermelho,
+    marginTop: 4,
+  },
+  // Texto do técnico, embaixo do card inteiro
+  nextCardDescricao: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpo,
+    color: cores.cinza,
+    marginTop: 12,
+  },
   nextDetailsLink: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.destaqueLeve,
@@ -393,6 +420,39 @@ const agendaStyle = StyleSheet.create({
 
   timelineSection: {
     paddingHorizontal: 20,
+  },
+  // Data entre os compromissos, com a linha da timeline passando ao lado
+  diaCabecalho: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+  },
+  diaCabecalhoTexto: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.branco,
+    opacity: 0.7,
+    marginLeft: 6,
+  },
+  // No primeiro cabeçalho a linha começa na altura do texto
+  diaCabecalhoLinhaInicio: {
+    top: 18,
+  },
+  // Carregando, erro ou lista vazia
+  estadoTexto: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.branco,
+    opacity: 0.7,
+    textAlign: "center",
+    marginTop: 24,
+  },
+  timelineChegada: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.apoio,
+    color: cores.vermelho,
+    marginTop: 2,
   },
   timelineItem: {
     flexDirection: "row",
