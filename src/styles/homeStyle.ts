@@ -494,72 +494,6 @@ const homeStyle = StyleSheet.create({
     color: cores.branco,
   },
 
-  teamSelectorArea: {
-    marginTop: 16,
-    position: "relative",
-    zIndex: 20,
-  },
-
-  teamSelectorLabel: {
-    fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: fontSizes.pequeno,
-    fontWeight: "600",
-    color: cores.branco,
-    marginBottom: 6,
-  },
-
-  teamSelector: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.22)",
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "rgba(255,255,255,0.04)",
-  },
-
-  teamSelectorText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.destaqueLeve,
-    color: cores.branco,
-  },
-
-  teamSelectorArrow: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.pequeno,
-    color: cores.branco70,
-  },
-
-  teamDropdown: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 68,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.18)",
-    borderRadius: 10,
-    backgroundColor: cores.preto,
-    overflow: "hidden",
-    zIndex: 30,
-    elevation: 30,
-  },
-
-  teamOption: {
-    minHeight: 38,
-    justifyContent: "center",
-    paddingHorizontal: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255,255,255,0.08)",
-  },
-
-  teamOptionText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.destaqueLeve,
-    color: cores.branco,
-  },
-
   statsModalTitle: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.corpo,
@@ -586,6 +520,11 @@ const homeStyle = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.06)",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.06)",
+  },
+
+  // Card único (Total: só os gols) ocupa a linha inteira
+  statCardFull: {
+    width: "100%",
   },
 
   statCardIcon: {

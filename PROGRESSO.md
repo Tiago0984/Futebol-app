@@ -4,7 +4,7 @@
 > feito, as regras combinadas com o Tiago e o que falta. Confira o código antes de confiar no que está
 > aqui: o arquivo pode estar desatualizado em relação aos commits mais novos (`git log`).
 
-Última atualização: 22/10/2026, último commit `14bea97`.
+Última atualização: 22/10/2026. Para o último commit, veja `git log`.
 
 ## O projeto
 
@@ -61,7 +61,7 @@ com o `SERVIDOR` em produção.
 | Home: nome, categoria, foto, posição | `GET /atleta`. Foto `null` → ícone padrão. Goleiro pela `posicao_atleta` | `home.tsx` |
 | Home: banner | Próximo `JOGO` não cancelado da página 1 de `GET /agenda`. Sem jogo, o banner some | `home.tsx` |
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
-| Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`: `total` e `por_time` (seletor de time). `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
+| Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`. "Seus números" usa o `total`. No modal, o botão da categoria (ex.: "Sub-13") mostra os 6 números de `categoria_atual`; o botão "Total" mostra **só os gols** de `total` (desde que entrou, somando todas as categorias). Sem `categoria_atual` (`null` ou servidor sem o bloco), só aparece o "Total". `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
 | Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga `token` e `perfil` mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |

@@ -20,7 +20,8 @@ import homeStyle from "@/styles/homeStyle";
 
 import { cores } from "@/styles/variaveis";
 
-type ModoEstatistica = "porTime" | "aoTotal";
+// categoria: números da categoria atual (ex.: Sub-13); total: desde que entrou na escolinha
+type ModoEstatistica = "categoria" | "total";
 
 type TipoAtleta = "linha" | "goleiro";
 
@@ -91,16 +92,16 @@ type Numeros = {
   assistencias: number | null;
 };
 
-type NumerosDoTime = Numeros & {
-  id_time: number;
-  nome_time: string;
-  logo_url: string | null;
-  categoria: string;
+type NumerosDaCategoria = Numeros & {
+  id_categoria: number;
+  nome_categoria: string; // "Sub-13"
+  categoria: string; // "Sub-13 Masculino"
 };
 
 type Estatisticas = {
   total: Numeros;
-  por_time: NumerosDoTime[];
+  // null = sem categoria ativa; ausente = servidor ainda sem esse bloco
+  categoria_atual?: NumerosDaCategoria | null;
 };
 
 // null (não registrado) ou ainda carregando aparece como "—", diferente de 0
@@ -114,8 +115,6 @@ export default function Home() {
   const [estatisticasApi, setEstatisticasApi] = useState<Estatisticas | null>(
     null,
   );
-  // id_time escolhido no seletor do modal
-  const [timeSelecionado, setTimeSelecionado] = useState<number | null>(null);
 
   useEffect(() => {
     async function carregarDados() {
@@ -157,12 +156,7 @@ export default function Home() {
 
         // Sem a rota (ou com erro), os números ficam "—"
         const jsonEstatisticas = await respostaEstatisticas.json();
-        if (jsonEstatisticas.success) {
-          const dados: Estatisticas = jsonEstatisticas.data;
-          setEstatisticasApi(dados);
-          // O primeiro time é o que tem mais partidas
-          setTimeSelecionado(dados.por_time[0]?.id_time ?? null);
-        }
+        if (jsonEstatisticas.success) setEstatisticasApi(jsonEstatisticas.data);
       } catch (erro) {
         console.log("Erro ao buscar dados da Home:", erro);
       }
@@ -194,42 +188,27 @@ export default function Home() {
     useState(false);
 
   const [modoEstatistica, setModoEstatistica] =
-    useState<ModoEstatistica>("porTime");
-
-  const [seletorTimeAberto, setSeletorTimeAberto] = useState(false);
+    useState<ModoEstatistica>("categoria");
 
   // Vem da posição principal do atleta na API
   const tipoAtleta: TipoAtleta =
     atleta?.posicao_atleta === "GOLEIRO" ? "goleiro" : "linha";
 
-  const abrirEstatisticas = () => {
-    setModalEstatisticasVisivel(true);
-    setSeletorTimeAberto(false);
-  };
+  const abrirEstatisticas = () => setModalEstatisticasVisivel(true);
+  const fecharEstatisticas = () => setModalEstatisticasVisivel(false);
 
-  const fecharEstatisticas = () => {
-    setModalEstatisticasVisivel(false);
-    setSeletorTimeAberto(false);
-  };
+  // Sem categoria ativa (ou servidor sem o bloco), só existe o Total.
+  // Enquanto carrega, o botão da categoria aparece com o nome do GET /atleta
+  const numerosCategoria = estatisticasApi?.categoria_atual ?? null;
+  const temCategoria = estatisticasApi ? numerosCategoria !== null : true;
+  const modo: ModoEstatistica = temCategoria ? modoEstatistica : "total";
+  const rotuloCategoria =
+    numerosCategoria?.nome_categoria ??
+    categoriaAtual?.nome_categoria ??
+    "Categoria";
 
-  const selecionarModo = (modo: ModoEstatistica) => {
-    setModoEstatistica(modo);
-    setSeletorTimeAberto(false);
-  };
-
-  const selecionarTime = (idTime: number) => {
-    setTimeSelecionado(idTime);
-    setSeletorTimeAberto(false);
-  };
-
-  const timesDoAtleta = estatisticasApi?.por_time ?? [];
-  const timeAtual =
-    timesDoAtleta.find((t) => t.id_time === timeSelecionado) ?? null;
-  // Atleta que ainda não jogou por nenhum time: "Por time" mostra o total (tudo 0)
-  const numeros =
-    modoEstatistica === "porTime"
-      ? (timeAtual ?? estatisticasApi?.total)
-      : estatisticasApi?.total;
+  // Os cards abaixo são da categoria atual; o Total mostra só os gols
+  const numeros = numerosCategoria;
 
   const estatisticasLinha: Estatistica[] = [
     {
@@ -310,8 +289,20 @@ export default function Home() {
     },
   ];
 
+  // Gols desde que entrou na escolinha (null enquanto o painel não registra)
+  const golsTotal: Estatistica = {
+    id: "golsTotal",
+    titulo: "Gols",
+    valor: exibirNumero(estatisticasApi?.total.gols),
+    icone: require("@/assets/images/img/bolaVermelha.png"),
+  };
+
   const estatisticas =
-    tipoAtleta === "goleiro" ? estatisticasGoleiro : estatisticasLinha;
+    modo === "total"
+      ? [golsTotal]
+      : tipoAtleta === "goleiro"
+        ? estatisticasGoleiro
+        : estatisticasLinha;
 
   return (
     <View style={fundoStyle.container}>
@@ -619,92 +610,58 @@ export default function Home() {
 
             {/* MODO DE FILTRO */}
             <View style={homeStyle.filterRow}>
-              <Pressable
-                style={[
-                  homeStyle.filterButton,
-                  modoEstatistica === "porTime" && homeStyle.filterButtonActive,
-                ]}
-                onPress={() => selecionarModo("porTime")}
-              >
-                <Text
+              {temCategoria && (
+                <Pressable
                   style={[
-                    homeStyle.filterButtonText,
-                    modoEstatistica === "porTime" &&
-                      homeStyle.filterButtonTextActive,
+                    homeStyle.filterButton,
+                    modo === "categoria" && homeStyle.filterButtonActive,
                   ]}
+                  onPress={() => setModoEstatistica("categoria")}
                 >
-                  Por time
-                </Text>
-              </Pressable>
+                  <Text
+                    style={[
+                      homeStyle.filterButtonText,
+                      modo === "categoria" && homeStyle.filterButtonTextActive,
+                    ]}
+                  >
+                    {rotuloCategoria}
+                  </Text>
+                </Pressable>
+              )}
 
               <Pressable
                 style={[
                   homeStyle.filterButton,
-                  modoEstatistica === "aoTotal" && homeStyle.filterButtonActive,
+                  modo === "total" && homeStyle.filterButtonActive,
                 ]}
-                onPress={() => selecionarModo("aoTotal")}
+                onPress={() => setModoEstatistica("total")}
               >
                 <Text
                   style={[
                     homeStyle.filterButtonText,
-                    modoEstatistica === "aoTotal" &&
-                      homeStyle.filterButtonTextActive,
+                    modo === "total" && homeStyle.filterButtonTextActive,
                   ]}
                 >
-                  Ao total
+                  Total
                 </Text>
               </Pressable>
             </View>
 
-            {/* SELETOR DE TIME */}
-            {modoEstatistica === "porTime" && (
-              <View style={homeStyle.teamSelectorArea}>
-                <Text style={homeStyle.teamSelectorLabel}>Time</Text>
-
-                {/* Sem nenhum time, o seletor não abre */}
-                <Pressable
-                  style={homeStyle.teamSelector}
-                  onPress={() =>
-                    setSeletorTimeAberto((estadoAtual) => !estadoAtual)
-                  }
-                  disabled={timesDoAtleta.length === 0}
-                >
-                  <Text style={homeStyle.teamSelectorText}>
-                    {timeAtual?.nome_time ?? "Nenhum time ainda"}
-                  </Text>
-
-                  {timesDoAtleta.length > 0 && (
-                    <Text style={homeStyle.teamSelectorArrow}>▼</Text>
-                  )}
-                </Pressable>
-
-                {seletorTimeAberto && (
-                  <View style={homeStyle.teamDropdown}>
-                    {timesDoAtleta.map((time) => (
-                      <Pressable
-                        key={time.id_time}
-                        style={homeStyle.teamOption}
-                        onPress={() => selecionarTime(time.id_time)}
-                      >
-                        <Text style={homeStyle.teamOptionText}>
-                          {time.nome_time}
-                        </Text>
-                      </Pressable>
-                    ))}
-                  </View>
-                )}
-              </View>
-            )}
-
             <Text style={homeStyle.statsModalTitle}>
-              {modoEstatistica === "porTime"
-                ? `Estatísticas — ${timeAtual?.nome_time ?? "Nenhum time ainda"}`
-                : "Estatísticas — Todos os times"}
+              {modo === "categoria"
+                ? `Estatísticas — ${numerosCategoria?.categoria ?? rotuloCategoria}`
+                : "Gols desde que entrou na escolinha"}
             </Text>
 
             <View style={homeStyle.statsGrid}>
               {estatisticas.map((estatistica) => (
-                <View key={estatistica.id} style={homeStyle.statCard}>
+                <View
+                  key={estatistica.id}
+                  style={[
+                    homeStyle.statCard,
+                    modo === "total" && homeStyle.statCardFull,
+                  ]}
+                >
                   <View style={homeStyle.statCardIcon}>
                     {"icone" in estatistica && estatistica.icone ? (
                       <Image
