@@ -4,7 +4,7 @@
 > feito, as regras combinadas com o Tiago e o que falta. Confira o código antes de confiar no que está
 > aqui: o arquivo pode estar desatualizado em relação aos commits mais novos (`git log`).
 
-Última atualização: 24/10/2026. Para o último commit, veja `git log`.
+Última atualização: 25/10/2026. Para o último commit, veja `git log`.
 
 ## O projeto
 
@@ -61,14 +61,15 @@ com o `SERVIDOR` em produção.
 |---|---|---|
 | Login do atleta | Integrado (`POST /auth/login` com `perfil: "atleta"`), mensagem de erro na tela, "Entrando..." | `login-atleta.tsx`, `config/api.ts` |
 | Home: nome, categoria, foto, posição | `GET /atleta`. Foto `null` → ícone padrão. Goleiro pela `posicao_atleta` | `home.tsx` |
-| Home: banner | Próximo `JOGO` não cancelado de `GET /agenda?tipo=JOGO` (só jogos: aparece mesmo com muitos treinos antes). Servidor sem o filtro ignora o `?tipo` e a mesma busca funciona; se a chamada falhar, usa a página 1 da agenda. Sem jogo, o banner some | `home.tsx` |
-| Home: próximas atividades | Os 3 primeiros não cancelados de `proximos` (mesma chamada do banner): "Hoje / Amanhã / Quarta-feira · 28/10/2026", título, local (sem local, a categoria) e horário (sem horário, "A definir"). Vazio: "Nenhuma atividade marcada por enquanto." Toque abre a Agenda | `home.tsx` |
+| Home: banner | Próximo `JOGO` não cancelado de `GET /agenda?tipo=JOGO` (só jogos: aparece mesmo com muitos treinos antes). Servidor sem o filtro ignora o `?tipo` e a mesma busca funciona; se a chamada falhar, usa a página 1 da agenda. Sem jogo, o banner some. Toque abre o detalhe do jogo (servidor sem o detalhe: Campeonatos) | `home.tsx` |
+| Home: próximas atividades | Os 3 primeiros não cancelados de `proximos` (mesma chamada do banner): "Hoje / Amanhã / Quarta-feira · 28/10/2026", título, local (sem local, a categoria) e horário (sem horário, "A definir"). Vazio: "Nenhuma atividade marcada por enquanto." Toque abre o detalhe do compromisso (servidor sem o detalhe: a Agenda) | `home.tsx` |
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
 | Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`. "Seus números" usa o `total`. No modal, o botão da categoria (ex.: "Sub-13") mostra os 6 números de `categoria_atual`; o botão "Total" mostra **só os gols** de `total` (desde que entrou, somando todas as categorias). Sem `categoria_atual` (`null` ou servidor sem o bloco), só aparece o "Total". `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
 | Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga `token` e `perfil` mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |
-| Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos; "Ver detalhes" está **escondido** até as telas de detalhe usarem a API. A linha de pessoa mostra `responsavel` (pedido ao backend) ou, até lá, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário e a troca de filtro voltam para hoje. Um cancelado antes do próximo fica antes do card, na ordem das datas | `agenda.tsx` |
+| Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos. O card do próximo ("Ver detalhes") e qualquer item da timeline abrem o detalhe do compromisso; servidor sem o detalhe (sem o campo `responsavel` nos eventos) esconde o "Ver detalhes" e o toque não faz nada. A linha de pessoa mostra o `responsavel` ou, sem ele, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário e a troca de filtro voltam para hoje. Um cancelado antes do próximo fica antes do card, na ordem das datas | `agenda.tsx` |
+| Detalhe do compromisso | `GET /agenda/{idEvento}`, uma tela para todos os tipos (visual da antiga `treino-tecnico.tsx`): Confirmado/Cancelado, "Faltam 2h 15min" / "Faltam 3 dias" / "Acontecendo agora" / "Concluído", título inteiro, dia, horário com duração, local. No jogo, card "AACJ × adversário" (placar quando jogado), campeonato ou "Amistoso", fase, pênaltis, confronto e "Chegar às" (só antes do jogo). Categoria, responsável e descrição só quando vêm. Ações rápidas: Abrir mapa (Google Maps pelo local), Adicionar ao calendário (link do Google Agenda preenchido) e Compartilhar (compartilhamento do sistema; onde não há, copia o texto). 404: "Este compromisso não está mais na sua agenda." As telas antigas (`treino-tecnico`, `detalhe-proxima-partida`, `agenda-local`) continuam no projeto com dados de exemplo | `detalhe-compromisso.tsx`, `utils/eventos.ts` |
 | Sino (todas as telas) | O próprio componente busca `GET /notificacoes/nao-lidas` sempre que a tela aparece; nenhuma tela passa o número. 0 esconde a bolinha; mais de 9 mostra "9+". Só busca com `perfil` = `"atleta"` (o responsável ainda não está integrado) | `components/botaoNotificacoes.tsx` |
 | Notificações | `GET /notificacoes?page=N` (20 por página, mais ao rolar). Seções Hoje / Ontem / Esta semana (desde segunda) / Anteriores, pela `data`. Categorias: **Agenda** (INSCRICAO, REMOCAO, ALTERACAO, CANCELAMENTO, REATIVACAO e AGENDA) e **Avisos da AACJ** (AVISO). Tocar marca como lido (`PATCH /notificacoes/{id}/lida`) e, se for da Agenda, abre a Agenda; o recado da AACJ não abre outra tela. "Marcar todas como lidas": com "Todas" usa `PATCH /notificacoes/lidas`; com uma categoria, marca só os avisos dela que estão na tela | `notificacoes.tsx` |
 | Esqueci minha senha | `POST /auth/esqueci-senha` com `email` e o `perfil` que vem do login (atleta ou responsável). O modal mostra a `message` da API (link vale 24 horas); o OK volta para o login do perfil. Erros (vazio, 422, 429, sem conexão) aparecem acima do botão. A resposta é a mesma exista ou não o e-mail. No backend local o e-mail vai para o log; e-mail de verdade só pela produção, e só para quem pode entrar no app | `esqueci-senha.tsx` |
@@ -84,22 +85,22 @@ com o `SERVIDOR` em produção.
 4. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
    - a contagem dos filtros usa os `totais` da API (todas as páginas); só no servidor sem `totais` ela soma o que já carregou;
    - com poucos compromissos, o dia tocado no fim da lista não chega ao topo, porque a lista acaba antes;
-   - títulos longos são cortados na timeline ("Time Azul x Time Visi…").
+   - títulos longos são cortados na timeline ("Time Azul x Time Visi…"); no detalhe do compromisso aparecem inteiros;
+   - o cabeçalho (mês e semana) não acompanha a rolagem da lista, só os toques nas setas, nos dias e no calendário.
 
 ## Pendências do lado do backend
 
 - Gols e assistências por atleta (hoje `null`) dependem do painel registrar quem fez cada gol.
 - `defesas` e `gols_sofridos` do goleiro não existem na rota de estatísticas. Pedir só se o Tiago quiser.
-- **Responsável do evento** (`responsavel` em cada evento de `GET /agenda`): parte da Etapa 2 abaixo. O app já mostra o
-  campo quando ele vier (até lá, mostra a categoria).
 - Treino com categoria "Geral (sem categoria)" vem com `categoria: null` de propósito.
-- Agenda, Etapa 1 **pronta no backend local** (commit `4aefe3a` na branch `feature/agenda-eventos`, ainda **não publicada**
-  na produção): `?tipo=JOGO` (vários com vírgula), `?de=AAAA-MM-DD&ate=AAAA-MM-DD` (até 93 dias; muda a resposta para
-  `{ periodo, eventos, totais }`, com concluídos e cancelados), `totais` por tipo (não considera o `?tipo`) e `concluido`
-  em cada evento. O app já usa o `?tipo` no banner da Home e os `totais` nos contadores da Agenda, com fallback para o
-  servidor antigo. O `?de=&ate=` ainda não é usado (serviria para voltar a semanas passadas na Agenda).
-- Agenda, Etapa 2 (pedida em 24/10, em andamento no backend): detalhe `GET /agenda/{idEvento}` só com os campos seguros
-  (adversário, fase, rodada, prorrogação, pênaltis, confronto; sem nomes de colegas nem escalação) e o campo
-  `responsavel` (novo campo opcional no evento e na Grade de Treinos). Com o detalhe, liberar o "Ver detalhes" da Agenda e do banner.
+- **Publicado na produção em 24/10** (conferido em 25/10): agenda com `?tipo=`, `?de=&ate=` (até 93 dias; muda a resposta
+  para `{ periodo, eventos, totais }`), `totais` por tipo e `concluido`; detalhe `GET /agenda/{idEvento}` (só campos
+  seguros: adversário, fase, rodada, prorrogação, pênaltis, confronto; sem colegas nem escalação); `responsavel` em todo
+  evento (campo opcional "Responsável pela atividade" no evento e na Grade de Treinos); e a súmula (S2), que preenche
+  gols e assistências nas estatísticas quando o jogo tem gol lançado (sem súmula continua `null`). O `?de=&ate=` ainda
+  não é usado pelo app (serviria para voltar a semanas passadas na Agenda).
+- **Comissão técnica** (pedido em 25/10): o "Entrar em contato" das ações rápidas do detalhe ficou de fora porque a API
+  não tem cadastro de professores (o `responsavel` é texto livre). A ideia é abrir a tela `comissao-tecnica.tsx` (hoje
+  com dados de exemplo) com o perfil do professor que conduz a atividade.
 - Produção: e-mails por SMTP desde 24/10 (antes `MAIL_MAILER=log` e nada saía). No terminal SSH do Plesk, use
-  `/opt/plesk/php/8.3/bin/php artisan ...` (o `php` padrão é 7.2).
+  `/opt/plesk/php/8.4/bin/php artisan ...` (o `php` padrão é 7.2; o site roda o 8.4).

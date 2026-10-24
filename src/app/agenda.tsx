@@ -4,6 +4,7 @@ import { API } from "@/config/api";
 import agendaStyle from "@/styles/agendaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
+import { abrirDetalhe, temDetalhe, visualDoTipo } from "@/utils/eventos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
@@ -32,7 +33,8 @@ type Evento = {
   fim: string | null;
   local: string | null;
   situacao: "CONFIRMADO" | "CANCELADO";
-  // Ainda não vem da API (pedido ao backend); quando vier, aparece no lugar da categoria
+  // Quem conduz a atividade; quando vem, aparece no lugar da categoria.
+  // Servidor sem o detalhe do evento não manda o campo
   responsavel?: string | null;
   jogo: { horario_chegada: string | null } | null;
 };
@@ -57,37 +59,6 @@ const filtros: { rotulo: string; tipo: string | null }[] = [
   { rotulo: "Eventos", tipo: "EVENTO" },
   { rotulo: "Confraternizações", tipo: "CONFRATERNIZACAO" },
 ];
-
-const visualPorTipo: Record<string, { icone: any; cor: string }> = {
-  TREINO: {
-    icone: require("@/assets/images/img/atletaVermelho.png"),
-    cor: cores.vermelho20,
-  },
-  JOGO: {
-    icone: require("@/assets/images/img/bolaVermelha.png"),
-    cor: cores.azulclaro,
-  },
-  CAMPEONATO: {
-    icone: require("@/assets/images/img/campeonatosVermelho.png"),
-    cor: cores.pastel,
-  },
-  AVALIACAO: {
-    icone: require("@/assets/images/img/pranchetaVermelha.png"),
-    cor: cores.pastel,
-  },
-  REUNIAO: {
-    icone: require("@/assets/images/img/grupoPessoasVermelho.png"),
-    cor: cores.rosa,
-  },
-  EVENTO: {
-    icone: require("@/assets/images/img/agendaVermelha.png"),
-    cor: cores.azulclaro,
-  },
-  CONFRATERNIZACAO: {
-    icone: require("@/assets/images/img/coracaoVermelho.png"),
-    cor: cores.rosa,
-  },
-};
 
 // A API só manda CONFIRMADO ou CANCELADO; mudanças chegam pelos avisos
 type Status = "confirmado" | "cancelado";
@@ -885,13 +856,18 @@ function CardProximo({
   rotuloDia: string;
   colado: boolean;
 }) {
-  const visual = visualPorTipo[evento.tipo] ?? visualPorTipo.EVENTO;
+  const visual = visualDoTipo(evento.tipo);
   const status = statusConfig[statusDoEvento(evento)];
   const pessoa = pessoaOuCategoria(evento);
   const chegada = evento.jogo?.horario_chegada;
+  const comDetalhe = temDetalhe(evento);
 
   return (
-    <View style={[agendaStyle.nextCard, colado && { marginTop: 0 }]}>
+    <Pressable
+      style={[agendaStyle.nextCard, colado && { marginTop: 0 }]}
+      onPress={() => abrirDetalhe(evento.id_evento)}
+      disabled={!comDetalhe}
+    >
       <Text style={agendaStyle.nextCardLabel}>
         Próximo compromisso · {rotuloDia}
       </Text>
@@ -962,7 +938,6 @@ function CardProximo({
             )}
           </View>
         </View>
-        {/* "Ver detalhes" fica escondido até as telas de detalhe usarem a API */}
         <View style={agendaStyle.nextCardSide}>
           <View
             style={[
@@ -986,6 +961,9 @@ function CardProximo({
               {status.texto}
             </Text>
           </View>
+          {comDetalhe && (
+            <Text style={agendaStyle.nextDetailsLink}>Ver detalhes {">"}</Text>
+          )}
         </View>
       </View>
       {evento.descricao && (
@@ -993,7 +971,7 @@ function CardProximo({
           {evento.descricao}
         </Text>
       )}
-    </View>
+    </Pressable>
   );
 }
 
@@ -1006,13 +984,18 @@ function ItemTimeline({
   comLinha: boolean;
   passado?: boolean;
 }) {
-  const visual = visualPorTipo[evento.tipo] ?? visualPorTipo.EVENTO;
+  const visual = visualDoTipo(evento.tipo);
   const status = statusConfig[statusDoEvento(evento)];
   const pessoa = pessoaOuCategoria(evento);
   const chegada = evento.jogo?.horario_chegada;
 
+  // Toque no item abre o detalhe (servidor sem o detalhe: não faz nada)
   return (
-    <View style={agendaStyle.timelineItem}>
+    <Pressable
+      style={agendaStyle.timelineItem}
+      onPress={() => abrirDetalhe(evento.id_evento)}
+      disabled={!temDetalhe(evento)}
+    >
       <View style={agendaStyle.timelineTimeCol}>
         {/* Sem horário: "--:--" (o "A definir" não cabe nesta coluna) */}
         <Text
@@ -1116,6 +1099,6 @@ function ItemTimeline({
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }

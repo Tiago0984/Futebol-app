@@ -19,6 +19,11 @@ import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
 
 import { cores } from "@/styles/variaveis";
+import {
+  abrirDetalhe,
+  formatarDiaCompromisso,
+  temDetalhe,
+} from "@/utils/eventos";
 
 // categoria: números da categoria atual (ex.: Sub-13); total: desde que entrou na escolinha
 type ModoEstatistica = "categoria" | "total";
@@ -62,6 +67,8 @@ type Evento = {
   data: string;
   horario_inicio: string | null;
   local: string | null;
+  // Só vem do servidor que tem o detalhe do evento (decide se o toque abre o detalhe)
+  responsavel?: string | null;
   situacao: string;
   jogo: {
     amistoso: boolean;
@@ -83,33 +90,6 @@ function formatarDataJogo(data: string, horario: string | null) {
   const dia = data.slice(8, 10);
   const mes = MESES[Number(data.slice(5, 7)) - 1];
   return `${dia} ${mes} · ${horario ?? "A definir"}`;
-}
-
-const DIAS_DA_SEMANA = [
-  "Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira",
-  "Quinta-feira", "Sexta-feira", "Sábado",
-];
-
-// Dia do aparelho no mesmo formato da API: "2026-11-03"
-function chaveDoDia(data: Date) {
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
-  const dia = String(data.getDate()).padStart(2, "0");
-  return `${data.getFullYear()}-${mes}-${dia}`;
-}
-
-// "Hoje · 03/11/2026", "Amanhã · 04/11/2026" ou "Quinta-feira · 05/11/2026"
-function formatarDiaAtividade(data: string) {
-  const chave = data.slice(0, 10);
-  const [ano, mes, dia] = chave.split("-").map(Number);
-  const hoje = new Date();
-  const amanha = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + 1);
-  const nome =
-    chave === chaveDoDia(hoje)
-      ? "Hoje"
-      : chave === chaveDoDia(amanha)
-        ? "Amanhã"
-        : DIAS_DA_SEMANA[new Date(ano, mes - 1, dia).getDay()];
-  return `${nome} · ${chave.slice(8, 10)}/${chave.slice(5, 7)}/${ano}`;
 }
 
 // Números de GET /api/v1/atleta/estatisticas; gols e assistencias null = ainda não registrado
@@ -443,7 +423,12 @@ export default function Home() {
         {proximoJogo && jogo && meuTime && adversario && (
           <Pressable
             style={homeStyle.banner}
-            onPress={() => router.navigate("/campeonatos")}
+            // Abre o detalhe do jogo; servidor sem o detalhe: Campeonatos, como antes
+            onPress={() =>
+              temDetalhe(proximoJogo)
+                ? abrirDetalhe(proximoJogo.id_evento)
+                : router.navigate("/campeonatos")
+            }
           >
             <Image
               source={require("@/assets/images/img/fundoCardCampeonatos.png")}
@@ -581,10 +566,15 @@ export default function Home() {
             <Pressable
               key={atividade.id_evento}
               style={homeStyle.activityItem}
-              onPress={() => router.navigate("/agenda")}
+              // Abre o detalhe; servidor sem o detalhe: a Agenda, como antes
+              onPress={() =>
+                temDetalhe(atividade)
+                  ? abrirDetalhe(atividade.id_evento)
+                  : router.navigate("/agenda")
+              }
             >
               <Text style={homeStyle.activityDate}>
-                {formatarDiaAtividade(atividade.data)}
+                {formatarDiaCompromisso(atividade.data)}
               </Text>
 
               <View style={homeStyle.activityRow}>
