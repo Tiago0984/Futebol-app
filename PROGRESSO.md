@@ -66,22 +66,24 @@ com o `SERVIDOR` em produção.
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
 | Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga `token` e `perfil` mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |
-| Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos; "Ver detalhes" está **escondido** até as telas de detalhe usarem a API. A linha de pessoa mostra `responsavel` (pedido ao backend) ou, até lá, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário volta para hoje | `agenda.tsx` |
+| Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos; "Ver detalhes" está **escondido** até as telas de detalhe usarem a API. A linha de pessoa mostra `responsavel` (pedido ao backend) ou, até lá, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário e a troca de filtro voltam para hoje. Um cancelado antes do próximo fica antes do card, na ordem das datas | `agenda.tsx` |
 | Desempenho | Desativado: saiu do menu, da Home e da Ajuda. As telas continuam no projeto | — |
 
 ## O que falta (sugestão de ordem)
 
-1. **Testar a Agenda com dados reais**: a Joana local tem treinos de 03/11 a 14/11; a do servidor tem jogos.
-   Conferir a navegação de semana e mês e a rolagem até o dia.
-2. **Avisos**: contador do sino em `components/botaoNotificacoes.tsx` (hoje o padrão é 2) com `GET /notificacoes/nao-lidas`;
+1. **Avisos**: contador do sino em `components/botaoNotificacoes.tsx` (hoje o padrão é 2) com `GET /notificacoes/nao-lidas`;
    tela `notificacoes.tsx` (dados fixos) com `GET /notificacoes`, `PATCH /notificacoes/{id}/lida` e `PATCH /notificacoes/lidas`.
-3. **Esqueci minha senha** (`esqueci-senha.tsx`, recebe `perfil` por parâmetro): `POST /auth/esqueci-senha` com `email` e `perfil`.
+2. **Esqueci minha senha** (`esqueci-senha.tsx`, recebe `perfil` por parâmetro): `POST /auth/esqueci-senha` com `email` e `perfil`.
    A resposta é sempre a mesma, exista ou não o e-mail.
-4. **Responsáveis no Perfil** (`perfil.tsx` tem um comentário marcando o lugar): `GET /atleta` traz
+3. **Responsáveis no Perfil** (`perfil.tsx` tem um comentário marcando o lugar): `GET /atleta` traz
    `responsaveis: [{ nome, grau_parentesco }]`.
-5. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
+4. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
    (`GET /responsavel/atletas`) e as mesmas telas do atleta em modo leitura, sob `/responsavel/atletas/{idAtleta}/...`.
-6. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
+5. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
+6. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
+   - a contagem dos filtros só soma as páginas já carregadas e cresce ao rolar (a API não manda o total por tipo);
+   - com poucos compromissos, o dia tocado no fim da lista não chega ao topo, porque a lista acaba antes;
+   - títulos longos são cortados na timeline ("Time Azul x Time Visi…").
 
 ## Pendências do lado do backend
 
