@@ -62,6 +62,7 @@ com o `SERVIDOR` em produção.
 | Login do atleta | Integrado (`POST /auth/login` com `perfil: "atleta"`), mensagem de erro na tela, "Entrando..." | `login-atleta.tsx`, `config/api.ts` |
 | Home: nome, categoria, foto, posição | `GET /atleta`. Foto `null` → ícone padrão. Goleiro pela `posicao_atleta` | `home.tsx` |
 | Home: banner | Próximo `JOGO` não cancelado da página 1 de `GET /agenda`. Sem jogo, o banner some | `home.tsx` |
+| Home: próximas atividades | Os 3 primeiros não cancelados de `proximos` (mesma chamada do banner): "Hoje / Amanhã / Quarta-feira · 28/10/2026", título, local (sem local, a categoria) e horário (sem horário, "A definir"). Vazio: "Nenhuma atividade marcada por enquanto." Toque abre a Agenda | `home.tsx` |
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
 | Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`. "Seus números" usa o `total`. No modal, o botão da categoria (ex.: "Sub-13") mostra os 6 números de `categoria_atual`; o botão "Total" mostra **só os gols** de `total` (desde que entrou, somando todas as categorias). Sem `categoria_atual` (`null` ou servidor sem o bloco), só aparece o "Total". `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
@@ -92,3 +93,10 @@ com o `SERVIDOR` em produção.
 - **Responsável do evento** (`responsavel` em cada evento de `GET /agenda`): o prompt já foi passado ao backend. Ele vem da Grade
   de Treinos ("Novo Horário") e é copiado pelo "Gerar agenda do mês". O app já mostra o campo quando ele vier.
 - Treino com categoria "Geral (sem categoria)" vem com `categoria: null` de propósito.
+- Pedidos para a agenda, passados ao backend em 24/10 (ainda sem resposta):
+  - filtro por tipo (`?tipo=JOGO`): o banner da Home só procura o jogo na página 1 e some se houver mais de 20 eventos antes;
+  - filtro por período (`?de=&ate=`), com os concluídos: para a Agenda mostrar semanas passadas e pular meses sem baixar página por página;
+  - totais por tipo na resposta: para os contadores dos filtros da Agenda;
+  - detalhe `GET /agenda/{idEvento}`: para o "Ver detalhes" da Agenda e do banner da Home, hoje sem destino.
+- Produção: e-mails por SMTP desde 24/10 (antes `MAIL_MAILER=log` e nada saía). No terminal SSH do Plesk, use
+  `/opt/plesk/php/8.3/bin/php artisan ...` (o `php` padrão é 7.2).

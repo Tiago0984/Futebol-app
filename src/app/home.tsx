@@ -56,9 +56,12 @@ type TimeJogo = {
 // Só os campos de um evento de GET /api/v1/agenda usados na Home
 type Evento = {
   id_evento: number;
+  titulo: string;
   tipo: string;
+  categoria: string | null;
   data: string;
   horario_inicio: string | null;
+  local: string | null;
   situacao: string;
   jogo: {
     amistoso: boolean;
@@ -80,6 +83,33 @@ function formatarDataJogo(data: string, horario: string | null) {
   const dia = data.slice(8, 10);
   const mes = MESES[Number(data.slice(5, 7)) - 1];
   return `${dia} ${mes} · ${horario ?? "A definir"}`;
+}
+
+const DIAS_DA_SEMANA = [
+  "Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira",
+  "Quinta-feira", "Sexta-feira", "Sábado",
+];
+
+// Dia do aparelho no mesmo formato da API: "2026-11-03"
+function chaveDoDia(data: Date) {
+  const mes = String(data.getMonth() + 1).padStart(2, "0");
+  const dia = String(data.getDate()).padStart(2, "0");
+  return `${data.getFullYear()}-${mes}-${dia}`;
+}
+
+// "Hoje · 03/11/2026", "Amanhã · 04/11/2026" ou "Quinta-feira · 05/11/2026"
+function formatarDiaAtividade(data: string) {
+  const chave = data.slice(0, 10);
+  const [ano, mes, dia] = chave.split("-").map(Number);
+  const hoje = new Date();
+  const amanha = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + 1);
+  const nome =
+    chave === chaveDoDia(hoje)
+      ? "Hoje"
+      : chave === chaveDoDia(amanha)
+        ? "Amanhã"
+        : DIAS_DA_SEMANA[new Date(ano, mes - 1, dia).getDay()];
+  return `${nome} · ${chave.slice(8, 10)}/${chave.slice(5, 7)}/${ano}`;
 }
 
 // Números de GET /api/v1/atleta/estatisticas; gols e assistencias null = ainda não registrado
@@ -112,6 +142,10 @@ function exibirNumero(valor: number | null | undefined) {
 export default function Home() {
   const [atleta, setAtleta] = useState<Atleta | null>(null);
   const [proximoJogo, setProximoJogo] = useState<Evento | null>(null);
+  // null enquanto a agenda não chegou (ou falhou)
+  const [proximasAtividades, setProximasAtividades] = useState<
+    Evento[] | null
+  >(null);
   const [estatisticasApi, setEstatisticasApi] = useState<Estatisticas | null>(
     null,
   );
@@ -148,10 +182,15 @@ export default function Home() {
         // Banner: primeiro jogo não cancelado entre os próximos eventos
         const jsonAgenda = await respostaAgenda.json();
         if (jsonAgenda.success) {
-          const jogo = (jsonAgenda.data.proximos as Evento[]).find(
+          const proximos = jsonAgenda.data.proximos as Evento[];
+          const jogo = proximos.find(
             (e) => e.tipo === "JOGO" && e.jogo && e.situacao !== "CANCELADO",
           );
           setProximoJogo(jogo ?? null);
+          // Próximas atividades: os 3 primeiros não cancelados (cancelados aparecem na Agenda)
+          setProximasAtividades(
+            proximos.filter((e) => e.situacao !== "CANCELADO").slice(0, 3),
+          );
         }
 
         // Sem a rota (ou com erro), os números ficam "—"
@@ -518,64 +557,46 @@ export default function Home() {
             </Pressable>
           </View>
 
-          <Pressable
-            style={homeStyle.activityItem}
-            onPress={() => router.navigate("/agenda")}
-          >
-            <Text style={homeStyle.activityDate}>Hoje · 30/07/2026</Text>
-
-            <View style={homeStyle.activityRow}>
-              <View style={homeStyle.activityTextCol}>
-                <Text style={homeStyle.activityTitle}>Treino Técnico</Text>
-
-                <Text style={homeStyle.activitySubtitle}>Campo Principal</Text>
-              </View>
-
-              <Text style={homeStyle.activityTime}>17:30</Text>
-            </View>
-
-            <View style={homeStyle.activityDivider} />
-          </Pressable>
-
-          <Pressable
-            style={homeStyle.activityItem}
-            onPress={() => router.navigate("/agenda")}
-          >
-            <Text style={homeStyle.activityDate}>
-              Segunda-feira · 03/08/2026
+          {proximasAtividades?.length === 0 && (
+            <Text style={homeStyle.activitySubtitle}>
+              Nenhuma atividade marcada por enquanto.
             </Text>
+          )}
 
-            <View style={homeStyle.activityRow}>
-              <View style={homeStyle.activityTextCol}>
-                <Text style={homeStyle.activityTitle}>Avaliação Física</Text>
+          {proximasAtividades?.map((atividade, index) => (
+            <Pressable
+              key={atividade.id_evento}
+              style={homeStyle.activityItem}
+              onPress={() => router.navigate("/agenda")}
+            >
+              <Text style={homeStyle.activityDate}>
+                {formatarDiaAtividade(atividade.data)}
+              </Text>
 
-                <Text style={homeStyle.activitySubtitle}>
-                  Centro de Performance
+              <View style={homeStyle.activityRow}>
+                <View style={homeStyle.activityTextCol}>
+                  <Text style={homeStyle.activityTitle} numberOfLines={1}>
+                    {atividade.titulo}
+                  </Text>
+
+                  {/* Sem local, mostra a categoria */}
+                  {(atividade.local ?? atividade.categoria) && (
+                    <Text style={homeStyle.activitySubtitle} numberOfLines={1}>
+                      {atividade.local ?? atividade.categoria}
+                    </Text>
+                  )}
+                </View>
+
+                <Text style={homeStyle.activityTime}>
+                  {atividade.horario_inicio ?? "A definir"}
                 </Text>
               </View>
 
-              <Text style={homeStyle.activityTime}>09:00</Text>
-            </View>
-
-            <View style={homeStyle.activityDivider} />
-          </Pressable>
-
-          <Pressable
-            style={homeStyle.activityItem}
-            onPress={() => router.navigate("/agenda")}
-          >
-            <Text style={homeStyle.activityDate}>Sábado · 08/08/2026</Text>
-
-            <View style={homeStyle.activityRow}>
-              <View style={homeStyle.activityTextCol}>
-                <Text style={homeStyle.activityTitle}>Campeonato Regional</Text>
-
-                <Text style={homeStyle.activitySubtitle}>AACJ</Text>
-              </View>
-
-              <Text style={homeStyle.activityTime}>17:00</Text>
-            </View>
-          </Pressable>
+              {index < proximasAtividades.length - 1 && (
+                <View style={homeStyle.activityDivider} />
+              )}
+            </Pressable>
+          ))}
         </View>
       </ScrollView>
 
