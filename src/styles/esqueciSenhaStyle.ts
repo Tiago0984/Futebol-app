@@ -104,6 +104,18 @@ const esqueciSenhaStyle = StyleSheet.create({
     marginTop: 30,
     marginBottom: 25,
   },
+  sendButtonDisabled: {
+    opacity: 0.6,
+  },
+  // Mensagem de erro acima do botão Enviar link
+  mensagemText: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 13,
+    color: cores.vermelho,
+    textAlign: "center",
+    marginTop: 16,
+    marginBottom: -14,
+  },
   sendButtonText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,
@@ -167,13 +179,6 @@ const esqueciSenhaStyle = StyleSheet.create({
     fontSize: 14,
     lineHeight: 19,
     color: cores.cinza,
-    marginBottom: 14,
-  },
-  modalValidity: {
-    fontFamily: fontes.OpenSans_SemiBold,
-    fontSize: 13,
-    fontWeight: "600",
-    color: cores.preto,
     marginBottom: 20,
   },
   modalButton: {

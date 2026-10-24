@@ -70,18 +70,17 @@ com o `SERVIDOR` em produção.
 | Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos; "Ver detalhes" está **escondido** até as telas de detalhe usarem a API. A linha de pessoa mostra `responsavel` (pedido ao backend) ou, até lá, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário e a troca de filtro voltam para hoje. Um cancelado antes do próximo fica antes do card, na ordem das datas | `agenda.tsx` |
 | Sino (todas as telas) | O próprio componente busca `GET /notificacoes/nao-lidas` sempre que a tela aparece; nenhuma tela passa o número. 0 esconde a bolinha; mais de 9 mostra "9+". Só busca com `perfil` = `"atleta"` (o responsável ainda não está integrado) | `components/botaoNotificacoes.tsx` |
 | Notificações | `GET /notificacoes?page=N` (20 por página, mais ao rolar). Seções Hoje / Ontem / Esta semana (desde segunda) / Anteriores, pela `data`. Categorias: **Agenda** (INSCRICAO, REMOCAO, ALTERACAO, CANCELAMENTO, REATIVACAO e AGENDA) e **Avisos da AACJ** (AVISO). Tocar marca como lido (`PATCH /notificacoes/{id}/lida`) e, se for da Agenda, abre a Agenda; o recado da AACJ não abre outra tela. "Marcar todas como lidas": com "Todas" usa `PATCH /notificacoes/lidas`; com uma categoria, marca só os avisos dela que estão na tela | `notificacoes.tsx` |
+| Esqueci minha senha | `POST /auth/esqueci-senha` com `email` e o `perfil` que vem do login (atleta ou responsável). O modal mostra a `message` da API (link vale 24 horas); o OK volta para o login do perfil. Erros (vazio, 422, 429, sem conexão) aparecem acima do botão. A resposta é a mesma exista ou não o e-mail. No backend local o e-mail vai para o log; e-mail de verdade só pela produção, e só para quem pode entrar no app | `esqueci-senha.tsx` |
 | Desempenho | Desativado: saiu do menu, da Home e da Ajuda. As telas continuam no projeto | — |
 
 ## O que falta (sugestão de ordem)
 
-1. **Esqueci minha senha** (`esqueci-senha.tsx`, recebe `perfil` por parâmetro): `POST /auth/esqueci-senha` com `email` e `perfil`.
-   A resposta é sempre a mesma, exista ou não o e-mail.
-2. **Responsáveis no Perfil** (`perfil.tsx` tem um comentário marcando o lugar): `GET /atleta` traz
+1. **Responsáveis no Perfil** (`perfil.tsx` tem um comentário marcando o lugar): `GET /atleta` traz
    `responsaveis: [{ nome, grau_parentesco }]`.
-3. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
+2. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
    (`GET /responsavel/atletas`) e as mesmas telas do atleta em modo leitura, sob `/responsavel/atletas/{idAtleta}/...`.
-4. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
-5. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
+3. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
+4. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
    - a contagem dos filtros só soma as páginas já carregadas e cresce ao rolar (a API não manda o total por tipo);
    - com poucos compromissos, o dia tocado no fim da lista não chega ao topo, porque a lista acaba antes;
    - títulos longos são cortados na timeline ("Time Azul x Time Visi…").

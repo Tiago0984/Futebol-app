@@ -1,4 +1,6 @@
+import { API } from "@/config/api";
 import esqueciSenhaStyle from "@/styles/esqueciSenhaStyle";
+import { mensagensDeErro } from "@/utils/formatos";
 import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -14,8 +16,48 @@ import {
 
 export default function EsqueciSenha() {
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
+  const perfilDoLink = perfil === "responsavel" ? "responsavel" : "atleta";
   const [email, setEmail] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [mensagemModal, setMensagemModal] = useState("");
+  const [erro, setErro] = useState("");
+  const [enviando, setEnviando] = useState(false);
+
+  // A resposta é a mesma exista ou não o e-mail (a API não revela quem está
+  // cadastrado); o modal mostra a mensagem dela, que já diz a validade do link
+  async function enviarLink() {
+    if (enviando) return;
+    if (!email.trim()) {
+      setErro("Informe seu e-mail.");
+      return;
+    }
+    setErro("");
+    setEnviando(true);
+    try {
+      const resposta = await fetch(`${API}/auth/esqueci-senha`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ email: email.trim(), perfil: perfilDoLink }),
+      });
+      const json = await resposta.json();
+
+      // 422 e-mail inválido | 429 muitos pedidos seguidos
+      if (!resposta.ok || !json.success) {
+        setErro(mensagensDeErro(json).geral);
+        return;
+      }
+      setMensagemModal(json.message);
+      setModalVisible(true);
+    } catch (e) {
+      console.log("Erro ao pedir o link de nova senha:", e);
+      setErro("Não foi possível conectar ao servidor.");
+    } finally {
+      setEnviando(false);
+    }
+  }
 
   return (
     <View style={esqueciSenhaStyle.container}>
@@ -84,11 +126,21 @@ export default function EsqueciSenha() {
             />
           </View>
 
+          {erro !== "" && (
+            <Text style={esqueciSenhaStyle.mensagemText}>{erro}</Text>
+          )}
+
           <Pressable
-            style={esqueciSenhaStyle.sendButton}
-            onPress={() => setModalVisible(true)}
+            style={[
+              esqueciSenhaStyle.sendButton,
+              enviando && esqueciSenhaStyle.sendButtonDisabled,
+            ]}
+            onPress={enviarLink}
+            disabled={enviando}
           >
-            <Text style={esqueciSenhaStyle.sendButtonText}>Enviar link</Text>
+            <Text style={esqueciSenhaStyle.sendButtonText}>
+              {enviando ? "Enviando..." : "Enviar link"}
+            </Text>
           </Pressable>
 
           <Pressable onPress={() => router.back()}>
@@ -121,19 +173,15 @@ export default function EsqueciSenha() {
         <View style={esqueciSenhaStyle.modalOverlay}>
           <View style={esqueciSenhaStyle.modalCard}>
             <Text style={esqueciSenhaStyle.modalTitle}>Enviar link</Text>
-            <Text style={esqueciSenhaStyle.modalText}>
-              Caso este e-mail esteja cadastrado em nosso sistema, você
-              receberá um link de redefinição por e-mail.
-            </Text>
-            <Text style={esqueciSenhaStyle.modalValidity}>
-              Validade do link (10 minutos).
-            </Text>
+            <Text style={esqueciSenhaStyle.modalText}>{mensagemModal}</Text>
             <Pressable
               style={esqueciSenhaStyle.modalButton}
               onPress={() => {
                 setModalVisible(false);
                 router.navigate(
-                  perfil === "responsavel" ? "/login-responsavel" : "/login-atleta"
+                  perfilDoLink === "responsavel"
+                    ? "/login-responsavel"
+                    : "/login-atleta",
                 );
               }}
             >
