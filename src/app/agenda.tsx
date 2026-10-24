@@ -408,9 +408,9 @@ export default function Agenda() {
   const abertos = proximosAbertos.filter(combinaCom(filtroAtivo));
   // Próximo = primeiro que ainda não terminou e não foi cancelado
   const proximo = abertos.find((e) => e.situacao !== "CANCELADO") ?? null;
-  const futuros = abertos.filter((e) => e !== proximo);
 
-  // Monta a timeline com um cabeçalho a cada dia novo; o card do próximo já mostra o dia dele
+  // Monta a timeline com um cabeçalho a cada dia novo, em ordem de data. Um cancelado
+  // antes do próximo fica antes do card; o card do próximo já mostra o dia dele
   const linhas: Linha[] = [];
   let diaAnterior = "";
   for (const evento of passados) {
@@ -420,11 +420,12 @@ export default function Agenda() {
     }
     linhas.push({ tipo: "evento", evento, passado: true });
   }
-  if (proximo) {
-    linhas.push({ tipo: "proximo", evento: proximo });
-    diaAnterior = chaveDoEvento(proximo);
-  }
-  for (const evento of futuros) {
+  for (const evento of abertos) {
+    if (evento === proximo) {
+      linhas.push({ tipo: "proximo", evento });
+      diaAnterior = chaveDoEvento(evento);
+      continue;
+    }
     if (chaveDoEvento(evento) !== diaAnterior) {
       diaAnterior = chaveDoEvento(evento);
       linhas.push({ tipo: "dia", chave: diaAnterior });
