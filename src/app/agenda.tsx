@@ -41,6 +41,9 @@ type RespostaAgenda = {
   proximos: Evento[];
   passados: Evento[];
   paginacao: { pagina_atual: number; ultima_pagina: number };
+  // Quantos próximos existem de cada tipo, somando todas as páginas
+  // (servidor antigo não manda: aí a contagem usa só o que já carregou)
+  totais?: Record<string, number>;
 };
 
 // Um botão por tipo da API; tipo null = Todos
@@ -228,6 +231,7 @@ export default function Agenda() {
   const [proximosApi, setProximosApi] = useState<Evento[]>([]);
   const [pagina, setPagina] = useState(1);
   const [ultimaPagina, setUltimaPagina] = useState(1);
+  const [totais, setTotais] = useState<Record<string, number> | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [carregandoMais, setCarregandoMais] = useState(false);
   const [erro, setErro] = useState("");
@@ -320,6 +324,7 @@ export default function Agenda() {
           setProximosApi(dados.proximos);
           setPagina(dados.paginacao.pagina_atual);
           setUltimaPagina(dados.paginacao.ultima_pagina);
+          setTotais(dados.totais ?? null);
           setAgora(new Date());
         } catch (e) {
           console.log("Erro ao buscar a agenda:", e);
@@ -396,10 +401,22 @@ export default function Agenda() {
     tipo === null || e.tipo === tipo;
 
   function contarCompromissos(tipo: string | null) {
-    return (
-      todosPassados.filter(combinaCom(tipo)).slice(-QUANTIDADE_PASSADOS)
-        .length + proximosAbertos.filter(combinaCom(tipo)).length
-    );
+    const passadosNaTela = todosPassados
+      .filter(combinaCom(tipo))
+      .slice(-QUANTIDADE_PASSADOS).length;
+    if (!totais) {
+      return passadosNaTela + proximosAbertos.filter(combinaCom(tipo)).length;
+    }
+    // totais vem da API ao abrir a tela e já conta as páginas que ainda não vieram;
+    // tira os carregados que terminaram depois disso (viraram passados ou sumiram)
+    const totalDaApi =
+      tipo === null
+        ? Object.values(totais).reduce((soma, n) => soma + n, 0)
+        : (totais[tipo] ?? 0);
+    const terminadosDepois = proximosApi.filter(
+      (e) => jaTerminou(e, agora) && combinaCom(tipo)(e),
+    ).length;
+    return passadosNaTela + totalDaApi - terminadosDepois;
   }
 
   const passados = todosPassados

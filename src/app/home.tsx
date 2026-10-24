@@ -162,12 +162,18 @@ export default function Home() {
         Authorization: `Bearer ${token}`,
       };
       try {
-        const [respostaAtleta, respostaAgenda, respostaEstatisticas] =
-          await Promise.all([
-            fetch(`${API}/atleta`, { headers }),
-            fetch(`${API}/agenda`, { headers }),
-            fetch(`${API}/atleta/estatisticas`, { headers }),
-          ]);
+        const [
+          respostaAtleta,
+          respostaAgenda,
+          respostaJogos,
+          respostaEstatisticas,
+        ] = await Promise.all([
+          fetch(`${API}/atleta`, { headers }),
+          fetch(`${API}/agenda`, { headers }),
+          // Só os jogos, para o banner achar o próximo mesmo com muitos treinos antes
+          fetch(`${API}/agenda?tipo=JOGO`, { headers }),
+          fetch(`${API}/atleta/estatisticas`, { headers }),
+        ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
         if (respostaAtleta.status === 401 || respostaAtleta.status === 403) {
@@ -179,19 +185,27 @@ export default function Home() {
         const jsonAtleta = await respostaAtleta.json();
         if (jsonAtleta.success) setAtleta(jsonAtleta.data);
 
-        // Banner: primeiro jogo não cancelado entre os próximos eventos
+        const ehProximoJogo = (e: Evento) =>
+          e.tipo === "JOGO" && e.jogo && e.situacao !== "CANCELADO";
+
         const jsonAgenda = await respostaAgenda.json();
+        let proximos: Evento[] = [];
         if (jsonAgenda.success) {
-          const proximos = jsonAgenda.data.proximos as Evento[];
-          const jogo = proximos.find(
-            (e) => e.tipo === "JOGO" && e.jogo && e.situacao !== "CANCELADO",
-          );
-          setProximoJogo(jogo ?? null);
+          proximos = jsonAgenda.data.proximos;
           // Próximas atividades: os 3 primeiros não cancelados (cancelados aparecem na Agenda)
           setProximasAtividades(
             proximos.filter((e) => e.situacao !== "CANCELADO").slice(0, 3),
           );
         }
+
+        // Banner: primeiro jogo não cancelado da lista só de jogos. Servidor sem o
+        // filtro ignora o ?tipo e manda tudo: a mesma busca continua achando o jogo.
+        // Se essa chamada falhar, procura na página 1 da agenda, como antes
+        const jsonJogos = await respostaJogos.json();
+        const jogos: Evento[] = jsonJogos.success
+          ? jsonJogos.data.proximos
+          : proximos;
+        setProximoJogo(jogos.find(ehProximoJogo) ?? null);
 
         // Sem a rota (ou com erro), os números ficam "—"
         const jsonEstatisticas = await respostaEstatisticas.json();

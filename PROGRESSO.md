@@ -61,7 +61,7 @@ com o `SERVIDOR` em produção.
 |---|---|---|
 | Login do atleta | Integrado (`POST /auth/login` com `perfil: "atleta"`), mensagem de erro na tela, "Entrando..." | `login-atleta.tsx`, `config/api.ts` |
 | Home: nome, categoria, foto, posição | `GET /atleta`. Foto `null` → ícone padrão. Goleiro pela `posicao_atleta` | `home.tsx` |
-| Home: banner | Próximo `JOGO` não cancelado da página 1 de `GET /agenda`. Sem jogo, o banner some | `home.tsx` |
+| Home: banner | Próximo `JOGO` não cancelado de `GET /agenda?tipo=JOGO` (só jogos: aparece mesmo com muitos treinos antes). Servidor sem o filtro ignora o `?tipo` e a mesma busca funciona; se a chamada falhar, usa a página 1 da agenda. Sem jogo, o banner some | `home.tsx` |
 | Home: próximas atividades | Os 3 primeiros não cancelados de `proximos` (mesma chamada do banner): "Hoje / Amanhã / Quarta-feira · 28/10/2026", título, local (sem local, a categoria) e horário (sem horário, "A definir"). Vazio: "Nenhuma atividade marcada por enquanto." Toque abre a Agenda | `home.tsx` |
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
 | Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`. "Seus números" usa o `total`. No modal, o botão da categoria (ex.: "Sub-13") mostra os 6 números de `categoria_atual`; o botão "Total" mostra **só os gols** de `total` (desde que entrou, somando todas as categorias). Sem `categoria_atual` (`null` ou servidor sem o bloco), só aparece o "Total". `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
@@ -82,7 +82,7 @@ com o `SERVIDOR` em produção.
    (`GET /responsavel/atletas`) e as mesmas telas do atleta em modo leitura, sob `/responsavel/atletas/{idAtleta}/...`.
 3. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
 4. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
-   - a contagem dos filtros só soma as páginas já carregadas e cresce ao rolar (a API não manda o total por tipo);
+   - a contagem dos filtros usa os `totais` da API (todas as páginas); só no servidor sem `totais` ela soma o que já carregou;
    - com poucos compromissos, o dia tocado no fim da lista não chega ao topo, porque a lista acaba antes;
    - títulos longos são cortados na timeline ("Time Azul x Time Visi…").
 
@@ -90,13 +90,16 @@ com o `SERVIDOR` em produção.
 
 - Gols e assistências por atleta (hoje `null`) dependem do painel registrar quem fez cada gol.
 - `defesas` e `gols_sofridos` do goleiro não existem na rota de estatísticas. Pedir só se o Tiago quiser.
-- **Responsável do evento** (`responsavel` em cada evento de `GET /agenda`): o prompt já foi passado ao backend. Ele vem da Grade
-  de Treinos ("Novo Horário") e é copiado pelo "Gerar agenda do mês". O app já mostra o campo quando ele vier.
+- **Responsável do evento** (`responsavel` em cada evento de `GET /agenda`): parte da Etapa 2 abaixo. O app já mostra o
+  campo quando ele vier (até lá, mostra a categoria).
 - Treino com categoria "Geral (sem categoria)" vem com `categoria: null` de propósito.
-- Pedidos para a agenda, passados ao backend em 24/10 (ainda sem resposta):
-  - filtro por tipo (`?tipo=JOGO`): o banner da Home só procura o jogo na página 1 e some se houver mais de 20 eventos antes;
-  - filtro por período (`?de=&ate=`), com os concluídos: para a Agenda mostrar semanas passadas e pular meses sem baixar página por página;
-  - totais por tipo na resposta: para os contadores dos filtros da Agenda;
-  - detalhe `GET /agenda/{idEvento}`: para o "Ver detalhes" da Agenda e do banner da Home, hoje sem destino.
+- Agenda, Etapa 1 **pronta no backend local** (commit `4aefe3a` na branch `feature/agenda-eventos`, ainda **não publicada**
+  na produção): `?tipo=JOGO` (vários com vírgula), `?de=AAAA-MM-DD&ate=AAAA-MM-DD` (até 93 dias; muda a resposta para
+  `{ periodo, eventos, totais }`, com concluídos e cancelados), `totais` por tipo (não considera o `?tipo`) e `concluido`
+  em cada evento. O app já usa o `?tipo` no banner da Home e os `totais` nos contadores da Agenda, com fallback para o
+  servidor antigo. O `?de=&ate=` ainda não é usado (serviria para voltar a semanas passadas na Agenda).
+- Agenda, Etapa 2 (pedida em 24/10, em andamento no backend): detalhe `GET /agenda/{idEvento}` só com os campos seguros
+  (adversário, fase, rodada, prorrogação, pênaltis, confronto; sem nomes de colegas nem escalação) e o campo
+  `responsavel` (novo campo opcional no evento e na Grade de Treinos). Com o detalhe, liberar o "Ver detalhes" da Agenda e do banner.
 - Produção: e-mails por SMTP desde 24/10 (antes `MAIL_MAILER=log` e nada saía). No terminal SSH do Plesk, use
   `/opt/plesk/php/8.3/bin/php artisan ...` (o `php` padrão é 7.2).
