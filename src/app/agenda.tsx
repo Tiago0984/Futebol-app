@@ -519,9 +519,11 @@ export default function Agenda() {
 
   function trocarFiltro(tipo: string | null) {
     setFiltroAtivo(tipo);
-    // A lista remonta com o filtro novo e as posições são medidas de novo
+    // A lista remonta com o filtro novo, volta ao começo e as posições são
+    // medidas de novo; a semana e o mês voltam para hoje junto com ela
     posicoes.current = {};
     rolagemPendente.current = null;
+    setDiaSelecionado(chaveHoje);
   }
 
   let conteudo;
