@@ -45,6 +45,8 @@ type EventoDetalhe = {
   fim: string | null;
   local: string | null;
   responsavel?: string | null;
+  // Profissional da comissão técnica; sem ele (texto antigo) não há perfil para abrir
+  responsavel_id?: number | null;
   situacao: "CONFIRMADO" | "CANCELADO";
   concluido?: boolean;
   jogo: {
@@ -200,7 +202,15 @@ export default function DetalheCompromisso() {
     setTimeout(() => setAviso(""), 4000);
   }
 
-  // Ações rápidas, em linhas de duas. "Abrir mapa" só com local
+  function abrirResponsavel(idProfissional: number) {
+    router.navigate({
+      pathname: "/comissao-tecnica",
+      params: { id: String(idProfissional) },
+    });
+  }
+
+  // Ações rápidas, em linhas de duas. "Abrir mapa" só com local e
+  // "Entrar em contato" só com o responsável cadastrado na comissão técnica
   function linhasDeAcoes(e: EventoDetalhe) {
     const acoes = [
       e.local && {
@@ -220,6 +230,12 @@ export default function DetalheCompromisso() {
         subtitulo: "Enviar data, horário e local para outra pessoa",
         icone: require("@/assets/images/img/compartilharVermelho.png"),
         aoTocar: () => compartilhar(e),
+      },
+      e.responsavel_id && {
+        titulo: "Entrar em contato",
+        subtitulo: "Ver o contato do responsável",
+        icone: require("@/assets/images/img/chatvermelho.png"),
+        aoTocar: () => abrirResponsavel(e.responsavel_id as number),
       },
     ].filter((acao) => !!acao);
     const linhas: (typeof acoes)[] = [];
@@ -460,11 +476,13 @@ export default function DetalheCompromisso() {
           )}
 
           {evento.responsavel && (
-            <View
+            <Pressable
               style={[
                 treinoTecnicoStyle.detailsRow,
                 evento.categoria && treinoTecnicoStyle.detailsRowDivider,
               ]}
+              disabled={!evento.responsavel_id}
+              onPress={() => abrirResponsavel(evento.responsavel_id as number)}
             >
               <Image
                 source={require("@/assets/images/img/perfilVermelho.png")}
@@ -479,7 +497,10 @@ export default function DetalheCompromisso() {
                   {evento.responsavel}
                 </Text>
               </View>
-            </View>
+              {!!evento.responsavel_id && (
+                <Text style={treinoTecnicoStyle.detailsChevron}>›</Text>
+              )}
+            </Pressable>
           )}
 
           <View

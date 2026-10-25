@@ -3,10 +3,6 @@ import { StyleSheet } from "react-native";
 import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const comissaoTecnicaStyle = StyleSheet.create({
-  scrollContent: {
-    paddingBottom: 24,
-  },
-
   header: {
     paddingHorizontal: 20,
     paddingTop: 20,
@@ -69,6 +65,11 @@ const comissaoTecnicaStyle = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 16,
+    overflow: "hidden",
+  },
+  avatarFoto: {
+    width: "100%",
+    height: "100%",
   },
   avatarIcon: {
     width: 50,
@@ -89,27 +90,6 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontWeight: "700",
     color: cores.vermelho,
     marginTop: 4,
-  },
-  confirmedPill: {
-    flexDirection: "row",
-    alignSelf: "flex-start",
-    alignItems: "center",
-    backgroundColor: cores.verdeclaro,
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    height: 26,
-    marginTop: 10,
-  },
-  confirmedIcon: {
-    width: 14,
-    height: 14,
-    marginRight: 6,
-  },
-  confirmedText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.corpoMedio,
-    fontWeight: "700",
-    color: cores.verde,
   },
 
   detailsCard: {
@@ -149,7 +129,9 @@ const comissaoTecnicaStyle = StyleSheet.create({
 
   categoriesRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
     columnGap: 10,
+    rowGap: 10,
     marginTop: 12,
   },
   categoryPill: {
@@ -211,6 +193,15 @@ const comissaoTecnicaStyle = StyleSheet.create({
     fontWeight: "700",
     color: cores.branco,
     marginTop: 2,
+  },
+
+  estadoTexto: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 14,
+    color: cores.branco70,
+    textAlign: "center",
+    marginTop: 60,
+    paddingHorizontal: 30,
   },
 });
 
