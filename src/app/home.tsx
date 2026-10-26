@@ -90,8 +90,43 @@ type Banner = {
   foto_url: string | null;
 };
 
-// Slides do carrossel do topo: o próximo jogo (pessoal) e depois os banners gerais
-type Slide = { tipo: "jogo" } | { tipo: "banner"; banner: Banner };
+// Só os campos de GET /api/v1/campeonatos-do-atleta usados no carrossel
+type CampeonatoDoAtleta = {
+  id_campeonato: number;
+  nome_campeonato: string;
+  tipo_label: string;
+  logo_url: string | null;
+  banner_url: string | null;
+  data_inicio_campeonato: string;
+  data_fim_campeonato: string;
+  situacao: "EM_ANDAMENTO" | "PROXIMO";
+  categorias: { id_categoria: number; rotulo: string }[];
+  convocada: boolean;
+  convocacoes: { id_categoria: number; rotulo: string; camisa: number }[];
+};
+
+// Slides do carrossel do topo: o próximo jogo, os campeonatos do atleta (pessoais)
+// e depois os banners gerais
+type Slide =
+  | { tipo: "jogo" }
+  | { tipo: "campeonato"; campeonato: CampeonatoDoAtleta }
+  | { tipo: "banner"; banner: Banner };
+
+// "2026-10-03T00:00:00-03:00" -> "03/10"; com o ano: "03/10/2026"
+function diaMes(data: string, comAno = false) {
+  const texto = `${data.slice(8, 10)}/${data.slice(5, 7)}`;
+  return comAno ? `${texto}/${data.slice(0, 4)}` : texto;
+}
+
+// Linha do atleta no campeonato: a convocação (pode ser numa categoria acima) ou as categorias
+function linhaDoCampeonato(c: CampeonatoDoAtleta) {
+  if (c.convocada && c.convocacoes.length > 0) {
+    return c.convocacoes
+      .map((conv) => `Convocação no ${conv.rotulo} · camisa ${conv.camisa}`)
+      .join("  |  ");
+  }
+  return c.categorias.map((cat) => cat.rotulo).join(" · ");
+}
 
 // Tempo de cada slide antes de passar sozinho
 const INTERVALO_CARROSSEL = 6000;
@@ -147,6 +182,7 @@ export default function Home() {
     null,
   );
   const [banners, setBanners] = useState<Banner[]>([]);
+  const [campeonatos, setCampeonatos] = useState<CampeonatoDoAtleta[]>([]);
   // O carrossel espera a agenda: o jogo entrando depois empurraria os banners de lugar
   const [agendaCarregada, setAgendaCarregada] = useState(false);
   // Largura de um slide (a do carrossel), medida na tela; 0 até medir
@@ -177,12 +213,14 @@ export default function Home() {
           respostaAgenda,
           respostaJogos,
           respostaEstatisticas,
+          respostaCampeonatos,
         ] = await Promise.all([
           fetch(`${API}/atleta`, { headers }),
           fetch(`${API}/agenda`, { headers }),
           // Só os jogos, para o banner achar o próximo mesmo com muitos treinos antes
           fetch(`${API}/agenda?tipo=JOGO`, { headers }),
           fetch(`${API}/atleta/estatisticas`, { headers }),
+          fetch(`${API}/campeonatos-do-atleta`, { headers }),
         ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
@@ -220,6 +258,12 @@ export default function Home() {
         // Sem a rota (ou com erro), os números ficam "—"
         const jsonEstatisticas = await respostaEstatisticas.json();
         if (jsonEstatisticas.success) setEstatisticasApi(jsonEstatisticas.data);
+
+        // Servidor sem a rota (404): o carrossel fica só com o jogo e os banners
+        if (respostaCampeonatos.ok) {
+          const jsonCampeonatos = await respostaCampeonatos.json();
+          if (jsonCampeonatos.success) setCampeonatos(jsonCampeonatos.data);
+        }
       } catch (erro) {
         console.log("Erro ao buscar dados da Home:", erro);
       }
@@ -253,9 +297,18 @@ export default function Home() {
     ...(proximoJogo && jogo && meuTime && adversario
       ? [{ tipo: "jogo" } as Slide]
       : []),
+    ...campeonatos.map(
+      (campeonato) => ({ tipo: "campeonato", campeonato }) as Slide,
+    ),
     ...banners.map((banner) => ({ tipo: "banner", banner }) as Slide),
   ];
   const totalSlides = slides.length;
+  const chaveDoSlide = (slide: Slide) =>
+    slide.tipo === "jogo"
+      ? "jogo"
+      : slide.tipo === "campeonato"
+        ? `campeonato-${slide.campeonato.id_campeonato}`
+        : `banner-${slide.banner.id_banner}`;
 
   function irParaSlide(indice: number) {
     carrosselRef.current?.scrollTo({ x: indice * larguraSlide, animated: true });
@@ -501,7 +554,7 @@ export default function Home() {
           </View>
         </View>
 
-        {/* CARROSSEL: próximo jogo do atleta e os banners do painel (some sem nenhum dos dois) */}
+        {/* CARROSSEL: próximo jogo, campeonatos do atleta e os banners do painel (some sem nenhum) */}
         {totalSlides > 0 && (
           <View>
             <View style={homeStyle.carrossel} onLayout={aoMedirCarrossel}>
@@ -586,9 +639,87 @@ export default function Home() {
                           </View>
                         </View>
                       </Pressable>
+                    ) : slide.tipo === "campeonato" ? (
+                      <Pressable
+                        key={chaveDoSlide(slide)}
+                        style={[homeStyle.bannerSlide, { width: larguraSlide }]}
+                        // As telas de campeonato ainda não abrem um campeonato pelo id
+                        onPress={() => router.navigate("/campeonatos")}
+                      >
+                        <Image
+                          source={
+                            slide.campeonato.banner_url
+                              ? { uri: slide.campeonato.banner_url }
+                              : require("@/assets/images/img/fundoCardCampeonatos.png")
+                          }
+                          style={homeStyle.bannerImage}
+                          resizeMode="cover"
+                        />
+                        <View style={homeStyle.bannerGeralOverlay} />
+
+                        <View style={homeStyle.bannerContent}>
+                          <View style={homeStyle.campeonatoTopo}>
+                            <View style={homeStyle.bannerTag}>
+                              <Text style={homeStyle.bannerTagText}>
+                                {slide.campeonato.tipo_label.toUpperCase()}
+                              </Text>
+                            </View>
+                            <Text
+                              style={homeStyle.campeonatoSituacao}
+                              numberOfLines={1}
+                            >
+                              {slide.campeonato.situacao === "EM_ANDAMENTO"
+                                ? "Em andamento"
+                                : `Começa em ${diaMes(slide.campeonato.data_inicio_campeonato)}`}
+                            </Text>
+                          </View>
+
+                          <View style={homeStyle.campeonatoMeio}>
+                            <View style={homeStyle.campeonatoLogoBox}>
+                              <Image
+                                source={
+                                  slide.campeonato.logo_url
+                                    ? { uri: slide.campeonato.logo_url }
+                                    : require("@/assets/images/img/escudovermelho.png")
+                                }
+                                style={homeStyle.campeonatoLogo}
+                                resizeMode="contain"
+                              />
+                            </View>
+                            <View style={homeStyle.campeonatoTextoCol}>
+                              <Text
+                                style={homeStyle.campeonatoNome}
+                                numberOfLines={2}
+                              >
+                                {slide.campeonato.nome_campeonato}
+                              </Text>
+                              <Text
+                                style={
+                                  slide.campeonato.convocada
+                                    ? homeStyle.campeonatoConvocacao
+                                    : homeStyle.campeonatoCategorias
+                                }
+                                numberOfLines={1}
+                              >
+                                {linhaDoCampeonato(slide.campeonato)}
+                              </Text>
+                            </View>
+                          </View>
+
+                          <View style={homeStyle.bannerFooter}>
+                            <Text style={homeStyle.bannerDate}>
+                              {diaMes(slide.campeonato.data_inicio_campeonato)} até{" "}
+                              {diaMes(slide.campeonato.data_fim_campeonato, true)}
+                            </Text>
+                            <Text style={homeStyle.bannerLink}>
+                              Ver campeonatos {">"}
+                            </Text>
+                          </View>
+                        </View>
+                      </Pressable>
                     ) : slide.tipo === "banner" ? (
                       <View
-                        key={slide.banner.id_banner}
+                        key={chaveDoSlide(slide)}
                         style={[homeStyle.bannerSlide, { width: larguraSlide }]}
                       >
                         <Image
@@ -623,7 +754,7 @@ export default function Home() {
               <View style={homeStyle.carrosselPontos}>
                 {slides.map((slide, i) => (
                   <Pressable
-                    key={slide.tipo === "jogo" ? "jogo" : slide.banner.id_banner}
+                    key={chaveDoSlide(slide)}
                     onPress={() => irParaSlide(i)}
                     hitSlop={6}
                     accessibilityRole="button"

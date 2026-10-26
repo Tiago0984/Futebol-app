@@ -171,6 +171,70 @@ const homeStyle = StyleSheet.create({
     backgroundColor: cores.vermelho,
   },
 
+  // Campeonato do atleta: tipo e situação, escudo com nome e convocação, datas
+  campeonatoTopo: {
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 10,
+  },
+
+  campeonatoSituacao: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.pequeno,
+    fontWeight: "600",
+    color: cores.branco70,
+    flexShrink: 1,
+  },
+
+  campeonatoMeio: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  campeonatoLogoBox: {
+    width: 54,
+    height: 54,
+    borderRadius: 12,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.15)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+
+  campeonatoLogo: {
+    width: 42,
+    height: 42,
+  },
+
+  campeonatoTextoCol: {
+    flex: 1,
+  },
+
+  campeonatoNome: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.subtitulo,
+    fontWeight: "800",
+    color: cores.branco,
+  },
+
+  campeonatoConvocacao: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.pequeno,
+    fontWeight: "700",
+    color: cores.branco,
+    marginTop: 3,
+  },
+
+  campeonatoCategorias: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.pequeno,
+    fontWeight: "600",
+    color: cores.branco70,
+    marginTop: 3,
+  },
+
   // Banner do painel: foto com título e subtítulo embaixo
   bannerGeralOverlay: {
     position: "absolute",
