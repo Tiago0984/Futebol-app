@@ -1,9 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image,
   ImageSourcePropType,
+  LayoutChangeEvent,
   Modal,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   Pressable,
   ScrollView,
   Text,
@@ -79,6 +82,20 @@ type Evento = {
   } | null;
 };
 
+// GET /api/v1/banners: os banners do painel (os mesmos do site), na ordem e só os ativos
+type Banner = {
+  id_banner: number;
+  titulo_banner: string | null;
+  subtitulo_banner: string | null;
+  foto_url: string | null;
+};
+
+// Slides do carrossel do topo: o próximo jogo (pessoal) e depois os banners gerais
+type Slide = { tipo: "jogo" } | { tipo: "banner"; banner: Banner };
+
+// Tempo de cada slide antes de passar sozinho
+const INTERVALO_CARROSSEL = 6000;
+
 const MESES = [
   "JAN", "FEV", "MAR", "ABR", "MAI", "JUN",
   "JUL", "AGO", "SET", "OUT", "NOV", "DEZ",
@@ -129,6 +146,19 @@ export default function Home() {
   const [estatisticasApi, setEstatisticasApi] = useState<Estatisticas | null>(
     null,
   );
+  const [banners, setBanners] = useState<Banner[]>([]);
+  // O carrossel espera a agenda: o jogo entrando depois empurraria os banners de lugar
+  const [agendaCarregada, setAgendaCarregada] = useState(false);
+  // Largura de um slide (a do carrossel), medida na tela; 0 até medir
+  const [larguraSlide, setLarguraSlide] = useState(0);
+  const [slideAtual, setSlideAtual] = useState(0);
+  const carrosselRef = useRef<ScrollView>(null);
+
+  // Lista nova (a agenda ou os banners chegaram): volta para o primeiro slide
+  function voltarAoPrimeiroSlide() {
+    carrosselRef.current?.scrollTo({ x: 0, animated: false });
+    setSlideAtual(0);
+  }
 
   useEffect(() => {
     async function carregarDados() {
@@ -193,8 +223,21 @@ export default function Home() {
       } catch (erro) {
         console.log("Erro ao buscar dados da Home:", erro);
       }
+      setAgendaCarregada(true);
+      voltarAoPrimeiroSlide();
     }
     carregarDados();
+
+    // Banners gerais (rota pública): à parte, para uma falha aqui não afetar o resto da Home
+    fetch(`${API}/banners`, { headers: { Accept: "application/json" } })
+      .then((resposta) => resposta.json())
+      .then((json) => {
+        if (json.success) {
+          setBanners(json.data.filter((b: Banner) => b.foto_url));
+          voltarAoPrimeiroSlide();
+        }
+      })
+      .catch((erro) => console.log("Erro ao buscar os banners:", erro));
   }, []);
 
   // Mostra primeiro o time em que o atleta está escalado; sem escalação, o time da casa
@@ -205,6 +248,45 @@ export default function Home() {
       ? jogo.time_casa
       : jogo.time_visitante
     : null;
+
+  const slides: Slide[] = !agendaCarregada ? [] : [
+    ...(proximoJogo && jogo && meuTime && adversario
+      ? [{ tipo: "jogo" } as Slide]
+      : []),
+    ...banners.map((banner) => ({ tipo: "banner", banner }) as Slide),
+  ];
+  const totalSlides = slides.length;
+
+  function irParaSlide(indice: number) {
+    carrosselRef.current?.scrollTo({ x: indice * larguraSlide, animated: true });
+    setSlideAtual(indice);
+  }
+
+  // Passa sozinho; recomeça a contagem a cada troca (inclusive pelo dedo ou pelos pontos)
+  useEffect(() => {
+    if (totalSlides < 2 || larguraSlide === 0) return;
+    const temporizador = setTimeout(() => {
+      const proximo = (slideAtual + 1) % totalSlides;
+      carrosselRef.current?.scrollTo({
+        x: proximo * larguraSlide,
+        animated: true,
+      });
+      setSlideAtual(proximo);
+    }, INTERVALO_CARROSSEL);
+    return () => clearTimeout(temporizador);
+  }, [slideAtual, totalSlides, larguraSlide]);
+
+  function aoRolarCarrossel(evento: NativeSyntheticEvent<NativeScrollEvent>) {
+    if (larguraSlide === 0) return;
+    const indice = Math.round(evento.nativeEvent.contentOffset.x / larguraSlide);
+    if (indice !== slideAtual && indice >= 0 && indice < totalSlides) {
+      setSlideAtual(indice);
+    }
+  }
+
+  function aoMedirCarrossel(evento: LayoutChangeEvent) {
+    setLarguraSlide(evento.nativeEvent.layout.width);
+  }
 
   const hora = new Date().getHours();
   const saudacao = hora < 12 ? "Bom dia" : hora < 18 ? "Boa tarde" : "Boa noite";
@@ -419,73 +501,145 @@ export default function Home() {
           </View>
         </View>
 
-        {/* BANNER: próximo jogo do atleta (some quando não há jogo marcado) */}
-        {proximoJogo && jogo && meuTime && adversario && (
-          <Pressable
-            style={homeStyle.banner}
-            // Abre o detalhe do jogo; servidor sem o detalhe: Campeonatos, como antes
-            onPress={() =>
-              temDetalhe(proximoJogo)
-                ? abrirDetalhe(proximoJogo.id_evento)
-                : router.navigate("/campeonatos")
-            }
-          >
-            <Image
-              source={require("@/assets/images/img/fundoCardCampeonatos.png")}
-              style={homeStyle.bannerImage}
-              resizeMode="cover"
-            />
+        {/* CARROSSEL: próximo jogo do atleta e os banners do painel (some sem nenhum dos dois) */}
+        {totalSlides > 0 && (
+          <View>
+            <View style={homeStyle.carrossel} onLayout={aoMedirCarrossel}>
+              <ScrollView
+                ref={carrosselRef}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onScroll={aoRolarCarrossel}
+                scrollEventThrottle={16}
+              >
+                {larguraSlide > 0 &&
+                  slides.map((slide) =>
+                    slide.tipo === "jogo" &&
+                    proximoJogo &&
+                    jogo &&
+                    meuTime &&
+                    adversario ? (
+                      <Pressable
+                        key="jogo"
+                        style={[homeStyle.bannerSlide, { width: larguraSlide }]}
+                        // Abre o detalhe do jogo; servidor sem o detalhe: Campeonatos, como antes
+                        onPress={() =>
+                          temDetalhe(proximoJogo)
+                            ? abrirDetalhe(proximoJogo.id_evento)
+                            : router.navigate("/campeonatos")
+                        }
+                      >
+                        <Image
+                          source={require("@/assets/images/img/fundoCardCampeonatos.png")}
+                          style={homeStyle.bannerImage}
+                          resizeMode="cover"
+                        />
 
-            <View style={homeStyle.bannerOverlay} />
+                        <View style={homeStyle.bannerOverlay} />
 
-            <View style={homeStyle.bannerContent}>
-              <View style={homeStyle.bannerTag}>
-                <Text style={homeStyle.bannerTagText}>
-                  {jogo.amistoso ? "AMISTOSO" : "CAMPEONATO"}
-                </Text>
-              </View>
+                        <View style={homeStyle.bannerContent}>
+                          <View style={homeStyle.bannerTag}>
+                            <Text style={homeStyle.bannerTagText}>
+                              {jogo.amistoso ? "AMISTOSO" : "CAMPEONATO"}
+                            </Text>
+                          </View>
 
-              <Text style={homeStyle.bannerTitle} numberOfLines={1}>
-                {jogo.campeonato?.nome_campeonato ?? "Amistoso"}
-              </Text>
+                          <Text style={homeStyle.bannerTitle} numberOfLines={1}>
+                            {jogo.campeonato?.nome_campeonato ?? "Amistoso"}
+                          </Text>
 
-              <Text style={homeStyle.bannerSubtitle}>
-                Próximo desafio da equipe
-              </Text>
+                          <Text style={homeStyle.bannerSubtitle}>
+                            Próximo desafio da equipe
+                          </Text>
 
-              <View style={homeStyle.bannerMatchRow}>
-                <View style={homeStyle.bannerTeam}>
-                  <Image
-                    source={
-                      meuTime.logo_url
-                        ? { uri: meuTime.logo_url }
-                        : require("@/assets/images/img/escudovermelho.png")
-                    }
-                    style={homeStyle.bannerTeamIcon}
-                    resizeMode="contain"
-                  />
+                          <View style={homeStyle.bannerMatchRow}>
+                            <View style={homeStyle.bannerTeam}>
+                              <Image
+                                source={
+                                  meuTime.logo_url
+                                    ? { uri: meuTime.logo_url }
+                                    : require("@/assets/images/img/escudovermelho.png")
+                                }
+                                style={homeStyle.bannerTeamIcon}
+                                resizeMode="contain"
+                              />
 
-                  <Text style={homeStyle.bannerTeamText} numberOfLines={1}>
-                    {meuTime.nome_time}
-                  </Text>
-                </View>
+                              <Text style={homeStyle.bannerTeamText} numberOfLines={1}>
+                                {meuTime.nome_time}
+                              </Text>
+                            </View>
 
-                <Text style={homeStyle.bannerVersus}>X</Text>
+                            <Text style={homeStyle.bannerVersus}>X</Text>
 
-                <Text style={homeStyle.bannerOpponent} numberOfLines={1}>
-                  {adversario.nome_time}
-                </Text>
-              </View>
+                            <Text style={homeStyle.bannerOpponent} numberOfLines={1}>
+                              {adversario.nome_time}
+                            </Text>
+                          </View>
 
-              <View style={homeStyle.bannerFooter}>
-                <Text style={homeStyle.bannerDate}>
-                  {formatarDataJogo(proximoJogo.data, proximoJogo.horario_inicio)}
-                </Text>
+                          <View style={homeStyle.bannerFooter}>
+                            <Text style={homeStyle.bannerDate}>
+                              {formatarDataJogo(proximoJogo.data, proximoJogo.horario_inicio)}
+                            </Text>
 
-                <Text style={homeStyle.bannerLink}>Ver detalhes {">"}</Text>
-              </View>
+                            <Text style={homeStyle.bannerLink}>Ver detalhes {">"}</Text>
+                          </View>
+                        </View>
+                      </Pressable>
+                    ) : slide.tipo === "banner" ? (
+                      <View
+                        key={slide.banner.id_banner}
+                        style={[homeStyle.bannerSlide, { width: larguraSlide }]}
+                      >
+                        <Image
+                          source={{ uri: slide.banner.foto_url as string }}
+                          style={homeStyle.bannerImage}
+                          resizeMode="cover"
+                        />
+                        <View style={homeStyle.bannerGeralOverlay} />
+                        <View style={homeStyle.bannerGeralConteudo}>
+                          {slide.banner.titulo_banner && (
+                            <Text style={homeStyle.bannerTitle} numberOfLines={2}>
+                              {slide.banner.titulo_banner}
+                            </Text>
+                          )}
+                          {slide.banner.subtitulo_banner && (
+                            <Text
+                              style={homeStyle.bannerGeralSubtitulo}
+                              numberOfLines={2}
+                            >
+                              {slide.banner.subtitulo_banner}
+                            </Text>
+                          )}
+                        </View>
+                      </View>
+                    ) : null,
+                  )}
+              </ScrollView>
             </View>
-          </Pressable>
+
+            {/* Pontos: mostram o slide atual e, tocados, levam até ele */}
+            {totalSlides > 1 && (
+              <View style={homeStyle.carrosselPontos}>
+                {slides.map((slide, i) => (
+                  <Pressable
+                    key={slide.tipo === "jogo" ? "jogo" : slide.banner.id_banner}
+                    onPress={() => irParaSlide(i)}
+                    hitSlop={6}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Ir para o destaque ${i + 1}`}
+                  >
+                    <View
+                      style={[
+                        homeStyle.carrosselPonto,
+                        i === slideAtual && homeStyle.carrosselPontoAtivo,
+                      ]}
+                    />
+                  </Pressable>
+                ))}
+              </View>
+            )}
+          </View>
         )}
 
         {/* ESTATÍSTICAS */}

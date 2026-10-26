@@ -136,13 +136,63 @@ const homeStyle = StyleSheet.create({
      BANNER
   ========================= */
 
-  banner: {
+  // O carrossel tem a moldura (cantos arredondados); cada slide ocupa a largura dele
+  carrossel: {
     height: 165,
     marginHorizontal: 20,
     marginTop: 26,
     borderRadius: 18,
     overflow: "hidden",
+  },
+
+  bannerSlide: {
+    height: 165,
+    overflow: "hidden",
     position: "relative",
+  },
+
+  carrosselPontos: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    columnGap: 6,
+    marginTop: 10,
+  },
+
+  carrosselPonto: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(255,255,255,0.3)",
+  },
+
+  carrosselPontoAtivo: {
+    width: 18,
+    backgroundColor: cores.vermelho,
+  },
+
+  // Banner do painel: foto com título e subtítulo embaixo
+  bannerGeralOverlay: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: "rgba(0,0,0,0.45)",
+  },
+
+  bannerGeralConteudo: {
+    flex: 1,
+    justifyContent: "flex-end",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+
+  bannerGeralSubtitulo: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.branco,
+    marginTop: 4,
   },
 
   bannerImage: {
