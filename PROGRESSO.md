@@ -4,7 +4,7 @@
 > feito, as regras combinadas com o Tiago e o que falta. Confira o código antes de confiar no que está
 > aqui: o arquivo pode estar desatualizado em relação aos commits mais novos (`git log`).
 
-Última atualização: 25/10/2026. Para o último commit, veja `git log`.
+Última atualização: 26/10/2026. Para o último commit, veja `git log`.
 
 ## O projeto
 
@@ -61,7 +61,7 @@ com o `SERVIDOR` em produção.
 |---|---|---|
 | Login do atleta | Integrado (`POST /auth/login` com `perfil: "atleta"`), mensagem de erro na tela, "Entrando..." | `login-atleta.tsx`, `config/api.ts` |
 | Home: nome, categoria, foto, posição | `GET /atleta`. Foto `null` → ícone padrão. Goleiro pela `posicao_atleta` | `home.tsx` |
-| Home: banner | Próximo `JOGO` não cancelado de `GET /agenda?tipo=JOGO` (só jogos: aparece mesmo com muitos treinos antes). Servidor sem o filtro ignora o `?tipo` e a mesma busca funciona; se a chamada falhar, usa a página 1 da agenda. Sem jogo, o banner some. Toque abre o detalhe do jogo (servidor sem o detalhe: Campeonatos) | `home.tsx` |
+| Home: carrossel do topo | Slides nesta ordem: (1) o **próximo jogo**: primeiro `JOGO` não cancelado de `GET /agenda?tipo=JOGO` (servidor sem o filtro ignora o `?tipo`; se a chamada falhar, usa a página 1 da agenda); toque abre o detalhe do jogo. (2) os **campeonatos do atleta**: `GET /campeonatos-do-atleta` (fundo `banner_url`, escudo `logo_url`, sem imagem usa as padrão; tipo, "Em andamento"/"Começa em", nome, "Convocação no Sub-13 Feminino · camisa 8" ou as categorias, datas); toque abre Campeonatos (telas ainda com dados de exemplo, sem id); servidor sem a rota (404) só pula. (3) os **banners do painel**: `GET /banners` (público; foto, título e subtítulo; ordem e ativo vêm do painel). Passa sozinho a cada 6 s, desliza com o dedo e os pontos levam ao slide (na web o mouse não arrasta). Espera a agenda chegar e volta ao 1º slide quando a lista muda. Sem nenhum slide, some | `home.tsx` |
 | Home: próximas atividades | Os 3 primeiros não cancelados de `proximos` (mesma chamada do banner): "Hoje / Amanhã / Quarta-feira · 28/10/2026", título, local (sem local, a categoria) e horário (sem horário, "A definir"). Vazio: "Nenhuma atividade marcada por enquanto." Toque abre o detalhe do compromisso (servidor sem o detalhe: a Agenda) | `home.tsx` |
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
 | Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`. "Seus números" usa o `total`. No modal, o botão da categoria (ex.: "Sub-13") mostra os 6 números de `categoria_atual`; o botão "Total" mostra **só os gols** de `total` (desde que entrou, somando todas as categorias). Sem `categoria_atual` (`null` ou servidor sem o bloco), só aparece o "Total". `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
@@ -104,9 +104,18 @@ com o `SERVIDOR` em produção.
   Calendário e na Grade, C3 `GET /comissao-tecnica/{id}`). Agenda e detalhe trazem `responsavel` (texto) e
   `responsavel_id`. Falta o Tiago conferir no admin da produção o select e o cadastro com foto, e escolher um
   profissional em algum compromisso da Joana para ver o botão no app.
-- **Telefone institucional com 10 ou 11 dígitos** (backend `cd6d96d`, ainda **não publicado**): grava só os dígitos e a
-  API devolve só dígitos. O app formata com `exibirTelefone` (com ou sem máscara no banco). Entra na próxima
-  publicação, sem migration (`git pull` + `optimize:clear`).
+- **Publicado em 26/10:** telefone institucional com 10 ou 11 dígitos (API devolve só dígitos; o app formata com
+  `exibirTelefone`); `GET /campeonatos-do-atleta` (participa quem foi convocado em qualquer categoria ou tem a
+  categoria atual no campeonato com time da AACJ; ativos e não terminados; em andamento primeiro) e `tipo_label` no
+  `GET /campeonatos`; tratamento de imagens no envio (Intervention Image): Banners 1920x1080 JPG, banner do
+  campeonato 1920x960 JPG (2:1, quase o formato do carrossel do app), logo 512x512 PNG inteira; recorte com prévia
+  no painel, limite de 10 MB, nomes de arquivo gerados. As URLs da API não mudaram. Docker local: rode
+  `docker compose build php` e `docker compose up -d` no outro PC (limite de upload e GD com JPEG).
+- **Pendente no backend (pedido em 26/10):** esconder a barra do subtítulo vazio no carrossel do site; avisar no
+  painel ao escolher arquivo acima de 10 MB; recusar time masculino da AACJ em categoria feminina (feminino em
+  masculino continua permitido até o professor responder a pergunta 14); limpar os dados de teste locais (banner
+  "TESTE - apagar", "Campeonato Teste Imagens" e a convocação da Joana). `imagens:reprocessar` na produção só com
+  o OK do Tiago e backup. A Joana local se chama "Joana maria" (nome mudado num teste do Editar perfil).
 - **Pushes do backend:** durante o desenvolvimento, só `git push origin feature/agenda-eventos`; a `main` do GitHub fica
   igual ao servidor e só recebe o código na publicação.
 - Produção: e-mails por SMTP desde 24/10 (antes `MAIL_MAILER=log` e nada saía). No terminal SSH do Plesk, use
