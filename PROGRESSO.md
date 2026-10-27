@@ -66,6 +66,8 @@ com o `SERVIDOR` em produção.
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
 | Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`. "Seus números" usa o `total`. No modal, o botão da categoria (ex.: "Sub-13") mostra os 6 números de `categoria_atual`; o botão "Total" mostra **só os gols** de `total` (desde que entrou, somando todas as categorias). Sem `categoria_atual` (`null` ou servidor sem o bloco), só aparece o "Total". `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
+| Responsáveis no Perfil | `responsaveis` de `GET /atleta`: uma linha "Responsável" por pessoa, com o parentesco entre parênteses ("Carla Exemplo (Mãe)"). Sem nenhum, não aparece. No Editar perfil aparecem só para leitura | `perfil.tsx`, `editar-perfil.tsx`, `utils/formatos.ts` |
+| Trocar foto (adiantado) | No Editar perfil, tocar na foto, no ícone da câmera ou em "Alterar foto" abre o modal: Tirar foto (não aparece na web), Escolher da galeria, Remover foto (só com foto) e Cancelar. Recorte quadrado (`expo-image-picker`, permissões no `app.json`). Envia `POST /atleta/foto` (multipart, campo `foto`) e remove com `DELETE /atleta/foto`; a resposta deve ser o atleta como no `GET`. Não apaga o que foi digitado e não salvo. **A rota ainda não existe**: o 404 mostra "A troca de foto ainda não está disponível." | `editar-perfil.tsx` |
 | Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga `token` e `perfil` mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |
 | Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos. O card do próximo ("Ver detalhes") e qualquer item da timeline abrem o detalhe do compromisso; servidor sem o detalhe (sem o campo `responsavel` nos eventos) esconde o "Ver detalhes" e o toque não faz nada. A linha de pessoa mostra o `responsavel` ou, sem ele, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário e a troca de filtro voltam para hoje. Um cancelado antes do próximo fica antes do card, na ordem das datas | `agenda.tsx` |
@@ -78,12 +80,10 @@ com o `SERVIDOR` em produção.
 
 ## O que falta (sugestão de ordem)
 
-1. **Responsáveis no Perfil** (`perfil.tsx` tem um comentário marcando o lugar): `GET /atleta` traz
-   `responsaveis: [{ nome, grau_parentesco }]`.
-2. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
+1. **Login e área do responsável**: `login-responsavel.tsx` hoje só navega para `/home`. Depois vêm a escolha do filho
    (`GET /responsavel/atletas`) e as mesmas telas do atleta em modo leitura, sob `/responsavel/atletas/{idAtleta}/...`.
-3. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
-4. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
+2. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
+3. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
    - a contagem dos filtros usa os `totais` da API (todas as páginas); só no servidor sem `totais` ela soma o que já carregou;
    - com poucos compromissos, o dia tocado no fim da lista não chega ao topo, porque a lista acaba antes;
    - títulos longos são cortados na timeline ("Time Azul x Time Visi…"); no detalhe do compromisso aparecem inteiros;
@@ -91,6 +91,9 @@ com o `SERVIDOR` em produção.
 
 ## Pendências do lado do backend
 
+- **Foto do atleta (pedido em 27/10):** `POST /atleta/foto` (multipart, campo `foto`) e `DELETE /atleta/foto`, devolvendo o
+  atleta como no `GET /atleta`. Falta decidir se a foto de menor vale na hora, fica pendente de aprovação da secretaria
+  ou depende da autorização do responsável; se ficar pendente, o app precisa do campo que o backend criar.
 - Gols e assistências por atleta (hoje `null`) dependem do painel registrar quem fez cada gol.
 - `defesas` e `gols_sofridos` do goleiro não existem na rota de estatísticas. Pedir só se o Tiago quiser.
 - Treino com categoria "Geral (sem categoria)" vem com `categoria: null` de propósito.

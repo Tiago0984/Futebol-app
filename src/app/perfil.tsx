@@ -6,9 +6,11 @@ import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import perfilStyle from "@/styles/perfilStyle";
 import { cores } from "@/styles/variaveis";
 import {
+  descreverResponsavel,
   exibirTelefone,
   formatarCpf,
   formatarDataNascimento,
+  ResponsavelAtleta,
 } from "@/utils/formatos";
 import { sairDaConta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,6 +27,8 @@ type Atleta = {
   email_atleta: string | null;
   telefone_atleta: string | null;
   numero_matricula_atleta: string | null;
+  // Lista vazia quando não há; CPF e contatos do responsável não vêm
+  responsaveis?: ResponsavelAtleta[];
   categorias: {
     nome_categoria: string;
     pivot: {
@@ -238,7 +242,26 @@ export default function Perfil() {
               </Text>
             </View>
 
-            {/* Responsável volta quando GET /api/v1/atleta passar a trazê-lo */}
+            {/* Uma linha por responsável; sem nenhum, a linha não aparece */}
+            {(atleta?.responsaveis ?? []).map((responsavel, index) => (
+              <View
+                key={`${responsavel.nome}-${index}`}
+                style={perfilStyle.infoRow}
+              >
+                <Image
+                  source={require("@/assets/images/img/userPreto.png")}
+                  style={perfilStyle.infoIcon}
+                  tintColor={cores.preto}
+                  resizeMode="contain"
+                />
+
+                <Text style={perfilStyle.infoLabel}>Responsável</Text>
+
+                <Text style={perfilStyle.infoValue}>
+                  {descreverResponsavel(responsavel)}
+                </Text>
+              </View>
+            ))}
 
             <View style={perfilStyle.infoRow}>
               <Image

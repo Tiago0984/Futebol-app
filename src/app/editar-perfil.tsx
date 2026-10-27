@@ -7,6 +7,7 @@ import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import {
   dataBrParaIso,
+  descreverResponsavel,
   exibirTelefone,
   formatarCpf,
   formatarDataNascimento,
@@ -14,12 +15,16 @@ import {
   mascaraCpf,
   mascaraData,
   mensagensDeErro,
+  ResponsavelAtleta,
 } from "@/utils/formatos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   Image,
+  Modal,
+  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -36,6 +41,10 @@ type Atleta = {
   email_atleta: string | null;
   telefone_atleta: string | null;
   numero_matricula_atleta: string | null;
+  // null = foto padrão
+  foto_url: string | null;
+  // Lista vazia quando não há; só a secretaria muda
+  responsaveis?: ResponsavelAtleta[];
   categorias: {
     nome_categoria: string;
     pivot: {
@@ -57,6 +66,11 @@ export default function EditarPerfil() {
   const [mensagemSucesso, setMensagemSucesso] = useState("");
   const [erroGeral, setErroGeral] = useState("");
   const [errosCampos, setErrosCampos] = useState<Record<string, string>>({});
+  const [modalFotoVisivel, setModalFotoVisivel] = useState(false);
+  const [enviandoFoto, setEnviandoFoto] = useState(false);
+  // Foto escolhida, mostrada enquanto o envio não termina
+  const [fotoLocal, setFotoLocal] = useState<string | null>(null);
+  const [erroFoto, setErroFoto] = useState("");
 
   const timerSucesso = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -80,6 +94,140 @@ export default function EditarPerfil() {
     setEmail(dados.email_atleta ?? "");
     setCpf(formatarCpf(dados.cpf_atleta));
     setDataNascimento(formatarDataNascimento(dados.data_nasc_atleta));
+  }
+
+  function mostrarSucesso(mensagem: string) {
+    if (timerSucesso.current) clearTimeout(timerSucesso.current);
+    setMensagemSucesso(mensagem);
+    timerSucesso.current = setTimeout(() => setMensagemSucesso(""), 5000);
+  }
+
+  // Abre a câmera ou a galeria já com recorte quadrado; o que for escolhido vai para a API
+  async function escolherFoto(origem: "camera" | "galeria") {
+    setModalFotoVisivel(false);
+    setErroFoto("");
+    const opcoes: ImagePicker.ImagePickerOptions = {
+      mediaTypes: ["images"],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    };
+    try {
+      // No navegador não há pedido de permissão, e o seletor precisa abrir logo após o toque
+      if (Platform.OS !== "web") {
+        const permissao =
+          origem === "camera"
+            ? await ImagePicker.requestCameraPermissionsAsync()
+            : await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissao.granted) {
+          setErroFoto(
+            origem === "camera"
+              ? "Permita o acesso à câmera para tirar a foto."
+              : "Permita o acesso às fotos para escolher uma imagem.",
+          );
+          return;
+        }
+      }
+      const resultado =
+        origem === "camera"
+          ? await ImagePicker.launchCameraAsync(opcoes)
+          : await ImagePicker.launchImageLibraryAsync(opcoes);
+      if (resultado.canceled) return;
+      await enviarFoto(resultado.assets[0]);
+    } catch (erro) {
+      console.log("Erro ao escolher a foto:", erro);
+      setErroFoto("Não foi possível abrir a câmera ou a galeria.");
+    }
+  }
+
+  // Resposta da foto: a API devolve o atleta no formato do GET. Só a foto muda;
+  // os campos do formulário ficam como estão, para não perder o que não foi salvo
+  async function tratarRespostaFoto(resposta: Response, mensagemPadrao: string) {
+    if (resposta.status === 401 || resposta.status === 403) {
+      await sairPorSessaoInvalida();
+      return;
+    }
+    if (resposta.status === 404) {
+      setErroFoto("A troca de foto ainda não está disponível.");
+      return;
+    }
+    const json = await resposta.json();
+    if (!resposta.ok || !json.success) {
+      const erros = mensagensDeErro(json);
+      setErroFoto(erros.campos.foto ?? erros.geral);
+      return;
+    }
+    setAtleta(json.data);
+    mostrarSucesso(json.message ?? mensagemPadrao);
+  }
+
+  // POST /api/v1/atleta/foto, multipart com o campo "foto" (rota pedida ao backend)
+  async function enviarFoto(foto: ImagePicker.ImagePickerAsset) {
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
+      router.replace("/selecao-perfil");
+      return;
+    }
+    setFotoLocal(foto.uri);
+    setEnviandoFoto(true);
+    try {
+      const formulario = new FormData();
+      const nomeArquivo = foto.fileName ?? "foto.jpg";
+      if (Platform.OS === "web") {
+        // No navegador a imagem é um endereço blob/data: vira arquivo antes de enviar
+        const arquivo = await (await fetch(foto.uri)).blob();
+        formulario.append("foto", arquivo, nomeArquivo);
+      } else {
+        formulario.append("foto", {
+          uri: foto.uri,
+          name: nomeArquivo,
+          type: foto.mimeType ?? "image/jpeg",
+        } as unknown as Blob);
+      }
+      // Sem Content-Type: o fetch monta o multipart com o separador certo
+      const resposta = await fetch(`${API}/atleta/foto`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: formulario,
+      });
+      await tratarRespostaFoto(resposta, "Foto atualizada com sucesso.");
+    } catch (erro) {
+      console.log("Erro ao enviar a foto:", erro);
+      setErroFoto("Não foi possível conectar ao servidor.");
+    } finally {
+      setFotoLocal(null);
+      setEnviandoFoto(false);
+    }
+  }
+
+  // DELETE /api/v1/atleta/foto: volta para a foto padrão (rota pedida ao backend)
+  async function removerFoto() {
+    setModalFotoVisivel(false);
+    setErroFoto("");
+    const token = await AsyncStorage.getItem("token");
+    if (!token) {
+      router.replace("/selecao-perfil");
+      return;
+    }
+    setEnviandoFoto(true);
+    try {
+      const resposta = await fetch(`${API}/atleta/foto`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      await tratarRespostaFoto(resposta, "Foto removida.");
+    } catch (erro) {
+      console.log("Erro ao remover a foto:", erro);
+      setErroFoto("Não foi possível conectar ao servidor.");
+    } finally {
+      setEnviandoFoto(false);
+    }
   }
 
   useEffect(() => {
@@ -199,9 +347,7 @@ export default function EditarPerfil() {
       if (alteracoes.email_atleta) {
         mensagem += ` Seu login agora é pelo e-mail ${json.data.email_atleta}.`;
       }
-      if (timerSucesso.current) clearTimeout(timerSucesso.current);
-      setMensagemSucesso(mensagem);
-      timerSucesso.current = setTimeout(() => setMensagemSucesso(""), 5000);
+      mostrarSucesso(mensagem);
     } catch (erro) {
       console.log("Erro ao salvar o perfil:", erro);
       setErroGeral("Não foi possível conectar ao servidor.");
@@ -273,15 +419,37 @@ export default function EditarPerfil() {
           </View>
         </View>
 
-        {/* FOTO */}
+        {/* FOTO: tocar na foto, no ícone ou em "Alterar foto" abre as opções */}
         <View style={editarPerfilStyle.photoSection}>
-          <View style={editarPerfilStyle.avatarCircle}>
-            <Image
-              source={require("@/assets/images/img/userPreto.png")}
-              style={editarPerfilStyle.avatarIcon}
-              tintColor={cores.preto}
-              resizeMode="contain"
-            />
+          <Pressable
+            style={editarPerfilStyle.avatarCircle}
+            onPress={() => setModalFotoVisivel(true)}
+            disabled={!atleta || enviandoFoto}
+            accessibilityRole="button"
+            accessibilityLabel="Alterar foto"
+          >
+            {fotoLocal || atleta?.foto_url ? (
+              <Image
+                source={{ uri: fotoLocal ?? atleta?.foto_url ?? undefined }}
+                style={editarPerfilStyle.avatarFoto}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image
+                source={require("@/assets/images/img/userPreto.png")}
+                style={editarPerfilStyle.avatarIcon}
+                tintColor={cores.preto}
+                resizeMode="contain"
+              />
+            )}
+
+            {enviandoFoto && (
+              <View style={editarPerfilStyle.avatarEnviando}>
+                <Text style={editarPerfilStyle.avatarEnviandoTexto}>
+                  Enviando...
+                </Text>
+              </View>
+            )}
 
             <View style={editarPerfilStyle.cameraBadge}>
               <Image
@@ -290,9 +458,18 @@ export default function EditarPerfil() {
                 resizeMode="contain"
               />
             </View>
-          </View>
+          </Pressable>
 
-          <Text style={editarPerfilStyle.changePhotoText}>Alterar foto</Text>
+          <Pressable
+            onPress={() => setModalFotoVisivel(true)}
+            disabled={!atleta || enviandoFoto}
+          >
+            <Text style={editarPerfilStyle.changePhotoText}>Alterar foto</Text>
+          </Pressable>
+
+          {erroFoto !== "" && (
+            <Text style={editarPerfilStyle.fotoErro}>{erroFoto}</Text>
+          )}
         </View>
 
         {/* FORMULÁRIO */}
@@ -383,7 +560,20 @@ export default function EditarPerfil() {
             </Text>
           )}
 
-          {/* Responsável volta quando GET /api/v1/atleta passar a trazê-lo */}
+          {/* Responsáveis, categoria e matrícula só a secretaria muda */}
+          {(atleta?.responsaveis ?? []).map((responsavel, index) => (
+            <View
+              key={`${responsavel.nome}-${index}`}
+              style={[editarPerfilStyle.fieldCard, editarPerfilStyle.fieldCardDisabled]}
+            >
+              <Text style={editarPerfilStyle.fieldLabel}>Responsável</Text>
+              <Text
+                style={[editarPerfilStyle.fieldValue, editarPerfilStyle.fieldValueDisabled]}
+              >
+                {descreverResponsavel(responsavel)}
+              </Text>
+            </View>
+          ))}
 
           <View
             style={[editarPerfilStyle.fieldCard, editarPerfilStyle.fieldCardDisabled]}
@@ -441,6 +631,62 @@ export default function EditarPerfil() {
           )}
         </View>
       </ScrollView>
+
+      {/* Opções da foto */}
+      <Modal
+        visible={modalFotoVisivel}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setModalFotoVisivel(false)}
+      >
+        <View style={editarPerfilStyle.modalOverlay}>
+          <View style={editarPerfilStyle.modalCard}>
+            <Text style={editarPerfilStyle.modalTitulo}>Alterar foto</Text>
+            <Text style={editarPerfilStyle.modalTexto}>
+              Como deseja adicionar sua foto?
+            </Text>
+
+            {/* No navegador a câmera abriria o mesmo seletor de arquivos da galeria */}
+            {Platform.OS !== "web" && (
+              <Pressable
+                style={editarPerfilStyle.modalOpcao}
+                onPress={() => escolherFoto("camera")}
+              >
+                <Text style={editarPerfilStyle.modalOpcaoTexto}>
+                  📷 Tirar foto
+                </Text>
+              </Pressable>
+            )}
+
+            <Pressable
+              style={editarPerfilStyle.modalOpcao}
+              onPress={() => escolherFoto("galeria")}
+            >
+              <Text style={editarPerfilStyle.modalOpcaoTexto}>
+                🖼️ Escolher da galeria
+              </Text>
+            </Pressable>
+
+            {atleta?.foto_url && (
+              <Pressable
+                style={editarPerfilStyle.modalOpcao}
+                onPress={removerFoto}
+              >
+                <Text style={editarPerfilStyle.modalOpcaoTextoRemover}>
+                  Remover foto
+                </Text>
+              </Pressable>
+            )}
+
+            <Pressable
+              style={editarPerfilStyle.modalCancelar}
+              onPress={() => setModalFotoVisivel(false)}
+            >
+              <Text style={editarPerfilStyle.modalCancelarTexto}>Cancelar</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
 
       {/* TabBar unificada */}
       <TabBar abaAtiva="perfil" />

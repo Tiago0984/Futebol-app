@@ -103,6 +103,116 @@ const editarPerfilStyle = StyleSheet.create({
     height: 20,
   },
 
+  // Foto do atleta ocupando o círculo inteiro
+  avatarFoto: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 75,
+  },
+
+  // Véu sobre a foto enquanto ela é enviada
+  avatarEnviando: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    borderRadius: 75,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  avatarEnviandoTexto: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 14,
+    color: cores.branco,
+  },
+
+  fotoErro: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.vermelho,
+    textAlign: "center",
+    marginTop: 8,
+    paddingHorizontal: 24,
+  },
+
+  /* MODAL DA FOTO */
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+  },
+
+  modalCard: {
+    width: "100%",
+    backgroundColor: cores.branco,
+    borderRadius: 18,
+    borderWidth: 2,
+    borderColor: cores.vermelho,
+    padding: 22,
+  },
+
+  modalTitulo: {
+    fontFamily: fontes.Oswald_Bold,
+    fontSize: 24,
+    color: cores.vermelho,
+    textAlign: "center",
+  },
+
+  modalTexto: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 14,
+    color: cores.cinza,
+    textAlign: "center",
+    marginTop: 6,
+    marginBottom: 18,
+  },
+
+  modalOpcao: {
+    height: 56,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: cores.vermelho20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12,
+  },
+
+  modalOpcaoTexto: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 15,
+    color: cores.preto,
+  },
+
+  modalOpcaoTextoRemover: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 15,
+    color: cores.vermelho,
+  },
+
+  modalCancelar: {
+    alignSelf: "center",
+    width: "50%",
+    height: 46,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: cores.vermelho20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 4,
+  },
+
+  modalCancelarTexto: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 14,
+    color: cores.cinza,
+  },
+
   changePhotoText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 14,

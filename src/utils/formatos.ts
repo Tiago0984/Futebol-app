@@ -78,6 +78,18 @@ export function exibirTelefone(valor: string | null | undefined) {
   return formatarTelefone(valor);
 }
 
+// Responsável do atleta, de data.responsaveis em GET /api/v1/atleta: "Carla Exemplo (Mãe)"
+export type ResponsavelAtleta = {
+  nome: string;
+  grau_parentesco: string | null;
+};
+
+export function descreverResponsavel(responsavel: ResponsavelAtleta) {
+  return responsavel.grau_parentesco
+    ? `${responsavel.nome} (${responsavel.grau_parentesco})`
+    : responsavel.nome;
+}
+
 // Resposta de erro da API: { success: false, message, errors? }
 // errors (só no 422) traz uma lista de mensagens por campo; fica a primeira de cada
 export function mensagensDeErro(json: {
