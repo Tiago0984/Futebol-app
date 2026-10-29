@@ -5,6 +5,7 @@ import alterarSenhaStyle from "@/styles/alterarSenhaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
+import { CHAVES_SESSAO } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -75,7 +76,7 @@ export default function AlterarSenha() {
 
       // Token vencido, encerrado ou atleta inativado: volta para o login
       if (resposta.status === 401 || resposta.status === 403) {
-        await AsyncStorage.multiRemove(["token", "perfil"]);
+        await AsyncStorage.multiRemove(CHAVES_SESSAO);
         router.replace("/selecao-perfil");
         return;
       }

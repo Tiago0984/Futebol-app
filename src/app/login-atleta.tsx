@@ -1,6 +1,7 @@
 import { API } from "@/config/api";
 import loginAtletaStyle from "@/styles/loginAtletaStyle";
 import { cores } from "@/styles/variaveis";
+import { nomeDoDispositivo } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -37,16 +38,6 @@ export default function LoginAtleta() {
     timerMensagem.current = setTimeout(() => setMensagem(""), 5000);
   }
 
-  // Id único por instalação, enviado como device_name no login
-  async function nomeDoDispositivo() {
-    let id = await AsyncStorage.getItem("device_id");
-    if (!id) {
-      id = `app-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      await AsyncStorage.setItem("device_id", id);
-    }
-    return id;
-  }
-
   async function fazerLogin() {
     if (!email.trim() || !senha) {
       mostrarMensagem("Informe e-mail e senha.");
@@ -75,6 +66,7 @@ export default function LoginAtleta() {
         return;
       }
 
+      await AsyncStorage.removeItem("atleta_selecionado");
       await AsyncStorage.setItem("token", json.data.token);
       await AsyncStorage.setItem("perfil", "atleta");
       router.replace("/home");

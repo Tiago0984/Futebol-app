@@ -12,10 +12,10 @@ import {
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 import TabBar from "@/components/tabBar";
-import { API } from "@/config/api";
 import fundoStyle from "@/styles/fundoStyle";
 import notificacoesStyle from "@/styles/notificacoesStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
+import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 
 type FiltroLeitura = "todas" | "naoLidas";
 
@@ -110,7 +110,7 @@ function dataDoAviso(notificacao: Notificacao, hoje: Date) {
 
 // Token vencido, encerrado ou atleta inativado: volta para o login
 async function sairPorSessaoInvalida() {
-  await AsyncStorage.multiRemove(["token", "perfil"]);
+  await AsyncStorage.multiRemove(CHAVES_SESSAO);
   router.replace("/selecao-perfil");
 }
 
@@ -121,7 +121,7 @@ async function chamarApi(caminho: string, metodo = "GET") {
     router.replace("/selecao-perfil");
     return null;
   }
-  const resposta = await fetch(`${API}${caminho}`, {
+  const resposta = await fetch(await urlDoAtleta(caminho), {
     method: metodo,
     headers: {
       Accept: "application/json",

@@ -1,11 +1,11 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
-import { API } from "@/config/api";
 import detalheCompromissoStyle from "@/styles/detalheCompromissoStyle";
 import detalheProximaPartidaStyle from "@/styles/detalheProximaPartidaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import treinoTecnicoStyle from "@/styles/treinoTecnicoStyle";
+import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 import {
   formatarDiaCompromisso,
   formatarDuracao,
@@ -124,7 +124,7 @@ export default function DetalheCompromisso() {
         return;
       }
       try {
-        const resposta = await fetch(`${API}/agenda/${id}`, {
+        const resposta = await fetch(await urlDoAtleta(`/agenda/${id}`), {
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ export default function DetalheCompromisso() {
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
         if (resposta.status === 401 || resposta.status === 403) {
-          await AsyncStorage.multiRemove(["token", "perfil"]);
+          await AsyncStorage.multiRemove(CHAVES_SESSAO);
           router.replace("/selecao-perfil");
           return;
         }

@@ -22,6 +22,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
 
 import { cores } from "@/styles/variaveis";
+import { CHAVES_SESSAO, ehResponsavel, urlDoAtleta } from "@/utils/sessao";
 import {
   abrirDetalhe,
   formatarDiaCompromisso,
@@ -173,6 +174,8 @@ function exibirNumero(valor: number | null | undefined) {
 
 export default function Home() {
   const [atleta, setAtleta] = useState<Atleta | null>(null);
+  // Só com o responsável logado: a saudação é para ele, os dados são do filho
+  const [nomeResponsavel, setNomeResponsavel] = useState<string | null>(null);
   const [proximoJogo, setProximoJogo] = useState<Evento | null>(null);
   // null enquanto a agenda não chegou (ou falhou)
   const [proximasAtividades, setProximasAtividades] = useState<
@@ -203,6 +206,9 @@ export default function Home() {
         router.replace("/selecao-perfil");
         return;
       }
+      if (await ehResponsavel()) {
+        setNomeResponsavel(await AsyncStorage.getItem("nome_responsavel"));
+      }
       const headers = {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
@@ -215,18 +221,23 @@ export default function Home() {
           respostaEstatisticas,
           respostaCampeonatos,
         ] = await Promise.all([
-          fetch(`${API}/atleta`, { headers }),
-          fetch(`${API}/agenda`, { headers }),
+          fetch(await urlDoAtleta("/atleta"), { headers }),
+          fetch(await urlDoAtleta("/agenda"), { headers }),
           // Só os jogos, para o banner achar o próximo mesmo com muitos treinos antes
-          fetch(`${API}/agenda?tipo=JOGO`, { headers }),
-          fetch(`${API}/atleta/estatisticas`, { headers }),
-          fetch(`${API}/campeonatos-do-atleta`, { headers }),
+          fetch(await urlDoAtleta("/agenda?tipo=JOGO"), { headers }),
+          fetch(await urlDoAtleta("/atleta/estatisticas"), { headers }),
+          fetch(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
         ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
         if (respostaAtleta.status === 401 || respostaAtleta.status === 403) {
-          await AsyncStorage.multiRemove(["token", "perfil"]);
+          await AsyncStorage.multiRemove(CHAVES_SESSAO);
           router.replace("/selecao-perfil");
+          return;
+        }
+        // Responsável: o filho escolhido foi inativado ou desvinculado
+        if (respostaAtleta.status === 404 && (await ehResponsavel())) {
+          router.replace("/escolha-atleta");
           return;
         }
 
@@ -346,6 +357,9 @@ export default function Home() {
 
   // Enquanto carrega (ou se falhar), mantém os textos padrão
   const primeiroNome = atleta?.nome_atleta.split(" ")[0] ?? "Atleta";
+  const saudacaoCompleta = nomeResponsavel
+    ? `${saudacao}, ${nomeResponsavel.split(" ")[0]}`
+    : saudacao;
   const categoriaAtual = atleta?.categorias.find(
     (c) =>
       c.pivot.status_categoria_atleta === "ATIVO" &&
@@ -491,7 +505,7 @@ export default function Home() {
         <View style={homeStyle.header}>
           <View style={homeStyle.headerTopRow}>
             <View>
-              <Text style={homeStyle.greeting}>{saudacao}</Text>
+              <Text style={homeStyle.greeting}>{saudacaoCompleta}</Text>
 
               <Text style={homeStyle.greetingName}>{primeiroNome}</Text>
             </View>

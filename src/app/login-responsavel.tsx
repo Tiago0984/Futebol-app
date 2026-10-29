@@ -1,8 +1,11 @@
+import { API } from "@/config/api";
 import loginResponsavelStyle from "@/styles/loginResponsavelStyle";
 import { cores } from "@/styles/variaveis";
+import { nomeDoDispositivo } from "@/utils/sessao";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image,
   Pressable,
@@ -16,6 +19,80 @@ export default function LoginResponsavel() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  const [carregando, setCarregando] = useState(false);
+
+  const timerMensagem = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cancela o timer da mensagem se a tela for fechada
+  useEffect(() => {
+    return () => {
+      if (timerMensagem.current) clearTimeout(timerMensagem.current);
+    };
+  }, []);
+
+  function mostrarMensagem(texto: string) {
+    // Cancela o timer anterior para não apagar a mensagem nova antes da hora
+    if (timerMensagem.current) clearTimeout(timerMensagem.current);
+    setMensagem(texto);
+    timerMensagem.current = setTimeout(() => setMensagem(""), 5000);
+  }
+
+  async function fazerLogin() {
+    if (!email.trim() || !senha) {
+      mostrarMensagem("Informe e-mail e senha.");
+      return;
+    }
+    setCarregando(true);
+    try {
+      const resposta = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          senha: senha,
+          perfil: "responsavel",
+          device_name: await nomeDoDispositivo(),
+        }),
+      });
+      const json = await resposta.json();
+
+      // 401 senha errada | 403 sem filho ativo | 422 campos | 429 tentativas
+      if (!resposta.ok || !json.success) {
+        mostrarMensagem(json.message);
+        return;
+      }
+
+      const atletas: { id_atleta: number }[] = json.data.atletas ?? [];
+      await AsyncStorage.setItem("token", json.data.token);
+      await AsyncStorage.setItem("perfil", "responsavel");
+      // Para a saudação da Home ("Bom dia, Carla")
+      await AsyncStorage.setItem(
+        "nome_responsavel",
+        json.data.responsavel?.nome_responsavel ?? "",
+      );
+
+      // Com um filho só, entra direto nele; com mais, escolhe na próxima tela
+      if (atletas.length === 1) {
+        await AsyncStorage.setItem(
+          "atleta_selecionado",
+          String(atletas[0].id_atleta),
+        );
+        router.replace("/home");
+      } else {
+        await AsyncStorage.removeItem("atleta_selecionado");
+        router.replace("/escolha-atleta");
+      }
+    } catch (erro) {
+      console.log("Erro ao realizar login:", erro);
+      mostrarMensagem("Não foi possível conectar ao servidor.");
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   return (
     <View style={loginResponsavelStyle.container}>
@@ -123,11 +200,22 @@ export default function LoginResponsavel() {
             </Text>
           </Pressable>
 
+          {mensagem !== "" && (
+            <Text style={loginResponsavelStyle.mensagemText}>{mensagem}</Text>
+          )}
+
           <Pressable
-            style={loginResponsavelStyle.enterButton}
-            onPress={() => router.navigate("/home")}
+            style={({ pressed }) => [
+              loginResponsavelStyle.enterButton,
+              pressed && loginResponsavelStyle.enterButtonPressed,
+              carregando && loginResponsavelStyle.enterButtonDisabled,
+            ]}
+            onPress={fazerLogin}
+            disabled={carregando}
           >
-            <Text style={loginResponsavelStyle.enterButtonText}>Entrar</Text>
+            <Text style={loginResponsavelStyle.enterButtonText}>
+              {carregando ? "Entrando..." : "Entrar"}
+            </Text>
           </Pressable>
 
           <Pressable

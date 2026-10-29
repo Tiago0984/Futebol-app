@@ -5,6 +5,7 @@ import editarPerfilStyle from "@/styles/editarPerfilStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
+import { CHAVES_SESSAO } from "@/utils/sessao";
 import {
   dataBrParaIso,
   descreverResponsavel,
@@ -85,7 +86,7 @@ export default function EditarPerfil() {
 
   // Token vencido, encerrado ou atleta inativado: volta para o login
   async function sairPorSessaoInvalida() {
-    await AsyncStorage.multiRemove(["token", "perfil"]);
+    await AsyncStorage.multiRemove(CHAVES_SESSAO);
     router.replace("/selecao-perfil");
   }
 

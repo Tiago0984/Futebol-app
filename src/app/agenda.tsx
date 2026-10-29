@@ -1,10 +1,10 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
-import { API } from "@/config/api";
 import agendaStyle from "@/styles/agendaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
 import { abrirDetalhe, temDetalhe, visualDoTipo } from "@/utils/eventos";
+import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
@@ -260,7 +260,7 @@ export default function Agenda() {
       router.replace("/selecao-perfil");
       return null;
     }
-    const resposta = await fetch(`${API}/agenda?page=${numero}`, {
+    const resposta = await fetch(await urlDoAtleta(`/agenda?page=${numero}`), {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
@@ -269,7 +269,7 @@ export default function Agenda() {
 
     // Token vencido, encerrado ou atleta inativado: volta para o login
     if (resposta.status === 401 || resposta.status === 403) {
-      await AsyncStorage.multiRemove(["token", "perfil"]);
+      await AsyncStorage.multiRemove(CHAVES_SESSAO);
       router.replace("/selecao-perfil");
       return null;
     }

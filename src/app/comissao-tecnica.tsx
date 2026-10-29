@@ -1,10 +1,10 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
-import { API } from "@/config/api";
 import comissaoTecnicaStyle from "@/styles/comissaoTecnicaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { exibirTelefone } from "@/utils/formatos";
+import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -46,7 +46,7 @@ export default function ComissaoTecnica() {
         return;
       }
       try {
-        const resposta = await fetch(`${API}/comissao-tecnica/${id}`, {
+        const resposta = await fetch(await urlDoAtleta(`/comissao-tecnica/${id}`), {
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,
@@ -55,7 +55,7 @@ export default function ComissaoTecnica() {
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
         if (resposta.status === 401 || resposta.status === 403) {
-          await AsyncStorage.multiRemove(["token", "perfil"]);
+          await AsyncStorage.multiRemove(CHAVES_SESSAO);
           router.replace("/selecao-perfil");
           return;
         }

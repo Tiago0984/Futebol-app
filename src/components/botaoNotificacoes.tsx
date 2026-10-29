@@ -3,15 +3,17 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
-import { API } from "@/config/api";
 import botaoNotificacoesStyle from "@/styles/botaoNotificacoesStyle";
 import type { TabName } from "@/components/tabBar";
+import { urlDoAtleta } from "@/utils/sessao";
 
 interface BotaoNotificacoesProps {
   abaAtiva: TabName;
 }
 
-export default function BotaoNotificacoes({ abaAtiva }: BotaoNotificacoesProps) {
+export default function BotaoNotificacoes({
+  abaAtiva,
+}: BotaoNotificacoesProps) {
   const [naoLidas, setNaoLidas] = useState(0);
 
   // Busca o número toda vez que a tela aparece (ex.: ao voltar das notificações).
@@ -20,19 +22,18 @@ export default function BotaoNotificacoes({ abaAtiva }: BotaoNotificacoesProps) 
     useCallback(() => {
       let ativo = true;
       (async () => {
-        const [token, perfil] = await Promise.all([
-          AsyncStorage.getItem("token"),
-          AsyncStorage.getItem("perfil"),
-        ]);
-        // A área do responsável usa outras rotas e ainda não está integrada
-        if (!token || perfil !== "atleta") return;
+        const token = await AsyncStorage.getItem("token");
+        if (!token) return;
         try {
-          const resposta = await fetch(`${API}/notificacoes/nao-lidas`, {
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
+          const resposta = await fetch(
+            await urlDoAtleta("/notificacoes/nao-lidas"),
+            {
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+              },
             },
-          });
+          );
           const json = await resposta.json();
           if (ativo && json.success) setNaoLidas(json.data.nao_lidas);
         } catch (erro) {

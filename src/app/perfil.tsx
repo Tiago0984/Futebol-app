@@ -1,6 +1,5 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
-import { API } from "@/config/api";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import perfilStyle from "@/styles/perfilStyle";
@@ -12,7 +11,12 @@ import {
   formatarDataNascimento,
   ResponsavelAtleta,
 } from "@/utils/formatos";
-import { sairDaConta } from "@/utils/sessao";
+import {
+  CHAVES_SESSAO,
+  ehResponsavel,
+  sairDaConta,
+  urlDoAtleta,
+} from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
@@ -42,6 +46,8 @@ export default function Perfil() {
   const insets = useSafeAreaInsets();
   const [atleta, setAtleta] = useState<Atleta | null>(null);
   const [saindo, setSaindo] = useState(false);
+  // O responsável vê o filho escolhido, só para leitura
+  const [responsavel, setResponsavel] = useState(false);
 
   // Recarrega ao voltar da tela de edição, para mostrar o que acabou de ser salvo
   useFocusEffect(
@@ -52,8 +58,10 @@ export default function Perfil() {
           router.replace("/selecao-perfil");
           return;
         }
+        const perfilResponsavel = await ehResponsavel();
+        setResponsavel(perfilResponsavel);
         try {
-          const resposta = await fetch(`${API}/atleta`, {
+          const resposta = await fetch(await urlDoAtleta("/atleta"), {
             headers: {
               Accept: "application/json",
               Authorization: `Bearer ${token}`,
@@ -62,8 +70,13 @@ export default function Perfil() {
 
           // Token vencido, encerrado ou atleta inativado: volta para o login
           if (resposta.status === 401 || resposta.status === 403) {
-            await AsyncStorage.multiRemove(["token", "perfil"]);
+            await AsyncStorage.multiRemove(CHAVES_SESSAO);
             router.replace("/selecao-perfil");
+            return;
+          }
+          // Responsável: o filho escolhido foi inativado ou desvinculado
+          if (resposta.status === 404 && perfilResponsavel) {
+            router.replace("/escolha-atleta");
             return;
           }
 
@@ -122,7 +135,9 @@ export default function Perfil() {
           </Pressable>
           <View style={perfilStyle.headerTitleCol}>
             <Text style={perfilStyle.screenTitle}>Perfil</Text>
-            <Text style={perfilStyle.screenSubtitle}>Minha conta</Text>
+            <Text style={perfilStyle.screenSubtitle}>
+              {responsavel ? "Atleta que você acompanha" : "Minha conta"}
+            </Text>
           </View>
 
           <View style={perfilStyle.headerIconsRow}>
@@ -166,14 +181,22 @@ export default function Perfil() {
               </Text>
             )}
 
-            <Pressable
-              style={perfilStyle.editProfileButton}
-              onPress={() => router.navigate("/editar-perfil")}
-            >
-              <Text style={perfilStyle.editProfileText}>
-                Editar perfil →
-              </Text>
-            </Pressable>
+            {/* Só o próprio atleta edita; o responsável pode trocar de filho */}
+            {responsavel ? (
+              <Pressable
+                style={perfilStyle.editProfileButton}
+                onPress={() => router.navigate("/escolha-atleta")}
+              >
+                <Text style={perfilStyle.editProfileText}>Trocar atleta →</Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={perfilStyle.editProfileButton}
+                onPress={() => router.navigate("/editar-perfil")}
+              >
+                <Text style={perfilStyle.editProfileText}>Editar perfil →</Text>
+              </Pressable>
+            )}
           </View>
         </View>
 
@@ -316,23 +339,29 @@ export default function Perfil() {
               <Text style={perfilStyle.menuArrow}>{">"}</Text>
             </Pressable>
 
+            {/* A senha do responsável usa outra rota, que ainda não está no app */}
+            {!responsavel && (
+              <Pressable
+                style={perfilStyle.infoRow}
+                onPress={() => router.navigate("/alterar-senha")}
+              >
+                <Image
+                  source={require("@/assets/images/img/cadeadoPretoFundoTransparente.png")}
+                  style={perfilStyle.infoIcon}
+                  tintColor={cores.preto}
+                  resizeMode="contain"
+                />
+
+                <Text style={perfilStyle.infoLabel}>Alterar senha</Text>
+
+                <Text style={perfilStyle.menuArrow}>{">"}</Text>
+              </Pressable>
+            )}
+
             <Pressable
               style={perfilStyle.infoRow}
-              onPress={() => router.navigate("/alterar-senha")}
+              onPress={() => router.navigate("/ajuda-suporte")}
             >
-              <Image
-                source={require("@/assets/images/img/cadeadoPretoFundoTransparente.png")}
-                style={perfilStyle.infoIcon}
-                tintColor={cores.preto}
-                resizeMode="contain"
-              />
-
-              <Text style={perfilStyle.infoLabel}>Alterar senha</Text>
-
-              <Text style={perfilStyle.menuArrow}>{">"}</Text>
-            </Pressable>
-
-            <Pressable style={perfilStyle.infoRow} onPress={() => router.navigate("/ajuda-suporte")}>
               <Image
                 source={require("@/assets/images/img/ajudaEsuporte.png")}
                 style={perfilStyle.infoIcon}
@@ -345,7 +374,10 @@ export default function Perfil() {
               <Text style={perfilStyle.menuArrow}>{">"}</Text>
             </Pressable>
 
-            <Pressable style={perfilStyle.infoRow} onPress={() => router.navigate("/sobre-a-aacj")}>
+            <Pressable
+              style={perfilStyle.infoRow}
+              onPress={() => router.navigate("/sobre-a-aacj")}
+            >
               <Image
                 source={require("@/assets/images/img/atencaoPreto.png")}
                 style={perfilStyle.infoIcon}
