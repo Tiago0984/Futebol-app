@@ -33,6 +33,14 @@ type Campeonato = {
   data_inicio_campeonato: string;
   data_fim_campeonato: string;
   categorias: Categoria[];
+  // Jogos já marcados (o total cresce quando o mata-mata é montado); servidor antigo não manda
+  resumo?: {
+    fase_atual_label: string | null;
+    rodada_atual: number | null;
+    total_rodadas: number | null;
+    jogos_realizados: number;
+    total_jogos: number;
+  } | null;
 };
 
 // GET /api/v1/campeonatos-do-atleta: em quais o atleta participa e como
@@ -59,9 +67,25 @@ function diaMes(data: string) {
   return `${data.slice(8, 10)}/${data.slice(5, 7)}`;
 }
 
-// Situação e progresso pelas datas (recortadas do texto, sem passar pelo fuso do aparelho).
-// O progresso é o tempo decorrido; a rodada e a fase dependem do backend
+// Com jogos marcados: "Fase de grupos · Rodada 4 de 5" (ou "6 de 10 jogos") e o progresso
+// pelos jogos com placar. Sem eles, a situação pelas datas
 function andamento(c: Campeonato, hoje: string) {
+  const pelasDatas = andamentoPelasDatas(c, hoje);
+  const r = c.resumo;
+  if (!r || r.total_jogos === 0) return pelasDatas;
+  const etapa =
+    r.rodada_atual && r.total_rodadas
+      ? `Rodada ${r.rodada_atual} de ${r.total_rodadas}`
+      : `${r.jogos_realizados} de ${r.total_jogos} ${r.total_jogos === 1 ? "jogo" : "jogos"}`;
+  return {
+    situacao: pelasDatas.situacao,
+    texto: [r.fase_atual_label, etapa].filter(Boolean).join(" · "),
+    progresso: Math.floor((r.jogos_realizados / r.total_jogos) * 100),
+  };
+}
+
+// Situação e progresso pelas datas (recortadas do texto, sem passar pelo fuso do aparelho)
+function andamentoPelasDatas(c: Campeonato, hoje: string) {
   const inicio = c.data_inicio_campeonato.slice(0, 10);
   const fim = c.data_fim_campeonato.slice(0, 10);
   if (fim < hoje) {

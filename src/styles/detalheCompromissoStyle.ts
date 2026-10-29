@@ -96,6 +96,13 @@ const detalheCompromissoStyle = StyleSheet.create({
     marginTop: 60,
     paddingHorizontal: 30,
   },
+  participacaoTitulo: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.subtitulo,
+    fontWeight: "700",
+    color: cores.branco,
+    marginBottom: 4,
+  },
   avisoAcao: {
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: fontSizes.corpoMedio,

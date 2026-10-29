@@ -69,6 +69,15 @@ type EventoDetalhe = {
     rodada?: number | null;
     penaltis?: Gols | null;
     confronto?: { texto: string } | null;
+    // Só do próprio atleta. Amistoso: convocado e camisa null; sem escalação: escalado false
+    participacao?: {
+      convocado: boolean | null;
+      camisa: number | null;
+      escalado: boolean;
+      time: Time | null;
+      titular_label: string | null;
+      posicao: { sigla: string; nome: string } | null;
+    } | null;
   } | null;
 };
 
@@ -463,7 +472,10 @@ export default function DetalheCompromisso() {
             {jogo.fase_completa && (
               <Text style={detalheCompromissoStyle.jogoInfoMuted}>
                 {jogo.fase_completa}
-                {jogo.rodada ? ` · Rodada ${jogo.rodada}` : ""}
+                {/* A fase completa já pode trazer a rodada ("Fase de grupos · Rodada 4") */}
+                {jogo.rodada && !jogo.fase_completa.includes("Rodada")
+                  ? ` · Rodada ${jogo.rodada}`
+                  : ""}
               </Text>
             )}
             {jogo.penaltis && (
@@ -481,6 +493,69 @@ export default function DetalheCompromisso() {
                 Chegar às {jogo.horario_chegada}
               </Text>
             )}
+          </View>
+        )}
+
+        {/* Sua participação no jogo: convocação e escalação (só as do próprio atleta) */}
+        {jogo?.participacao && (
+          <View style={treinoTecnicoStyle.detailsCard}>
+            <Text style={detalheCompromissoStyle.participacaoTitulo}>
+              Sua participação
+            </Text>
+            {jogo.participacao.convocado !== null && (
+              <View style={treinoTecnicoStyle.detailsRow}>
+                <Image
+                  source={require("@/assets/images/img/atletaVermelho.png")}
+                  style={treinoTecnicoStyle.detailsIcon}
+                  resizeMode="contain"
+                />
+                <View style={treinoTecnicoStyle.detailsTextCol}>
+                  <Text style={treinoTecnicoStyle.detailsLabel} numberOfLines={1}>
+                    Convocação
+                  </Text>
+                  <Text style={treinoTecnicoStyle.detailsValue} numberOfLines={1}>
+                    {jogo.participacao.convocado
+                      ? jogo.participacao.camisa
+                        ? `Convocação confirmada · camisa ${jogo.participacao.camisa}`
+                        : "Convocação confirmada"
+                      : "Sem convocação"}
+                  </Text>
+                </View>
+              </View>
+            )}
+            <View
+              style={[
+                treinoTecnicoStyle.detailsRow,
+                jogo.participacao.convocado !== null &&
+                  treinoTecnicoStyle.detailsRowDivider,
+              ]}
+            >
+              <Image
+                source={require("@/assets/images/img/pranchetaVermelha.png")}
+                style={treinoTecnicoStyle.detailsIcon}
+                resizeMode="contain"
+              />
+              <View style={treinoTecnicoStyle.detailsTextCol}>
+                <Text style={treinoTecnicoStyle.detailsLabel} numberOfLines={1}>
+                  Escalação
+                </Text>
+                <Text style={treinoTecnicoStyle.detailsValue} numberOfLines={2}>
+                  {jogo.participacao.escalado
+                    ? [
+                        jogo.participacao.titular_label,
+                        jogo.participacao.posicao?.nome,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ") || "Na escalação"
+                    : "A definir pelo técnico"}
+                </Text>
+                {jogo.participacao.escalado && jogo.participacao.time && (
+                  <Text style={treinoTecnicoStyle.detailsSubValue} numberOfLines={1}>
+                    {jogo.participacao.time.nome_time}
+                  </Text>
+                )}
+              </View>
+            </View>
           </View>
         )}
 
