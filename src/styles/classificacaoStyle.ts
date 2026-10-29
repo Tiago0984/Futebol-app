@@ -3,10 +3,6 @@ import { StyleSheet } from "react-native";
 import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const classificacaoStyle = StyleSheet.create({
-  scrollContent: {
-    paddingBottom: 24,
-  },
-
   header: {
     paddingHorizontal: 20,
     paddingTop: 20,
@@ -109,6 +105,11 @@ const classificacaoStyle = StyleSheet.create({
     backgroundColor: "#D9D9D9",
     marginRight: 8,
   },
+  equipeEscudo: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+  },
   equipeNome: {
     flex: 1,
     minWidth: 0,
@@ -116,6 +117,29 @@ const classificacaoStyle = StyleSheet.create({
     fontSize: fontSizes.corpoMedio,
     fontWeight: "700",
     color: cores.preto,
+  },
+  // Linha e nome da AACJ (da_aacj); posição de quem já se classificou
+  linhaAacj: {
+    backgroundColor: "rgba(215,25,32,0.06)",
+  },
+  equipeNomeAacj: {
+    color: cores.vermelho,
+  },
+  posClassificado: {
+    color: cores.verde,
+    fontFamily: fontes.OpenSans_Bold,
+    fontWeight: "700",
+  },
+  grupoTitulo: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.subtitulo,
+    fontWeight: "700",
+    color: cores.preto,
+    marginTop: 8,
+    textTransform: "capitalize",
+  },
+  legendaCard: {
+    paddingTop: 0,
   },
   colNumero: {
     width: 22,

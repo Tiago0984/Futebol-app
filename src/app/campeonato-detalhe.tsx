@@ -1,207 +1,48 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
-import { API } from "@/config/api";
 import campeonatoDetalheStyle from "@/styles/campeonatoDetalheStyle";
 import campeonatosStyle from "@/styles/campeonatosStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
+import {
+  dataCompleta,
+  diaDaSemana,
+  diaMes,
+  escudoDoTime,
+  gruposDaCategoria,
+  jogado,
+  jogosDaCategoria,
+  jogosFuturos,
+  placarTexto,
+  resultadoDaAacj,
+  useCampeonato,
+  voltarParaCampeonatos,
+} from "@/utils/campeonatos";
 import { abrirDetalhe, chaveDoDia } from "@/utils/eventos";
-import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-type Categoria = { id_categoria: number; rotulo: string };
-
-// da_aacj: time da AACJ (tipo_time INTERNO); servidor antigo não manda
-type Time = {
-  id_time: number;
-  nome_time: string;
-  logo_url: string | null;
-  da_aacj?: boolean;
-};
-
-type Jogo = {
-  id_jogo: number;
-  id_evento: number;
-  id_categoria: number | null;
-  fase: string | null;
-  rodada_jogo: number | null;
-  placar_time_casa_jogos: number | null;
-  placar_time_visitante_jogos: number | null;
-  penaltis_time_casa_jogos: number | null;
-  penaltis_time_visitante_jogos: number | null;
-  data_jogo: string;
-  horario_jogo: string | null;
-  local_jogo: string | null;
-  time_casa: Time;
-  time_visitante: Time;
-};
-
-type LinhaTabela = {
-  posicao: number;
-  id_time: number;
-  time: string;
-  logo_url: string | null;
-  pontos: number;
-  jogos: number;
-  vitorias: number;
-  empates: number;
-  derrotas: number;
-  gols_marcados: number;
-  gols_sofridos: number;
-  saldo: number;
-  da_aacj?: boolean;
-};
-
-type ClassificacaoCategoria = {
-  id_categoria: number;
-  categoria: string;
-  grupos: { grupo: string; tabela: LinhaTabela[] }[];
-};
-
-// Só os campos de GET /api/v1/campeonatos/{id} usados nesta tela
-type DadosCampeonato = {
-  id_campeonato: number;
-  nome_campeonato: string;
-  organizador_campeonato: string | null;
-  descricao_campeonato: string | null;
-  tipo_label?: string;
-  local_evento: string | null;
-  logo_url: string | null;
-  data_inicio_campeonato: string;
-  data_fim_campeonato: string;
-  categorias: Categoria[];
-  jogos: Jogo[];
-  classificacao: ClassificacaoCategoria[];
-};
-
-const DIAS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-
-// Datas recortadas do texto (já vêm no horário de Brasília), sem passar pelo fuso do aparelho
-const diaMes = (data: string) => `${data.slice(8, 10)}/${data.slice(5, 7)}`;
-const dataCompleta = (data: string) => `${diaMes(data)}/${data.slice(0, 4)}`;
-function diaDaSemana(data: string) {
-  const [a, m, d] = data.slice(0, 10).split("-").map(Number);
-  return DIAS[new Date(a, m - 1, d).getDay()];
-}
-
-const jogado = (j: Jogo) =>
-  j.placar_time_casa_jogos !== null && j.placar_time_visitante_jogos !== null;
-
-// Resultado do ponto de vista da AACJ; null quando nenhum dos times é da AACJ
-// (ou o servidor ainda não diz qual é)
-function resultadoDaAacj(j: Jogo) {
-  const casa = j.time_casa.da_aacj;
-  const fora = j.time_visitante.da_aacj;
-  if (!jogado(j) || casa === fora) return null;
-  let nossos = casa ? j.placar_time_casa_jogos! : j.placar_time_visitante_jogos!;
-  let deles = casa ? j.placar_time_visitante_jogos! : j.placar_time_casa_jogos!;
-  if (nossos === deles && j.penaltis_time_casa_jogos !== null) {
-    nossos = casa ? j.penaltis_time_casa_jogos! : j.penaltis_time_visitante_jogos!;
-    deles = casa ? j.penaltis_time_visitante_jogos! : j.penaltis_time_casa_jogos!;
-  }
-  return nossos > deles ? "VITORIA" : nossos < deles ? "DERROTA" : "EMPATE";
-}
-
-function placarTexto(j: Jogo) {
-  const placar = `${j.placar_time_casa_jogos} x ${j.placar_time_visitante_jogos}`;
-  return j.penaltis_time_casa_jogos !== null
-    ? `${placar} (${j.penaltis_time_casa_jogos}-${j.penaltis_time_visitante_jogos} pên.)`
-    : placar;
-}
 
 export default function CampeonatoDetalhe() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id?: string }>();
-  const [campeonato, setCampeonato] = useState<DadosCampeonato | null>(null);
-  // Categorias do atleta neste campeonato (para abrir já na dele)
-  const [minhasCategorias, setMinhasCategorias] = useState<number[]>([]);
-  // Jogos que estão na agenda do atleta: só esses abrem o detalhe do compromisso
-  const [eventosNaAgenda, setEventosNaAgenda] = useState<number[]>([]);
+  const { campeonato, erro, idCategoria: categoriaPadrao, eventosNaAgenda } =
+    useCampeonato(id);
+  // Categoria mostrada: a escolhida nos botões, senão a do atleta, senão a primeira
   const [categoriaEscolhida, setCategoriaEscolhida] = useState<number | null>(
     null,
   );
-  const [erro, setErro] = useState("");
+  const idCategoria = categoriaEscolhida ?? categoriaPadrao;
 
-  useEffect(() => {
-    let ativa = true;
-    (async () => {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        router.replace("/selecao-perfil");
-        return;
-      }
-      const headers = {
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-      try {
-        const [resposta, respostaMeus, respostaJogos] = await Promise.all([
-          fetch(`${API}/campeonatos/${id}`, {
-            headers: { Accept: "application/json" },
-          }),
-          fetch(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
-          fetch(await urlDoAtleta("/agenda?tipo=JOGO"), { headers }),
-        ]);
-
-        // Token vencido, encerrado ou atleta inativado: volta para o login
-        if (respostaMeus.status === 401 || respostaMeus.status === 403) {
-          await AsyncStorage.multiRemove(CHAVES_SESSAO);
-          router.replace("/selecao-perfil");
-          return;
-        }
-        const json = await resposta.json();
-        if (!ativa) return;
-        if (resposta.status === 404) {
-          setErro("Este campeonato não está mais disponível.");
-          return;
-        }
-        if (!resposta.ok || !json.success) {
-          setErro(json.message ?? "Não foi possível carregar o campeonato.");
-          return;
-        }
-
-        // As duas abaixo são extras: sem elas a tela aparece do mesmo jeito
-        if (respostaMeus.ok) {
-          const jsonMeus = await respostaMeus.json();
-          const meu = jsonMeus.data?.find(
-            (c: { id_campeonato: number }) => c.id_campeonato === Number(id),
-          );
-          if (meu) {
-            setMinhasCategorias([
-              ...meu.convocacoes.map((c: Categoria) => c.id_categoria),
-              ...meu.categorias.map((c: Categoria) => c.id_categoria),
-            ]);
-          }
-        }
-        if (respostaJogos.ok) {
-          const jsonJogos = await respostaJogos.json();
-          const eventos = [
-            ...(jsonJogos.data?.passados ?? []),
-            ...(jsonJogos.data?.proximos ?? []),
-          ];
-          setEventosNaAgenda(eventos.map((e: { id_evento: number }) => e.id_evento));
-        }
-        setCampeonato(json.data);
-      } catch (e) {
-        console.log("Erro ao buscar o campeonato:", e);
-        if (ativa) setErro("Não foi possível conectar ao servidor.");
-      }
-    })();
-    return () => {
-      ativa = false;
-    };
-  }, [id]);
-
-  function voltar() {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace("/campeonatos");
-    }
+  // Telas de "ver tudo", na mesma categoria
+  function verCompleto(
+    pathname: "/classificacao" | "/ultimos-resultados" | "/proxima-partida",
+  ) {
+    router.navigate({
+      pathname,
+      params: { id: String(id), categoria: String(idCategoria ?? "") },
+    });
   }
 
   let conteudo;
@@ -213,13 +54,6 @@ export default function CampeonatoDetalhe() {
     );
   } else {
     const c = campeonato;
-    // Categoria mostrada: a escolhida, senão a do atleta, senão a primeira
-    const idCategoria =
-      categoriaEscolhida ??
-      c.categorias.find((cat) => minhasCategorias.includes(cat.id_categoria))
-        ?.id_categoria ??
-      c.categorias[0]?.id_categoria ??
-      null;
 
     const hoje = chaveDoDia(new Date());
     const inicio = c.data_inicio_campeonato.slice(0, 10);
@@ -227,10 +61,7 @@ export default function CampeonatoDetalhe() {
     const situacao =
       fim < hoje ? "ENCERRADO" : inicio > hoje ? "EM_BREVE" : "ANDAMENTO";
 
-    // Jogos da categoria (sem categoria no jogo: entra em todas)
-    const jogos = c.jogos
-      .filter((j) => idCategoria === null || j.id_categoria === null || j.id_categoria === idCategoria)
-      .sort((a, b) => a.data_jogo.localeCompare(b.data_jogo));
+    const jogos = jogosDaCategoria(c, idCategoria);
     const realizados = jogos.filter(jogado);
     const pendentes = jogos.filter((j) => !jogado(j));
     const progresso = jogos.length
@@ -238,17 +69,12 @@ export default function CampeonatoDetalhe() {
       : 0;
     // Fase atual: a do próximo jogo sem placar; tudo jogado, a do último
     const faseAtual = (pendentes[0] ?? realizados[realizados.length - 1])?.fase;
-    // Próximas: sem placar e de hoje em diante (jogo passado sem placar espera o resultado)
-    const futuros = pendentes.filter((j) => j.data_jogo.slice(0, 10) >= hoje);
+    const futuros = jogosFuturos(jogos, hoje);
     const proximo = futuros[0];
     const proximos = futuros.slice(1, 4);
     const ultimos = realizados.slice(-3).reverse();
 
-    const classificacao = c.classificacao.find((cl) => cl.id_categoria === idCategoria);
-    // Só grupos com jogos contados (o mata-mata vem com a tabela zerada)
-    const grupos = (classificacao?.grupos ?? []).filter((g) =>
-      g.tabela.some((l) => l.jogos > 0),
-    );
+    const grupos = gruposDaCategoria(c, idCategoria);
     // Resumo: o grupo da AACJ; sem ele, o primeiro grupo com times
     const grupoResumo =
       grupos.find((g) => g.tabela.some((l) => l.da_aacj)) ?? grupos[0];
@@ -298,10 +124,7 @@ export default function CampeonatoDetalhe() {
       { rotulo: "Período", valor: `${dataCompleta(inicio)} a ${dataCompleta(fim)}` },
     ].filter((l) => l.valor);
 
-    const escudo = (t: Time) =>
-      t.logo_url
-        ? { uri: t.logo_url }
-        : require("@/assets/images/img/escudovermelho.png");
+    const escudo = escudoDoTime;
 
     conteudo = (
       <>
@@ -525,6 +348,11 @@ export default function CampeonatoDetalhe() {
                   <Text style={campeonatoDetalheStyle.tableTitle}>
                     Classificação
                   </Text>
+                  <Pressable onPress={() => verCompleto("/classificacao")}>
+                    <Text style={campeonatoDetalheStyle.tableLink}>
+                      Ver completo {">"}
+                    </Text>
+                  </Pressable>
                 </View>
                 {grupos.length > 1 && (
                   <Text style={campeonatoDetalheStyle.grupoNome}>
@@ -568,6 +396,11 @@ export default function CampeonatoDetalhe() {
                   <Text style={campeonatoDetalheStyle.tableTitle}>
                     Últimos Resultados
                   </Text>
+                  <Pressable onPress={() => verCompleto("/ultimos-resultados")}>
+                    <Text style={campeonatoDetalheStyle.tableLink}>
+                      Ver completo {">"}
+                    </Text>
+                  </Pressable>
                 </View>
                 <View style={campeonatoDetalheStyle.tableRows}>
                   {ultimos.map((j) => {
@@ -614,6 +447,11 @@ export default function CampeonatoDetalhe() {
               <Text style={campeonatoDetalheStyle.tableTitle}>
                 Próximas partidas
               </Text>
+              <Pressable onPress={() => verCompleto("/proxima-partida")}>
+                <Text style={campeonatoDetalheStyle.tableLink}>
+                  Ver completo {">"}
+                </Text>
+              </Pressable>
             </View>
             {proximos.map((j) => (
               <View key={j.id_jogo} style={campeonatoDetalheStyle.upcomingRow}>
@@ -644,12 +482,7 @@ export default function CampeonatoDetalhe() {
   }
 
   const categoriaTitulo = campeonato?.categorias.find(
-    (cat) =>
-      cat.id_categoria ===
-      (categoriaEscolhida ??
-        campeonato.categorias.find((x) => minhasCategorias.includes(x.id_categoria))
-          ?.id_categoria ??
-        campeonato.categorias[0]?.id_categoria),
+    (cat) => cat.id_categoria === idCategoria,
   )?.rotulo;
 
   return (
@@ -676,7 +509,7 @@ export default function CampeonatoDetalhe() {
         <View style={campeonatoDetalheStyle.header}>
           <Pressable
             style={campeonatoDetalheStyle.backButton}
-            onPress={voltar}
+            onPress={voltarParaCampeonatos}
             hitSlop={10}
             accessibilityRole="button"
             accessibilityLabel="Voltar"

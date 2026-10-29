@@ -2,11 +2,9 @@ import { StyleSheet } from "react-native";
 
 import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
+// Linhas de 88: o placar (ou os times) pode ocupar duas linhas; a coluna das datas
+// usa a mesma altura para ficar alinhada com o cartão
 const ultimosResultadosStyle = StyleSheet.create({
-  scrollContent: {
-    paddingBottom: 24,
-  },
-
   header: {
     paddingHorizontal: 20,
     paddingTop: 20,
@@ -73,7 +71,7 @@ const ultimosResultadosStyle = StyleSheet.create({
   },
   dateCol: {
     width: 40,
-    height: 74,
+    height: 88,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -90,7 +88,7 @@ const ultimosResultadosStyle = StyleSheet.create({
   },
   lineCol: {
     width: 20,
-    height: 74,
+    height: 88,
     alignItems: "center",
   },
   lineDot: {
@@ -102,8 +100,8 @@ const ultimosResultadosStyle = StyleSheet.create({
   },
   lineConnector: {
     position: "absolute",
-    top: 41,
-    bottom: -33,
+    top: 48,
+    bottom: -40,
     width: 2,
     backgroundColor: "rgba(255,255,255,0.15)",
   },
@@ -111,7 +109,7 @@ const ultimosResultadosStyle = StyleSheet.create({
   resultItem: {
     flexDirection: "row",
     alignItems: "center",
-    height: 74,
+    height: 88,
   },
   resultItemDivider: {
     borderBottomWidth: 1,

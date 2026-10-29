@@ -1,72 +1,145 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
+import campeonatosStyle from "@/styles/campeonatosStyle";
 import fundoStyle from "@/styles/fundoStyle";
+import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import ultimosResultadosStyle from "@/styles/ultimosResultadosStyle";
 import { cores } from "@/styles/variaveis";
-import { router } from "expo-router";
+import {
+  diaDaSemana,
+  diaMes,
+  escudoDoTime,
+  faseDoJogo,
+  jogado,
+  jogosDaCategoria,
+  placarTexto,
+  resultadoDaAacj,
+  ROTULO_RESULTADO,
+  useCampeonato,
+  voltarParaCampeonatos,
+} from "@/utils/campeonatos";
+import { useLocalSearchParams } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const crestAacj = require("@/assets/images/img/logo/logo-aacj.png");
-const crestTimePreto = require("@/assets/images/img/logo/time-preto.jpg");
-
-const resultados = [
-  {
-    dia: "04/05",
-    semana: "Dom",
-    crest: crestAacj,
-    placar: "AACJ  2 X 0  Santos",
-    competicao: "Campeonato paulista sub-17",
-    local: "Estádio Municipal",
-    resultado: "Vitória",
-  },
-  {
-    dia: "27/04",
-    semana: "Dom",
-    crest: crestTimePreto,
-    placar: "AACJ  1 X 1  Palmeiras",
-    competicao: "Campeonato paulista sub-17",
-    local: "Arena Barueri",
-    resultado: "Empate",
-  },
-  {
-    dia: "20/04",
-    semana: "Dom",
-    crest: crestAacj,
-    placar: "AACJ  0 X 1  Santos",
-    competicao: "Campeonato paulista sub-17",
-    local: "Estádio Municipal",
-    resultado: "Derrota",
-  },
-  {
-    dia: "04/05",
-    semana: "Dom",
-    crest: crestAacj,
-    placar: "AACJ  2 X 0  Santos",
-    competicao: "Campeonato paulista sub-17",
-    local: "Estádio Municipal",
-    resultado: "Vitória",
-  },
-  {
-    dia: "27/04",
-    semana: "Dom",
-    crest: crestTimePreto,
-    placar: "AACJ  1 X 1  Palmeiras",
-    competicao: "Campeonato paulista sub-17",
-    local: "Arena Barueri",
-    resultado: "Empate",
-  },
-  {
-    dia: "20/04",
-    semana: "Dom",
-    crest: crestAacj,
-    placar: "AACJ  0 X 1  Santos",
-    competicao: "Campeonato paulista sub-17",
-    local: "Estádio Municipal",
-    resultado: "Derrota",
-  },
-];
-
+// Todos os jogos com placar da categoria (?id=&categoria=), do mais recente ao mais antigo
 export default function UltimosResultados() {
+  const insets = useSafeAreaInsets();
+  const { id, categoria } = useLocalSearchParams<{
+    id?: string;
+    categoria?: string;
+  }>();
+  const { campeonato, erro, idCategoria } = useCampeonato(id, categoria);
+
+  const rotuloCategoria = campeonato?.categorias.find(
+    (cat) => cat.id_categoria === idCategoria,
+  )?.rotulo;
+  const resultados = campeonato
+    ? jogosDaCategoria(campeonato, idCategoria).filter(jogado).reverse()
+    : [];
+
+  let conteudo;
+  if (erro) {
+    conteudo = <Text style={campeonatosStyle.estadoTexto}>{erro}</Text>;
+  } else if (!campeonato) {
+    conteudo = (
+      <Text style={campeonatosStyle.estadoTexto}>Carregando resultados...</Text>
+    );
+  } else if (resultados.length === 0) {
+    conteudo = (
+      <Text style={campeonatosStyle.estadoTexto}>
+        Ainda não há resultados nesta categoria.
+      </Text>
+    );
+  } else {
+    conteudo = (
+      <View style={ultimosResultadosStyle.listSection}>
+        {/* Datas à esquerda, alinhadas com os jogos do cartão */}
+        <View>
+          {resultados.map((j, index) => (
+            <View key={j.id_jogo} style={ultimosResultadosStyle.resultRow}>
+              <View style={ultimosResultadosStyle.dateCol}>
+                <Text style={ultimosResultadosStyle.dateDay}>{diaMes(j.data_jogo)}</Text>
+                <Text style={ultimosResultadosStyle.dateWeekday}>
+                  {diaDaSemana(j.data_jogo).slice(0, 3)}
+                </Text>
+              </View>
+              <View style={ultimosResultadosStyle.lineCol}>
+                <View style={ultimosResultadosStyle.lineDot} />
+                {index < resultados.length - 1 && (
+                  <View style={ultimosResultadosStyle.lineConnector} />
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+
+        <View style={ultimosResultadosStyle.listCard}>
+          {resultados.map((j, index) => {
+            const resultado = resultadoDaAacj(j);
+            // Escudo do adversário da AACJ; jogo sem a AACJ, o do mandante
+            const escudo =
+              j.time_casa.da_aacj && !j.time_visitante.da_aacj
+                ? j.time_visitante
+                : j.time_casa;
+            const estiloPill =
+              resultado === "VITORIA"
+                ? ultimosResultadosStyle.resultPillVitoria
+                : resultado === "DERROTA"
+                  ? ultimosResultadosStyle.resultPillDerrota
+                  : ultimosResultadosStyle.resultPillEmpate;
+            const corTexto =
+              resultado === "VITORIA"
+                ? cores.verde
+                : resultado === "DERROTA"
+                  ? cores.vermelho
+                  : cores.cinza;
+
+            return (
+              <View
+                key={j.id_jogo}
+                style={[
+                  ultimosResultadosStyle.resultItem,
+                  index < resultados.length - 1 &&
+                    ultimosResultadosStyle.resultItemDivider,
+                ]}
+              >
+                <Image
+                  source={escudoDoTime(escudo)}
+                  style={ultimosResultadosStyle.resultCrest}
+                  resizeMode="contain"
+                />
+                <View style={ultimosResultadosStyle.resultTextCol}>
+                  <Text
+                    style={ultimosResultadosStyle.resultScore}
+                    numberOfLines={2}
+                  >
+                    {j.time_casa.nome_time}  {placarTexto(j)}  {j.time_visitante.nome_time}
+                  </Text>
+                  <Text style={ultimosResultadosStyle.resultCompeticao} numberOfLines={1}>
+                    {faseDoJogo(j) || campeonato.nome_campeonato}
+                  </Text>
+                  {j.local_jogo && (
+                    <Text style={ultimosResultadosStyle.resultLocal} numberOfLines={1}>
+                      {j.local_jogo}
+                    </Text>
+                  )}
+                </View>
+                {/* Vitória/Empate/Derrota só nos jogos da AACJ */}
+                {resultado && (
+                  <View style={[ultimosResultadosStyle.resultPill, estiloPill]}>
+                    <Text style={[ultimosResultadosStyle.resultPillText, { color: corTexto }]}>
+                      {ROTULO_RESULTADO[resultado]}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={fundoStyle.container}>
@@ -79,13 +152,15 @@ export default function UltimosResultados() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={ultimosResultadosStyle.scrollContent}
+        contentContainerStyle={{
+          paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom + 24,
+        }}
       >
         <View style={ultimosResultadosStyle.header}>
           <View style={ultimosResultadosStyle.headerTopRow}>
             <Pressable
               style={ultimosResultadosStyle.backButton}
-              onPress={() => router.back()}
+              onPress={voltarParaCampeonatos}
               hitSlop={10}
               accessibilityRole="button"
               accessibilityLabel="Voltar"
@@ -96,10 +171,13 @@ export default function UltimosResultados() {
               <Text style={ultimosResultadosStyle.headerTitle}>
                 Últimos resultados
               </Text>
-              <Text
-                style={ultimosResultadosStyle.headerSubtitle}>
-                Categoria Sub-17
-              </Text>
+              {campeonato && (
+                <Text style={ultimosResultadosStyle.headerSubtitle} numberOfLines={2}>
+                  {[campeonato.nome_campeonato, rotuloCategoria]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </Text>
+              )}
             </View>
             <View style={ultimosResultadosStyle.headerIconsRow}>
               <View style={ultimosResultadosStyle.headerIconButton}>
@@ -114,103 +192,7 @@ export default function UltimosResultados() {
           </View>
         </View>
 
-        <View style={ultimosResultadosStyle.listSection}>
-          <View>
-            {resultados.map((item, index) => {
-              const ehUltimo = index === resultados.length - 1;
-
-              return (
-                <View key={index} style={ultimosResultadosStyle.resultRow}>
-                  <View style={ultimosResultadosStyle.dateCol}>
-                    <Text style={ultimosResultadosStyle.dateDay}>
-                      {item.dia}
-                    </Text>
-                    <Text style={ultimosResultadosStyle.dateWeekday}>
-                      {item.semana}
-                    </Text>
-                  </View>
-
-                  <View style={ultimosResultadosStyle.lineCol}>
-                    <View style={ultimosResultadosStyle.lineDot} />
-                    {!ehUltimo && (
-                      <View style={ultimosResultadosStyle.lineConnector} />
-                    )}
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-
-          <View style={ultimosResultadosStyle.listCard}>
-            {resultados.map((item, index) => {
-              const ehUltimo = index === resultados.length - 1;
-
-              const estiloPill =
-                item.resultado === "Vitória"
-                  ? ultimosResultadosStyle.resultPillVitoria
-                  : item.resultado === "Derrota"
-                    ? ultimosResultadosStyle.resultPillDerrota
-                    : ultimosResultadosStyle.resultPillEmpate;
-
-              const corTexto =
-                item.resultado === "Vitória"
-                  ? cores.verde
-                  : item.resultado === "Derrota"
-                    ? cores.vermelho
-                    : cores.cinza;
-
-              return (
-                <View
-                  key={index}
-                  style={[
-                    ultimosResultadosStyle.resultItem,
-                    !ehUltimo && ultimosResultadosStyle.resultItemDivider,
-                  ]}
-                >
-                  <Image
-                    source={item.crest}
-                    style={ultimosResultadosStyle.resultCrest}
-                    resizeMode="contain"
-                  />
-                  <View style={ultimosResultadosStyle.resultTextCol}>
-                    <Text
-                      style={ultimosResultadosStyle.resultScore}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.7}
-                    >
-                      {item.placar}
-                    </Text>
-                    <Text
-                      style={ultimosResultadosStyle.resultCompeticao}
-                      numberOfLines={1}
-                    >
-                      {item.competicao}
-                    </Text>
-                    <Text
-                      style={ultimosResultadosStyle.resultLocal}
-                      numberOfLines={1}
-                    >
-                      {item.local}
-                    </Text>
-                  </View>
-                  <View
-                    style={[ultimosResultadosStyle.resultPill, estiloPill]}
-                  >
-                    <Text
-                      style={[
-                        ultimosResultadosStyle.resultPillText,
-                        { color: corTexto },
-                      ]}
-                    >
-                      {item.resultado}
-                    </Text>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-        </View>
+        {conteudo}
       </ScrollView>
 
       {/* TabBar unificada */}

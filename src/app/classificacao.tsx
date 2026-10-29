@@ -1,37 +1,131 @@
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
+import campeonatosStyle from "@/styles/campeonatosStyle";
 import classificacaoStyle from "@/styles/classificacaoStyle";
 import fundoStyle from "@/styles/fundoStyle";
-import { router } from "expo-router";
+import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
+import {
+  gruposDaCategoria,
+  useCampeonato,
+  voltarParaCampeonatos,
+} from "@/utils/campeonatos";
+import { useLocalSearchParams } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const times = [
-  "Verdão",
-  "AACJ",
-  "Santos",
-  "Palmeiras",
-  "São Paulo",
-  "Corinthians",
-  "Flamengo",
-  "Guarani",
-  "Ferroviária",
-  "Time Preto",
-  "Grêmio",
-  "Internacional",
-  "Atlético",
-  "Cruzeiro",
-  "Bahia",
-  "Vitória",
-  "Sport",
-  "Náutico",
-  "Fluminense",
-  "Botafogo",
-  "Vasco",
-  "Coritiba",
-  "Goiás",
-];
-
+// Classificação completa da categoria (?id=&categoria=), uma tabela por grupo
 export default function Classificacao() {
+  const insets = useSafeAreaInsets();
+  const { id, categoria } = useLocalSearchParams<{
+    id?: string;
+    categoria?: string;
+  }>();
+  const { campeonato, erro, idCategoria } = useCampeonato(id, categoria);
+
+  const rotuloCategoria = campeonato?.categorias.find(
+    (cat) => cat.id_categoria === idCategoria,
+  )?.rotulo;
+  const grupos = campeonato ? gruposDaCategoria(campeonato, idCategoria) : [];
+  const temClassificado = grupos.some((g) => g.tabela.some((l) => l.classificado));
+
+  let conteudo;
+  if (erro) {
+    conteudo = <Text style={campeonatosStyle.estadoTexto}>{erro}</Text>;
+  } else if (!campeonato) {
+    conteudo = (
+      <Text style={campeonatosStyle.estadoTexto}>Carregando classificação...</Text>
+    );
+  } else if (grupos.length === 0) {
+    conteudo = (
+      <Text style={campeonatosStyle.estadoTexto}>
+        A classificação aparece depois dos primeiros jogos com placar. No mata-mata
+        não há tabela de pontos.
+      </Text>
+    );
+  } else {
+    conteudo = grupos.map((grupo) => (
+      <View key={grupo.grupo} style={classificacaoStyle.tableCard}>
+        {grupos.length > 1 && (
+          <Text style={classificacaoStyle.grupoTitulo}>{grupo.grupo}</Text>
+        )}
+        <View style={classificacaoStyle.tableHeaderRow}>
+          <View style={classificacaoStyle.colPos}>
+            <Text style={classificacaoStyle.tableHeaderText}>POS</Text>
+          </View>
+          <View style={classificacaoStyle.colEquipe}>
+            <Text style={classificacaoStyle.tableHeaderText}>Equipe</Text>
+          </View>
+          {["PJ", "V", "E", "D"].map((sigla) => (
+            <View key={sigla} style={classificacaoStyle.colNumero}>
+              <Text style={classificacaoStyle.tableHeaderText}>{sigla}</Text>
+            </View>
+          ))}
+          <View style={classificacaoStyle.colDestaque}>
+            <Text style={classificacaoStyle.tableHeaderText}>SG</Text>
+          </View>
+          <View style={classificacaoStyle.colDestaque}>
+            <Text style={classificacaoStyle.tableHeaderText}>PTS</Text>
+          </View>
+        </View>
+
+        {grupo.tabela.map((linha) => (
+          <View
+            key={linha.id_time}
+            style={[
+              classificacaoStyle.linhaRow,
+              linha.da_aacj && classificacaoStyle.linhaAacj,
+            ]}
+          >
+            <View style={classificacaoStyle.colPos}>
+              <Text
+                style={[
+                  classificacaoStyle.colPosText,
+                  linha.classificado && classificacaoStyle.posClassificado,
+                ]}
+              >
+                {linha.posicao}
+              </Text>
+            </View>
+            <View style={classificacaoStyle.colEquipe}>
+              {linha.logo_url ? (
+                <Image
+                  source={{ uri: linha.logo_url }}
+                  style={classificacaoStyle.equipeEscudo}
+                  resizeMode="contain"
+                />
+              ) : (
+                <View style={classificacaoStyle.equipeBadge} />
+              )}
+              <Text
+                style={[
+                  classificacaoStyle.equipeNome,
+                  linha.da_aacj && classificacaoStyle.equipeNomeAacj,
+                ]}
+                numberOfLines={1}
+              >
+                {linha.time}
+              </Text>
+            </View>
+            {[linha.jogos, linha.vitorias, linha.empates, linha.derrotas].map(
+              (valor, i) => (
+                <View key={i} style={classificacaoStyle.colNumero}>
+                  <Text style={classificacaoStyle.colNumeroTexto}>{valor}</Text>
+                </View>
+              ),
+            )}
+            <View style={classificacaoStyle.colDestaque}>
+              <Text style={classificacaoStyle.colDestaqueTexto}>
+                {linha.saldo > 0 ? `+${linha.saldo}` : linha.saldo}
+              </Text>
+            </View>
+            <View style={classificacaoStyle.colDestaque}>
+              <Text style={classificacaoStyle.colDestaqueTexto}>{linha.pontos}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    ));
+  }
 
   return (
     <View style={fundoStyle.container}>
@@ -44,13 +138,15 @@ export default function Classificacao() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={classificacaoStyle.scrollContent}
+        contentContainerStyle={{
+          paddingBottom: TAB_BAR_BASE_PADDING_BOTTOM + insets.bottom + 24,
+        }}
       >
         <View style={classificacaoStyle.header}>
           <View style={classificacaoStyle.headerTopRow}>
             <Pressable
               style={classificacaoStyle.backButton}
-              onPress={() => router.back()}
+              onPress={voltarParaCampeonatos}
               hitSlop={10}
               accessibilityRole="button"
               accessibilityLabel="Voltar"
@@ -58,12 +154,14 @@ export default function Classificacao() {
               <Text style={classificacaoStyle.backChevron}>‹</Text>
             </Pressable>
             <View style={classificacaoStyle.headerTitleCol}>
-              <Text style={classificacaoStyle.headerTitle}>
-                Classificação
-              </Text>
-              <Text style={classificacaoStyle.headerSubtitle}>
-                Categoria Sub-17
-              </Text>
+              <Text style={classificacaoStyle.headerTitle}>Classificação</Text>
+              {campeonato && (
+                <Text style={classificacaoStyle.headerSubtitle} numberOfLines={2}>
+                  {[campeonato.nome_campeonato, rotuloCategoria]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </Text>
+              )}
             </View>
             <View style={classificacaoStyle.headerIconsRow}>
               <View style={classificacaoStyle.headerIconButton}>
@@ -78,97 +176,43 @@ export default function Classificacao() {
           </View>
         </View>
 
-        <View style={classificacaoStyle.tableCard}>
-          <View style={classificacaoStyle.tableHeaderRow}>
-            <View style={classificacaoStyle.colPos}>
-              <Text style={classificacaoStyle.tableHeaderText}>POS</Text>
-            </View>
-            <View style={classificacaoStyle.colEquipe}>
-              <Text style={classificacaoStyle.tableHeaderText}>Equipe</Text>
-            </View>
-            <View style={classificacaoStyle.colNumero}>
-              <Text style={classificacaoStyle.tableHeaderText}>PJ</Text>
-            </View>
-            <View style={classificacaoStyle.colNumero}>
-              <Text style={classificacaoStyle.tableHeaderText}>V</Text>
-            </View>
-            <View style={classificacaoStyle.colNumero}>
-              <Text style={classificacaoStyle.tableHeaderText}>E</Text>
-            </View>
-            <View style={classificacaoStyle.colNumero}>
-              <Text style={classificacaoStyle.tableHeaderText}>D</Text>
-            </View>
-            <View style={classificacaoStyle.colDestaque}>
-              <Text style={classificacaoStyle.tableHeaderText}>SG</Text>
-            </View>
-            <View style={classificacaoStyle.colDestaque}>
-              <Text style={classificacaoStyle.tableHeaderText}>PTS</Text>
-            </View>
-          </View>
+        {conteudo}
 
-          {times.map((nome, index) => (
-            <View key={nome} style={classificacaoStyle.linhaRow}>
-              <View style={classificacaoStyle.colPos}>
-                <Text style={classificacaoStyle.colPosText}>{index + 1}</Text>
+        {grupos.length > 0 && (
+          <View style={[classificacaoStyle.tableCard, classificacaoStyle.legendaCard]}>
+            <View style={classificacaoStyle.legenda}>
+              <View style={classificacaoStyle.legendaLinha}>
+                {[
+                  ["PJ", "Jogos"],
+                  ["V", "Vitórias"],
+                  ["E", "Empates"],
+                  ["D", "Derrotas"],
+                ].map(([sigla, nome]) => (
+                  <Text key={sigla} style={classificacaoStyle.legendaItem}>
+                    <Text style={classificacaoStyle.legendaSigla}>{sigla}: </Text>
+                    {nome}
+                  </Text>
+                ))}
               </View>
-              <View style={classificacaoStyle.colEquipe}>
-                <View style={classificacaoStyle.equipeBadge} />
-                <Text style={classificacaoStyle.equipeNome} numberOfLines={1}>
-                  {nome}
+              <View style={classificacaoStyle.legendaLinha}>
+                <Text style={classificacaoStyle.legendaItem}>
+                  <Text style={classificacaoStyle.legendaSigla}>SG: </Text>
+                  Saldo de gols
                 </Text>
+                <Text style={classificacaoStyle.legendaItem}>
+                  <Text style={classificacaoStyle.legendaSigla}>PTS: </Text>
+                  Pontos
+                </Text>
+                {temClassificado && (
+                  <Text style={classificacaoStyle.legendaItem}>
+                    <Text style={classificacaoStyle.posClassificado}>1 </Text>
+                    Classificado
+                  </Text>
+                )}
               </View>
-              <View style={classificacaoStyle.colNumero}>
-                <Text style={classificacaoStyle.colNumeroTexto}>27</Text>
-              </View>
-              <View style={classificacaoStyle.colNumero}>
-                <Text style={classificacaoStyle.colNumeroTexto}>7</Text>
-              </View>
-              <View style={classificacaoStyle.colNumero}>
-                <Text style={classificacaoStyle.colNumeroTexto}>2</Text>
-              </View>
-              <View style={classificacaoStyle.colNumero}>
-                <Text style={classificacaoStyle.colNumeroTexto}>0</Text>
-              </View>
-              <View style={classificacaoStyle.colDestaque}>
-                <Text style={classificacaoStyle.colDestaqueTexto}>+14</Text>
-              </View>
-              <View style={classificacaoStyle.colDestaque}>
-                <Text style={classificacaoStyle.colDestaqueTexto}>24</Text>
-              </View>
-            </View>
-          ))}
-
-          <View style={classificacaoStyle.legenda}>
-            <View style={classificacaoStyle.legendaLinha}>
-              <Text style={classificacaoStyle.legendaItem}>
-                <Text style={classificacaoStyle.legendaSigla}>PJ: </Text>
-                Jogos
-              </Text>
-              <Text style={classificacaoStyle.legendaItem}>
-                <Text style={classificacaoStyle.legendaSigla}>V: </Text>
-                Vitórias
-              </Text>
-              <Text style={classificacaoStyle.legendaItem}>
-                <Text style={classificacaoStyle.legendaSigla}>E: </Text>
-                Empates
-              </Text>
-              <Text style={classificacaoStyle.legendaItem}>
-                <Text style={classificacaoStyle.legendaSigla}>D: </Text>
-                Derrotas
-              </Text>
-            </View>
-            <View style={classificacaoStyle.legendaLinha}>
-              <Text style={classificacaoStyle.legendaItem}>
-                <Text style={classificacaoStyle.legendaSigla}>SG: </Text>
-                Saldo de gols
-              </Text>
-              <Text style={classificacaoStyle.legendaItem}>
-                <Text style={classificacaoStyle.legendaSigla}>PTS: </Text>
-                Pontos
-              </Text>
             </View>
           </View>
-        </View>
+        )}
       </ScrollView>
 
       {/* TabBar unificada */}
