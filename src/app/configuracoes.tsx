@@ -5,14 +5,32 @@ import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import { sairDaConta } from "@/utils/sessao";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useState } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Image, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Configuracoes() {
   const insets = useSafeAreaInsets();
   const [saindo, setSaindo] = useState(false);
+  // Preferência guardada só no aparelho; o envio de notificações ainda não existe na API
+  const [notificacoesAtivas, setNotificacoesAtivas] = useState(true);
+
+  useEffect(() => {
+    AsyncStorage.getItem("notificacoes_ativas")
+      .then((valor) => {
+        if (valor !== null) setNotificacoesAtivas(valor === "1");
+      })
+      .catch(() => {});
+  }, []);
+
+  function alternarNotificacoes(ativas: boolean) {
+    setNotificacoesAtivas(ativas);
+    AsyncStorage.setItem("notificacoes_ativas", ativas ? "1" : "0").catch(
+      () => {},
+    );
+  }
 
   async function handleSair() {
     if (saindo) return;
@@ -92,9 +110,15 @@ export default function Configuracoes() {
 
               <Text style={configuracoesStyle.rowLabel}>Notificações</Text>
 
-              <Text style={configuracoesStyle.rowValue}>Ativado</Text>
-
-              <Text style={configuracoesStyle.rowArrow}>{">"}</Text>
+              <Switch
+                value={notificacoesAtivas}
+                onValueChange={alternarNotificacoes}
+                trackColor={{ false: cores.cinza, true: cores.vermelho }}
+                thumbColor={cores.branco}
+                // Na web a bolinha ligada usa outra prop (verde por padrão), que não está na tipagem
+                {...({ activeThumbColor: cores.branco } as object)}
+                accessibilityLabel="Notificações"
+              />
             </View>
 
             <View style={[configuracoesStyle.row, configuracoesStyle.rowLast]}>
@@ -117,19 +141,6 @@ export default function Configuracoes() {
           <Text style={configuracoesStyle.sectionTitle}>Aplicativo</Text>
 
           <View style={configuracoesStyle.card}>
-            <View style={configuracoesStyle.row}>
-              <Image
-                source={require("@/assets/images/img/controleDeslizante.png")}
-                style={configuracoesStyle.rowIcon}
-                tintColor={cores.preto}
-                resizeMode="contain"
-              />
-
-              <Text style={configuracoesStyle.rowLabel}>Notificações</Text>
-
-              <Text style={configuracoesStyle.rowArrow}>{">"}</Text>
-            </View>
-
             <View style={[configuracoesStyle.row, configuracoesStyle.rowLast]}>
               <Image
                 source={require("@/assets/images/img/refresh.png")}

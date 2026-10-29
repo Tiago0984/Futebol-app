@@ -138,6 +138,15 @@ const editarPerfilStyle = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
+  fotoPendente: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.branco,
+    textAlign: "center",
+    marginTop: 8,
+    paddingHorizontal: 24,
+  },
+
   /* MODAL DA FOTO */
 
   modalOverlay: {

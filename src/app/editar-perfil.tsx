@@ -43,6 +43,8 @@ type Atleta = {
   numero_matricula_atleta: string | null;
   // null = foto padrão
   foto_url: string | null;
+  // Foto enviada pelo app esperando a secretaria; servidor antigo não manda
+  foto_pendente?: boolean;
   // Lista vazia quando não há; só a secretaria muda
   responsaveis?: ResponsavelAtleta[];
   categorias: {
@@ -467,6 +469,13 @@ export default function EditarPerfil() {
             <Text style={editarPerfilStyle.changePhotoText}>Alterar foto</Text>
           </Pressable>
 
+          {/* A foto nova só aparece depois que a secretaria aprova */}
+          {atleta?.foto_pendente && !enviandoFoto && (
+            <Text style={editarPerfilStyle.fotoPendente}>
+              Sua nova foto está aguardando aprovação da secretaria.
+            </Text>
+          )}
+
           {erroFoto !== "" && (
             <Text style={editarPerfilStyle.fotoErro}>{erroFoto}</Text>
           )}
@@ -667,13 +676,14 @@ export default function EditarPerfil() {
               </Text>
             </Pressable>
 
-            {atleta?.foto_url && (
+            {/* O DELETE também descarta a foto que espera aprovação */}
+            {(atleta?.foto_url || atleta?.foto_pendente) && (
               <Pressable
                 style={editarPerfilStyle.modalOpcao}
                 onPress={removerFoto}
               >
                 <Text style={editarPerfilStyle.modalOpcaoTextoRemover}>
-                  Remover foto
+                  {atleta.foto_url ? "Remover foto" : "Cancelar foto enviada"}
                 </Text>
               </Pressable>
             )}
