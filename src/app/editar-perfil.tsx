@@ -57,6 +57,13 @@ type Atleta = {
   }[];
 };
 
+// "Tirar foto": no app sempre; no navegador só em tela de toque (celular/tablet), onde o
+// seletor abre a câmera. No computador ele abriria o mesmo seletor de arquivos da galeria
+const temCamera =
+  Platform.OS !== "web" ||
+  (typeof window !== "undefined" &&
+    !!window.matchMedia?.("(pointer: coarse)").matches);
+
 export default function EditarPerfil() {
   const insets = useSafeAreaInsets();
   const [atleta, setAtleta] = useState<Atleta | null>(null);
@@ -656,8 +663,7 @@ export default function EditarPerfil() {
               Como deseja adicionar sua foto?
             </Text>
 
-            {/* No navegador a câmera abriria o mesmo seletor de arquivos da galeria */}
-            {Platform.OS !== "web" && (
+            {temCamera && (
               <Pressable
                 style={editarPerfilStyle.modalOpcao}
                 onPress={() => escolherFoto("camera")}
