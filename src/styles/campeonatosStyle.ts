@@ -3,10 +3,6 @@ import { StyleSheet } from "react-native";
 import { fontes, cores, fontSizes, iconSizes } from "./variaveis";
 
 const campeonatosStyle = StyleSheet.create({
-  scrollContent: {
-    paddingBottom: 24,
-  },
-
   header: {
     paddingHorizontal: 24,
     paddingTop: 22,
@@ -155,16 +151,23 @@ const campeonatosStyle = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: cores.preto,
   },
+  // Banner e escurecimento cobrem o card inteiro (1 px a mais para não sobrar borda)
   cardBanner: {
     position: "absolute",
     top: -1,
     left: -1,
+    right: -1,
+    bottom: -1,
+    width: undefined,
+    height: undefined,
   },
   cardBannerOverlay: {
     position: "absolute",
     top: -1,
     left: -1,
-    backgroundColor: "rgba(0,0,0,0.3)",
+    right: -1,
+    bottom: -1,
+    backgroundColor: "rgba(0,0,0,0.55)",
   },
   cardContent: {
     padding: 18,
@@ -186,12 +189,19 @@ const campeonatosStyle = StyleSheet.create({
     flexShrink: 1,
   },
   cardIconCircle: {
-    width: 44,
-    height: 44,
+    width: 48,
+    height: 48,
     borderRadius: 14,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.15)",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
+  },
+  cardLogo: {
+    width: 38,
+    height: 38,
   },
   cardIcon: {
     width: 30,
@@ -224,6 +234,27 @@ const campeonatosStyle = StyleSheet.create({
     fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.verde,
+  },
+  statusPillEmBreve: {
+    backgroundColor: cores.azulclaro,
+  },
+  statusPillTextEmBreve: {
+    color: "#1F5FAD",
+  },
+  statusPillEncerrado: {
+    backgroundColor: "rgba(255,255,255,0.15)",
+  },
+  statusPillTextEncerrado: {
+    color: cores.branco70,
+  },
+
+  estadoTexto: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 14,
+    color: cores.branco70,
+    textAlign: "center",
+    marginTop: 40,
+    paddingHorizontal: 30,
   },
 
   progressSection: {
