@@ -122,6 +122,14 @@ com o `SERVIDOR` em produção.
   Atleta" mostra o endereço do responsável quando é outro registro e deixa claro no histórico que mudou só o dele.
   Correção 2: `compartilhado_com` também lista os filhos com o mesmo texto de endereço em outro registro; com true,
   cada registro recebe o endereço novo. O app não muda.
+- **Locais (pedido em 29/10, em andamento):** cadastro de Locais para o "Abrir mapa" achar o lugar certo, em três
+  fases como a Comissão Técnica. L1 (CADASTROS › Locais, `tbl_local` com endereço próprio e link só do Google Maps, bloco
+  "Locais usados que ainda não estão cadastrados") pronta e commitada só no local. L2 aprovada e em andamento: select de
+  local nos eventos, na grade, no jogo e no campeonato, "Novo local" dentro do formulário, grade aceitando "Sem local",
+  renomear leva o nome para todos, mudar endereço não avisa e o atalho "Ligar os N usos". L1 e L2 publicam juntas, só
+  com o OK do Tiago. **L3 (falta pedir o plano):** `local_detalhe: { nome, endereco, mapa_url }` em cada evento da
+  agenda e do detalhe (null sem local cadastrado). Quando sair, o app: "Abrir mapa" usa a `mapa_url` (sem ela, busca
+  pelo nome); endereço embaixo do local no detalhe; calendário e compartilhar com o endereço completo.
 - **Pendente no backend (pedido em 26/10):** esconder a barra do subtítulo vazio no carrossel do site; avisar no
   painel ao escolher arquivo acima de 10 MB; recusar time masculino da AACJ em categoria feminina (feminino em
   masculino continua permitido até o professor responder a pergunta 14); limpar os dados de teste locais (banner
