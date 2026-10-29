@@ -86,6 +86,17 @@ const QUANTIDADE_PASSADOS = 3;
 
 // Espaço entre os filtros e o primeiro item da timeline
 const ESPACO_TOPO_LISTA = 10;
+// Tempo de uma rolagem animada feita pelo app (scrollTo), com folga
+const DURACAO_ROLAGEM_DO_APP = 800;
+
+// O cabeçalho para de acompanhar a rolagem até a animação do app terminar
+function pausarCabecalho(pausaAte: { current: number }) {
+  pausaAte.current = Date.now() + DURACAO_ROLAGEM_DO_APP;
+}
+
+function cabecalhoPausado(pausaAte: { current: number }) {
+  return Date.now() < pausaAte.current;
+}
 
 const SIGLAS_DIAS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
 const NOMES_DIAS = [
@@ -217,6 +228,9 @@ export default function Agenda() {
   // Rolagem esperando a lista carregar ou medir: vai para o primeiro dia com
   // compromisso entre "de" e "ate" assim que ele aparecer
   const rolagemPendente = useRef<{ de: string; ate: string } | null>(null);
+  // Enquanto a lista rola sozinha (toque na semana, nas setas, no calendário), o
+  // cabeçalho não acompanha a rolagem, para não passar pelos dias do caminho
+  const ignorarRolagemAte = useRef(0);
 
   // Guarda onde cada linha ficou e, se havia rolagem pendente para aquele dia, rola agora
   const registrarPosicao = useCallback(
@@ -226,6 +240,7 @@ export default function Agenda() {
       if (pendente && chave >= pendente.de && chave <= pendente.ate) {
         rolagemPendente.current = null;
         setDiaSelecionado(chave);
+        pausarCabecalho(ignorarRolagemAte);
         listaRef.current?.scrollTo({
           y: Math.max(y - ESPACO_TOPO_LISTA, 0),
           animated: true,
@@ -347,12 +362,33 @@ export default function Agenda() {
     }
   }
 
-  // Perto do fim da lista, busca a próxima página
+  // Perto do fim da lista, busca a próxima página. Rolando com o dedo, o mês e a
+  // semana do topo passam a ser os do dia que está no alto da lista
   function aoRolar(e: NativeSyntheticEvent<NativeScrollEvent>) {
     const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
     if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 200) {
       carregarAte("9999-12-31", 1);
     }
+    if (cabecalhoPausado(ignorarRolagemAte)) return;
+
+    // Última linha que já passou do topo (as linhas estão em ordem de posição)
+    const topo = contentOffset.y + ESPACO_TOPO_LISTA + 1;
+    let chaveNoTopo: string | null = null;
+    for (const linha of linhas) {
+      const y = posicoes.current[idDaLinha(linha)];
+      if (y === undefined) continue;
+      if (y > topo) break;
+      chaveNoTopo = chaveDaLinha(linha);
+    }
+    if (!chaveNoTopo) return;
+    // Os passados ficam no começo da lista; com eles no topo, o cabeçalho fica em hoje
+    const dia = chaveNoTopo < chaveHoje ? chaveHoje : chaveNoTopo;
+    if (dia !== diaSelecionado) setDiaSelecionado(dia);
+  }
+
+  // O dedo na lista volta a mandar no cabeçalho, mesmo no meio de uma rolagem do app
+  function aoComecarArrastar() {
+    ignorarRolagemAte.current = 0;
   }
 
   const ultimoCarregado =
@@ -434,6 +470,7 @@ export default function Agenda() {
   const dataSelecionada = dataDaChave(diaSelecionado);
 
   function rolarAte(y: number) {
+    pausarCabecalho(ignorarRolagemAte);
     listaRef.current?.scrollTo({
       y: Math.max(y - ESPACO_TOPO_LISTA, 0),
       animated: true,
@@ -467,6 +504,7 @@ export default function Agenda() {
   function irParaHoje() {
     rolagemPendente.current = null;
     setDiaSelecionado(chaveHoje);
+    pausarCabecalho(ignorarRolagemAte);
     listaRef.current?.scrollTo({ y: 0, animated: true });
   }
 
@@ -768,7 +806,8 @@ export default function Agenda() {
         style={{ flex: 1 }}
         contentContainerStyle={agendaStyle.scrollContent}
         onScroll={aoRolar}
-        scrollEventThrottle={200}
+        onScrollBeginDrag={aoComecarArrastar}
+        scrollEventThrottle={100}
       >
         {conteudo}
         {carregandoMais && (

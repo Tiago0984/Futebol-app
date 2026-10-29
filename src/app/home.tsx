@@ -229,8 +229,16 @@ export default function Home() {
           fetch(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
         ]);
 
-        // Token vencido, encerrado ou atleta inativado: volta para o login
-        if (respostaAtleta.status === 401 || respostaAtleta.status === 403) {
+        // Token vencido, encerrado ou atleta inativado (em qualquer uma das
+        // chamadas, todas com o mesmo token): volta para o login
+        const sessaoAcabou = [
+          respostaAtleta,
+          respostaAgenda,
+          respostaJogos,
+          respostaEstatisticas,
+          respostaCampeonatos,
+        ].some((resposta) => resposta.status === 401 || resposta.status === 403);
+        if (sessaoAcabou) {
           await AsyncStorage.multiRemove(CHAVES_SESSAO);
           router.replace("/selecao-perfil");
           return;
