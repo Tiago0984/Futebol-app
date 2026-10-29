@@ -70,7 +70,7 @@ com o `SERVIDOR` em produção.
 | Trocar foto (adiantado) | No Editar perfil, tocar na foto, no ícone da câmera ou em "Alterar foto" abre o modal: Tirar foto (não aparece na web), Escolher da galeria, Remover foto (com foto atual) ou "Cancelar foto enviada" (só com foto esperando aprovação) e Cancelar. Recorte quadrado (`expo-image-picker`, permissões no `app.json`). Envia `POST /atleta/foto` (multipart, campo `foto`) e remove com `DELETE /atleta/foto`; a resposta deve ser o atleta como no `GET`. Não apaga o que foi digitado e não salvo. A foto fica pendente até a secretaria aprovar: o app mostra a `message` da API e, com `foto_pendente: true`, o aviso "Sua nova foto está aguardando aprovação da secretaria." embaixo da foto (a atual continua). **A rota ainda não existe**: o 404 mostra "A troca de foto ainda não está disponível." | `editar-perfil.tsx` |
 | Configurações | O "Notificações" da Conta virou um botão de ligar e desligar (vermelho ligado, bolinha branca), guardado só no aparelho (`notificacoes_ativas` no AsyncStorage). Ainda não muda nada: a API não manda aviso no celular nem tem rota de preferência. O "Notificações" repetido do Aplicativo saiu | `configuracoes.tsx` |
 | Área do responsável | `POST /auth/login` com `perfil: "responsavel"` guarda `token`, `perfil` e `nome_responsavel`. Com um filho, vai direto para a Home; com mais, abre **Escolha o atleta** (`GET /responsavel/atletas`: foto, nome, matrícula e bolinha dos avisos não lidos) e guarda `atleta_selecionado`. As telas do atleta (Home, Agenda, detalhe, Comissão Técnica, Notificações e o sino) usam `urlDoAtleta()`, que troca `/atleta` e as outras rotas por `/responsavel/atletas/{id}/...`. Home: "Bom dia, Carla" em cima e o nome do filho grande. Perfil: subtítulo "Atleta que você acompanha" e "Trocar atleta →" no lugar de "Editar perfil". 404 do filho (inativado ou desvinculado) volta para a escolha. Testado em 29/10 com a Carla em produção | `login-responsavel.tsx`, `escolha-atleta.tsx`, `utils/sessao.ts` |
-| Meus dados (responsável) | Aberta pelo Perfil do responsável. `GET` e `PATCH /responsavel` (manda só o que mudou): e-mail (login), telefone e WhatsApp editáveis; nome, CPF e endereço (numa linha só) em cards cinza. "Alterar senha" do responsável usa a mesma tela do atleta com `PUT /responsavel/senha` | `meus-dados.tsx`, `alterar-senha.tsx` |
+| Meus dados (responsável) | Aberta pelo Perfil do responsável. `GET` e `PATCH /responsavel` (manda só o que mudou): e-mail (login), telefone e WhatsApp editáveis. Com o servidor novo (o GET manda `endereco.compartilhado_com`), também nome, CPF e o endereço em campos separados: o CEP com 8 dígitos preenche rua, bairro, cidade e UF pelo ViaCEP, e o botão "Mudar também o endereço de Joana" (já ligado, só quando o endereço muda e é o mesmo de um filho) manda `endereco_dos_filhos`; nome novo atualiza a saudação da Home. Sem esse campo (servidor antigo), nome, CPF e endereço (numa linha só) ficam em cards cinza. "Alterar senha" do responsável usa a mesma tela do atleta com `PUT /responsavel/senha` | `meus-dados.tsx`, `alterar-senha.tsx` |
 | Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga a sessão (`CHAVES_SESSAO`: token, perfil, atleta_selecionado e nome_responsavel) mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |
 | Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos. O card do próximo ("Ver detalhes") e qualquer item da timeline abrem o detalhe do compromisso; servidor sem o detalhe (sem o campo `responsavel` nos eventos) esconde o "Ver detalhes" e o toque não faz nada. A linha de pessoa mostra o `responsavel` ou, sem ele, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). As setas de mês e de semana não voltam antes de hoje; o botão do calendário e a troca de filtro voltam para hoje. Um cancelado antes do próximo fica antes do card, na ordem das datas | `agenda.tsx` |
@@ -83,9 +83,9 @@ com o `SERVIDOR` em produção.
 
 ## O que falta (sugestão de ordem)
 
-1. **Meus dados do responsável, segunda parte** (depende do backend): liberar nome e CPF e trocar a linha do endereço por
-   campos separados (CEP preenche rua, bairro e cidade pelo ViaCEP), com o botão "Mudar também o endereço de Joana" (já
-   ligado, só aparece quando o endereço muda), mandando `endereco_dos_filhos`.
+1. **Testar em produção depois da publicação do backend** (F1 e F2 da foto e os dados do responsável): a Joana envia
+   foto, a secretaria aprova ou recusa no painel e ela recebe o aviso; a Carla muda CPF, CEP e endereço com o botão
+   ligado e desligado.
 2. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
 3. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
    - a contagem dos filtros usa os `totais` da API (todas as páginas); só no servidor sem `totais` ela soma o que já carregou;
@@ -95,11 +95,6 @@ com o `SERVIDOR` em produção.
 
 ## Pendências do lado do backend
 
-- **Foto do atleta (plano aprovado em 29/10, ainda não publicado):** F1 = `POST /atleta/foto` (multipart, campo `foto`,
-  512x512 JPG, 10 MB, 5 por minuto e 20 por hora) e `DELETE /atleta/foto` (remove na hora e descarta a pendente), e o
-  campo `foto_pendente` em todas as respostas do atleta. A foto enviada fica pendente fora do `public/` até a secretaria
-  aprovar. F2 = aprovação no painel e aviso AVISO ao atleta ("Sua foto foi aprovada" / "não foi aprovada"). Depois de
-  publicar, o backend confere com um curl de 11 MB se o nginx da produção deixa passar.
 - Gols e assistências por atleta (hoje `null`) dependem do painel registrar quem fez cada gol.
 - `defesas` e `gols_sofridos` do goleiro não existem na rota de estatísticas. Pedir só se o Tiago quiser.
 - Treino com categoria "Geral (sem categoria)" vem com `categoria: null` de propósito.
@@ -120,11 +115,12 @@ com o `SERVIDOR` em produção.
   campeonato 1920x960 JPG (2:1, quase o formato do carrossel do app), logo 512x512 PNG inteira; recorte com prévia
   no painel, limite de 10 MB, nomes de arquivo gerados. As URLs da API não mudaram. Docker local: rode
   `docker compose build php` e `docker compose up -d` no outro PC (limite de upload e GD com JPEG).
-- **Dados do responsável pelo app (pedido em 29/10):** `PATCH /responsavel` aceitando nome, CPF (dígitos verificadores, único,
-  com histórico) e endereço. O endereço é o mesmo registro do filho no painel; a proposta é `endereco_dos_filhos`
-  (true muda o compartilhado, false dá ao responsável um endereço próprio) e o GET dizer com quem o endereço é
-  compartilhado (ex.: `endereco.compartilhado_com`). Pendência anotada: o "Editar" do atleta no painel regrava os dados
-  do responsável e pode desfazer o que ele mudou pelo app.
+- **Pronto no local em 29/10, esperando o OK para publicar:** foto F1 e F2 (aprovar ou recusar no painel, com AVISO
+  "Foto aprovada" / "Foto não aprovada" e motivo) e `PATCH /responsavel` com nome, CPF (422 se inválido ou repetido),
+  `endereco` e `endereco_dos_filhos` (padrão true; false dá ao responsável um endereço próprio), histórico em
+  `tbl_responsavel_historico`. Duas migrations. Depois de publicar, o backend faz o curl de 11 MB por causa do nginx.
+  Pendência anotada: o "Editar" do atleta no painel regrava os dados do responsável e pode desfazer o que ele mudou
+  pelo app.
 - **Pendente no backend (pedido em 26/10):** esconder a barra do subtítulo vazio no carrossel do site; avisar no
   painel ao escolher arquivo acima de 10 MB; recusar time masculino da AACJ em categoria feminina (feminino em
   masculino continua permitido até o professor responder a pergunta 14); limpar os dados de teste locais (banner

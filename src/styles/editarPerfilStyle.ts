@@ -277,6 +277,47 @@ const editarPerfilStyle = StyleSheet.create({
     marginLeft: 4,
   },
 
+  /* ENDEREÇO (Meus dados do responsável) */
+
+  sectionTitle: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.titulo,
+    fontWeight: "800",
+    color: cores.branco,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+
+  // Dois campos lado a lado (Número e Complemento, Cidade e UF)
+  fieldRow: {
+    flexDirection: "row",
+    gap: 10,
+  },
+
+  fieldCardFlex: {
+    flex: 1,
+  },
+
+  fieldCardEstreito: {
+    width: 96,
+  },
+
+  // Linha com texto e o botão de ligar e desligar
+  switchCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    paddingVertical: 14,
+  },
+
+  switchLabel: {
+    flex: 1,
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 14,
+    color: cores.preto,
+  },
+
   /* SALVAR */
 
   saveButton: {

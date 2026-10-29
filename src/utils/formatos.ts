@@ -26,6 +26,12 @@ export function mascaraCpf(texto: string) {
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
 
+// Máscara de digitação do CEP: 13560-000
+export function mascaraCep(texto: string) {
+  const numeros = texto.replace(/\D/g, "").slice(0, 8);
+  return numeros.replace(/(\d{5})(\d)/, "$1-$2");
+}
+
 // Máscara de digitação da data: 14/05/2014
 export function mascaraData(texto: string) {
   const numeros = texto.replace(/\D/g, "").slice(0, 8);
