@@ -31,6 +31,8 @@ type Atleta = {
   email_atleta: string | null;
   telefone_atleta: string | null;
   numero_matricula_atleta: string | null;
+  // null = foto padrão; a foto enviada pelo app só vem depois da aprovação
+  foto_url: string | null;
   // Lista vazia quando não há; CPF e contatos do responsável não vêm
   responsaveis?: ResponsavelAtleta[];
   categorias: {
@@ -156,12 +158,20 @@ export default function Perfil() {
         {/* PERFIL */}
         <View style={perfilStyle.profileRow}>
           <View style={perfilStyle.avatarCircle}>
-            <Image
-              source={require("@/assets/images/img/userPreto.png")}
-              style={perfilStyle.avatarIcon}
-              tintColor={cores.preto}
-              resizeMode="contain"
-            />
+            {atleta?.foto_url ? (
+              <Image
+                source={{ uri: atleta.foto_url }}
+                style={perfilStyle.avatarFoto}
+                resizeMode="cover"
+              />
+            ) : (
+              <Image
+                source={require("@/assets/images/img/userPreto.png")}
+                style={perfilStyle.avatarIcon}
+                tintColor={cores.preto}
+                resizeMode="contain"
+              />
+            )}
           </View>
 
           <View style={perfilStyle.profileInfoCol}>

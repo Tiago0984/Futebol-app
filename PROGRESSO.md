@@ -67,7 +67,7 @@ com o `SERVIDOR` em produção.
 | Home: "Seus números" e modal de estatísticas | `GET /atleta/estatisticas`. "Seus números" usa o `total`. No modal, o botão da categoria (ex.: "Sub-13") mostra os 6 números de `categoria_atual`; o botão "Total" mostra **só os gols** de `total` (desde que entrou, somando todas as categorias). Sem `categoria_atual` (`null` ou servidor sem o bloco), só aparece o "Total". `null` aparece como "—", diferente de 0. Gols e assistências vêm `null` até o backend registrar. Defesas e gols sofridos do goleiro não existem na API e mostram "—" | `home.tsx` |
 | Editar perfil | `GET` e `PATCH /atleta` (manda só o que mudou). Nome, telefone, e-mail, CPF e data de nascimento editáveis; categoria e matrícula só leitura. A API só deixa mudar dia e mês da data (ano diferente dá 422 com a mensagem da secretaria) | `editar-perfil.tsx`, `utils/formatos.ts` |
 | Responsáveis no Perfil | `responsaveis` de `GET /atleta`: uma linha "Responsável" por pessoa, com o parentesco entre parênteses ("Carla Exemplo (Mãe)"). Sem nenhum, não aparece. No Editar perfil aparecem só para leitura | `perfil.tsx`, `editar-perfil.tsx`, `utils/formatos.ts` |
-| Trocar foto (adiantado) | No Editar perfil, tocar na foto, no ícone da câmera ou em "Alterar foto" abre o modal: Tirar foto (não aparece na web), Escolher da galeria, Remover foto (com foto atual) ou "Cancelar foto enviada" (só com foto esperando aprovação) e Cancelar. Recorte quadrado (`expo-image-picker`, permissões no `app.json`). Envia `POST /atleta/foto` (multipart, campo `foto`) e remove com `DELETE /atleta/foto`; a resposta deve ser o atleta como no `GET`. Não apaga o que foi digitado e não salvo. A foto fica pendente até a secretaria aprovar: o app mostra a `message` da API e, com `foto_pendente: true`, o aviso "Sua nova foto está aguardando aprovação da secretaria." embaixo da foto (a atual continua). **A rota ainda não existe**: o 404 mostra "A troca de foto ainda não está disponível." | `editar-perfil.tsx` |
+| Trocar foto | No Editar perfil, tocar na foto, no ícone da câmera ou em "Alterar foto" abre o modal: Tirar foto (não aparece na web), Escolher da galeria, Remover foto (com foto atual) ou "Cancelar foto enviada" (só com foto esperando aprovação) e Cancelar. Recorte quadrado (`expo-image-picker`, permissões no `app.json`). Envia `POST /atleta/foto` (multipart, campo `foto`) e remove com `DELETE /atleta/foto`; a resposta deve ser o atleta como no `GET`. Não apaga o que foi digitado e não salvo. A foto fica pendente até a secretaria aprovar: o app mostra a `message` da API e, com `foto_pendente: true`, o aviso "Sua nova foto está aguardando aprovação da secretaria." embaixo da foto (a atual continua). A secretaria aprova ou recusa no painel (Atletas) e o atleta recebe o AVISO "Foto aprovada" ou "Foto não aprovada". Publicado em produção e testado em 29/10 (enviar, aprovar, recusar e remover). Servidor sem a rota (404): "A troca de foto ainda não está disponível." | `editar-perfil.tsx` |
 | Configurações | O "Notificações" da Conta virou um botão de ligar e desligar (vermelho ligado, bolinha branca), guardado só no aparelho (`notificacoes_ativas` no AsyncStorage). Ainda não muda nada: a API não manda aviso no celular nem tem rota de preferência. O "Notificações" repetido do Aplicativo saiu | `configuracoes.tsx` |
 | Área do responsável | `POST /auth/login` com `perfil: "responsavel"` guarda `token`, `perfil` e `nome_responsavel`. Com um filho, vai direto para a Home; com mais, abre **Escolha o atleta** (`GET /responsavel/atletas`: foto, nome, matrícula e bolinha dos avisos não lidos) e guarda `atleta_selecionado`. As telas do atleta (Home, Agenda, detalhe, Comissão Técnica, Notificações e o sino) usam `urlDoAtleta()`, que troca `/atleta` e as outras rotas por `/responsavel/atletas/{id}/...`. Home: "Bom dia, Carla" em cima e o nome do filho grande. Perfil: subtítulo "Atleta que você acompanha" e "Trocar atleta →" no lugar de "Editar perfil". 404 do filho (inativado ou desvinculado) volta para a escolha. Testado em 29/10 com a Carla em produção | `login-responsavel.tsx`, `escolha-atleta.tsx`, `utils/sessao.ts` |
 | Meus dados (responsável) | Aberta pelo Perfil do responsável. `GET` e `PATCH /responsavel` (manda só o que mudou): e-mail (login), telefone e WhatsApp editáveis. Com o servidor novo (o GET manda `endereco.compartilhado_com`), também nome, CPF e o endereço em campos separados: o CEP com 8 dígitos preenche rua, bairro, cidade e UF pelo ViaCEP, e o botão "Mudar também o endereço de Joana" (já ligado, só quando o endereço muda e é o mesmo de um filho) manda `endereco_dos_filhos`; nome novo atualiza a saudação da Home. Sem esse campo (servidor antigo), nome, CPF e endereço (numa linha só) ficam em cards cinza. "Alterar senha" do responsável usa a mesma tela do atleta com `PUT /responsavel/senha` | `meus-dados.tsx`, `alterar-senha.tsx` |
@@ -83,9 +83,9 @@ com o `SERVIDOR` em produção.
 
 ## O que falta (sugestão de ordem)
 
-1. **Testar em produção depois da publicação do backend** (F1 e F2 da foto e os dados do responsável): a Joana envia
-   foto, a secretaria aprova ou recusa no painel e ela recebe o aviso; a Carla muda CPF, CEP e endereço com o botão
-   ligado e desligado.
+1. **"Meus dados" da Carla**: testado em 29/10 (nome, CPF e CEP funcionam). Falta repetir a mudança de endereço depois
+   da correção 2 do backend: o botão "Mudar também o endereço de Joana" deve aparecer e, ligado, mudar a Joana junto
+   (em produção, Carla e Joana têm registros de endereço separados, 25 e 26, e por isso o botão não apareceu).
 2. Na Home, o 401 da `/agenda` e das estatísticas é ignorado; só o de `/atleta` volta para o login. É um detalhe.
 3. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
    - a contagem dos filtros usa os `totais` da API (todas as páginas); só no servidor sem `totais` ela soma o que já carregou;
@@ -115,12 +115,17 @@ com o `SERVIDOR` em produção.
   campeonato 1920x960 JPG (2:1, quase o formato do carrossel do app), logo 512x512 PNG inteira; recorte com prévia
   no painel, limite de 10 MB, nomes de arquivo gerados. As URLs da API não mudaram. Docker local: rode
   `docker compose build php` e `docker compose up -d` no outro PC (limite de upload e GD com JPEG).
-- **Pronto no local em 29/10, esperando o OK para publicar:** foto F1 e F2 (aprovar ou recusar no painel, com AVISO
+- **Publicado na produção em 29/10 (2297215):** foto F1 e F2 (aprovar ou recusar no painel, com AVISO
   "Foto aprovada" / "Foto não aprovada" e motivo) e `PATCH /responsavel` com nome, CPF (422 se inválido ou repetido),
   `endereco` e `endereco_dos_filhos` (padrão true; false dá ao responsável um endereço próprio), histórico em
   `tbl_responsavel_historico`. Duas migrations. Depois de publicar, o backend faz o curl de 11 MB por causa do nginx.
   Pendência anotada: o "Editar" do atleta no painel regrava os dados do responsável e pode desfazer o que ele mudou
   pelo app.
+- **Pedido em 29/10 (correções 1 e 2 do endereço):** o `compartilhado_com` compara o registro (`id_endereco`), não o
+  texto; cadastros pelo site criam um registro para cada pessoa e nunca mostravam o botão. Correção 1: o "Editar
+  Atleta" mostra o endereço do responsável quando é outro registro e deixa claro no histórico que mudou só o dele.
+  Correção 2: `compartilhado_com` também lista os filhos com o mesmo texto de endereço em outro registro; com true,
+  cada registro recebe o endereço novo. O app não muda.
 - **Pendente no backend (pedido em 26/10):** esconder a barra do subtítulo vazio no carrossel do site; avisar no
   painel ao escolher arquivo acima de 10 MB; recusar time masculino da AACJ em categoria feminina (feminino em
   masculino continua permitido até o professor responder a pergunta 14); limpar os dados de teste locais (banner

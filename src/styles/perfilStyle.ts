@@ -90,6 +90,13 @@ const perfilStyle = StyleSheet.create({
     backgroundColor: cores.cinza,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
+  },
+
+  // Foto do atleta ocupando o círculo inteiro
+  avatarFoto: {
+    width: "100%",
+    height: "100%",
   },
 
   avatarIcon: {
@@ -175,7 +182,12 @@ const perfilStyle = StyleSheet.create({
     color: cores.preto,
   },
 
+  // Valor longo (ex.: nome do responsável) quebra a linha sem espremer o rótulo
   infoValue: {
+    flexShrink: 1,
+    maxWidth: "60%",
+    marginLeft: 8,
+    textAlign: "right",
     fontFamily: fontes.OpenSans_Regular,
     fontSize: fontSizes.destaqueLeve,
     color: cores.cinza,
