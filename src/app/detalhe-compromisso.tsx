@@ -44,6 +44,13 @@ type EventoDetalhe = {
   inicio: string | null;
   fim: string | null;
   local: string | null;
+  // Local cadastrado no painel (L3); null quando o local é só texto ou não há local.
+  // Servidor antigo não manda o campo
+  local_detalhe?: {
+    nome: string;
+    endereco: string | null;
+    mapa_url: string;
+  } | null;
   responsavel?: string | null;
   // Profissional da comissão técnica; sem ele (texto antigo) não há perfil para abrir
   responsavel_id?: number | null;
@@ -171,10 +178,22 @@ export default function DetalheCompromisso() {
       : e.horario_inicio;
   }
 
-  function abrirMapa(local: string) {
-    Linking.openURL(
-      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(local)}`,
-    );
+  // Link do mapa: o do local cadastrado. Com local só em texto, o servidor novo manda
+  // local_detalhe null e o mapa some ("Conforme a agenda" levaria a um lugar errado);
+  // o servidor antigo, sem o campo, continua com a busca pelo texto
+  function urlDoMapa(e: EventoDetalhe) {
+    if ("local_detalhe" in e) return e.local_detalhe?.mapa_url ?? null;
+    return e.local
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.local)}`
+      : null;
+  }
+
+  // "Arena Norte, Avenida Brasil, 500 – Vila Nova, São Carlos/SP" para o calendário e o compartilhar
+  function localCompleto(e: EventoDetalhe) {
+    if (!e.local_detalhe) return e.local;
+    return [e.local_detalhe.nome, e.local_detalhe.endereco]
+      .filter(Boolean)
+      .join(", ");
   }
 
   // No celular abre o compartilhamento do sistema; onde não existe (alguns
@@ -183,7 +202,7 @@ export default function DetalheCompromisso() {
     const mensagem = [
       e.titulo,
       `${formatarDiaCompromisso(e.data)} · ${horarioTexto(e)}`,
-      e.local,
+      localCompleto(e),
     ]
       .filter(Boolean)
       .join("\n");
@@ -209,21 +228,25 @@ export default function DetalheCompromisso() {
     });
   }
 
-  // Ações rápidas, em linhas de duas. "Abrir mapa" só com local e
+  // Ações rápidas, em linhas de duas. "Abrir mapa" só com link do mapa e
   // "Entrar em contato" só com o responsável cadastrado na comissão técnica
   function linhasDeAcoes(e: EventoDetalhe) {
+    const mapa = urlDoMapa(e);
     const acoes = [
-      e.local && {
+      mapa && {
         titulo: "Abrir mapa",
-        subtitulo: "Procurar o local no mapa",
+        subtitulo: e.local_detalhe
+          ? "Ver o endereço no mapa"
+          : "Procurar o local no mapa",
         icone: require("@/assets/images/img/mapavermelho.png"),
-        aoTocar: () => abrirMapa(e.local as string),
+        aoTocar: () => Linking.openURL(mapa),
       },
       {
         titulo: "Adicionar ao calendário",
         subtitulo: "Salvar o compromisso no Google Agenda",
         icone: require("@/assets/images/img/agendaVermelha.png"),
-        aoTocar: () => Linking.openURL(linkGoogleAgenda(e)),
+        aoTocar: () =>
+          Linking.openURL(linkGoogleAgenda({ ...e, local: localCompleto(e) })),
       },
       {
         titulo: "Compartilhar",
@@ -374,8 +397,13 @@ export default function DetalheCompromisso() {
             />
             <View style={treinoTecnicoStyle.infoTextCol}>
               <Text style={treinoTecnicoStyle.infoLabel} numberOfLines={2}>
-                {evento.local ?? "Local a definir"}
+                {evento.local_detalhe?.nome ?? evento.local ?? "Local a definir"}
               </Text>
+              {evento.local_detalhe?.endereco && (
+                <Text style={treinoTecnicoStyle.infoSubLabel} numberOfLines={3}>
+                  {evento.local_detalhe.endereco}
+                </Text>
+              )}
             </View>
           </View>
         </View>
