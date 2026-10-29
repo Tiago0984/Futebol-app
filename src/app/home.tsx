@@ -665,8 +665,12 @@ export default function Home() {
                       <Pressable
                         key={chaveDoSlide(slide)}
                         style={[homeStyle.bannerSlide, { width: larguraSlide }]}
-                        // As telas de campeonato ainda não abrem um campeonato pelo id
-                        onPress={() => router.navigate("/campeonatos")}
+                        onPress={() =>
+                          router.navigate({
+                            pathname: "/campeonato-detalhe",
+                            params: { id: String(slide.campeonato.id_campeonato) },
+                          })
+                        }
                       >
                         <Image
                           source={
@@ -734,7 +738,7 @@ export default function Home() {
                               {diaMes(slide.campeonato.data_fim_campeonato, true)}
                             </Text>
                             <Text style={homeStyle.bannerLink}>
-                              Ver campeonatos {">"}
+                              Ver campeonato {">"}
                             </Text>
                           </View>
                         </View>

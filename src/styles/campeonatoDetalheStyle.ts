@@ -425,6 +425,50 @@ const campeonatoDetalheStyle = StyleSheet.create({
     marginRight: 5,
   },
 
+  statusPillEmBreve: {
+    backgroundColor: cores.azulclaro,
+  },
+
+  statusPillTextEmBreve: {
+    color: "#1F5FAD",
+  },
+
+  // Selo "Encerrado" no card branco de informações
+  statusPillEncerrado: {
+    backgroundColor: "#EEEEEE",
+  },
+
+  statusPillTextEncerrado: {
+    color: cores.cinza,
+  },
+
+  // Linha da AACJ na tabela (da_aacj)
+  teamDotAacj: {
+    backgroundColor: cores.vermelho,
+  },
+
+  textoAacj: {
+    color: cores.vermelho,
+  },
+
+  grupoNome: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.pequeno,
+    fontWeight: "600",
+    color: cores.branco70,
+    marginBottom: 4,
+    textTransform: "capitalize",
+  },
+
+  descricao: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.branco70,
+    marginHorizontal: 24,
+    marginTop: 12,
+    lineHeight: 18,
+  },
+
   classificationTeam: {
     flex: 1,
     fontFamily: fontes.OpenSans_Bold,
