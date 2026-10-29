@@ -339,24 +339,40 @@ export default function Perfil() {
               <Text style={perfilStyle.menuArrow}>{">"}</Text>
             </Pressable>
 
-            {/* A senha do responsável usa outra rota, que ainda não está no app */}
-            {!responsavel && (
+            {/* Só o responsável: e-mail, telefone e WhatsApp dele */}
+            {responsavel && (
               <Pressable
                 style={perfilStyle.infoRow}
-                onPress={() => router.navigate("/alterar-senha")}
+                onPress={() => router.navigate("/meus-dados")}
               >
                 <Image
-                  source={require("@/assets/images/img/cadeadoPretoFundoTransparente.png")}
+                  source={require("@/assets/images/img/userPreto.png")}
                   style={perfilStyle.infoIcon}
                   tintColor={cores.preto}
                   resizeMode="contain"
                 />
 
-                <Text style={perfilStyle.infoLabel}>Alterar senha</Text>
+                <Text style={perfilStyle.infoLabel}>Meus dados</Text>
 
                 <Text style={perfilStyle.menuArrow}>{">"}</Text>
               </Pressable>
             )}
+
+            <Pressable
+              style={perfilStyle.infoRow}
+              onPress={() => router.navigate("/alterar-senha")}
+            >
+              <Image
+                source={require("@/assets/images/img/cadeadoPretoFundoTransparente.png")}
+                style={perfilStyle.infoIcon}
+                tintColor={cores.preto}
+                resizeMode="contain"
+              />
+
+              <Text style={perfilStyle.infoLabel}>Alterar senha</Text>
+
+              <Text style={perfilStyle.menuArrow}>{">"}</Text>
+            </Pressable>
 
             <Pressable
               style={perfilStyle.infoRow}

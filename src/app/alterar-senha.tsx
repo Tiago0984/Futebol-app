@@ -5,7 +5,7 @@ import alterarSenhaStyle from "@/styles/alterarSenhaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
-import { CHAVES_SESSAO } from "@/utils/sessao";
+import { CHAVES_SESSAO, ehResponsavel } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -60,7 +60,11 @@ export default function AlterarSenha() {
         return;
       }
 
-      const resposta = await fetch(`${API}/atleta/senha`, {
+      // Mesmos campos e respostas nos dois perfis; só o endereço muda
+      const rota = (await ehResponsavel())
+        ? "responsavel/senha"
+        : "atleta/senha";
+      const resposta = await fetch(`${API}/${rota}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -170,7 +174,7 @@ export default function AlterarSenha() {
           </View>
 
           <Text style={alterarSenhaStyle.subtitle}>
-            Atualize sua senha para {'\n'} manter sua conta segura.
+            Atualize sua senha para {"\n"} manter sua conta segura.
           </Text>
         </View>
 
@@ -186,9 +190,7 @@ export default function AlterarSenha() {
               secureTextEntry={!senhaAtualVisivel}
             />
 
-            <Pressable
-              onPress={() => setSenhaAtualVisivel(!senhaAtualVisivel)}
-            >
+            <Pressable onPress={() => setSenhaAtualVisivel(!senhaAtualVisivel)}>
               <Image
                 source={
                   senhaAtualVisivel
@@ -295,7 +297,9 @@ export default function AlterarSenha() {
           <Pressable
             style={[
               alterarSenhaStyle.saveButton,
-              camposPreenchidos && !carregando && alterarSenhaStyle.saveButtonAtivo,
+              camposPreenchidos &&
+                !carregando &&
+                alterarSenhaStyle.saveButtonAtivo,
             ]}
             onPress={alterarSenha}
             disabled={carregando}
