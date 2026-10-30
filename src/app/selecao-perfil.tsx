@@ -1,7 +1,8 @@
+import { SITE } from "@/config/api";
 import selecaoPerfilStyle from "@/styles/selecaoPerfilStyle";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
 
 export default function Index() {
   return (
@@ -110,9 +111,22 @@ export default function Index() {
           </View>
 
           <View style={selecaoPerfilStyle.footerLinksRow}>
-            <Text style={selecaoPerfilStyle.footerLink}>Fazer matricula</Text>
+            {/* Abrem o site: a matrícula (cadastro público) e a home */}
+            <Pressable
+              onPress={() => Linking.openURL(`${SITE}/cadastro`)}
+              hitSlop={8}
+              accessibilityRole="link"
+            >
+              <Text style={selecaoPerfilStyle.footerLink}>Fazer matrícula</Text>
+            </Pressable>
             <Text style={selecaoPerfilStyle.footerDot}>•</Text>
-            <Text style={selecaoPerfilStyle.footerLink}>Conheça a AACJ</Text>
+            <Pressable
+              onPress={() => Linking.openURL(`${SITE}/`)}
+              hitSlop={8}
+              accessibilityRole="link"
+            >
+              <Text style={selecaoPerfilStyle.footerLink}>Conheça a AACJ</Text>
+            </Pressable>
           </View>
         </View>
       </ScrollView>

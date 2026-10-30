@@ -4,3 +4,5 @@ const SERVIDOR = "https://coderatech.tipi5.smpsistema.com.br/AACJ";
 
 export const API = `${SERVIDOR}/api/v1`;
 export const IMAGEM = `${SERVIDOR}/futebol/images`;
+// Site público da AACJ (home em /, matrícula em /cadastro)
+export const SITE = SERVIDOR;
