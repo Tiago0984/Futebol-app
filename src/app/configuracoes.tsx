@@ -4,6 +4,11 @@ import configuracoesStyle from "@/styles/configuracoesStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
+import {
+  notificacoesLigadas,
+  pushDisponivel,
+  registrarAparelho,
+} from "@/utils/notificacoes";
 import { sairDaConta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
@@ -14,19 +19,29 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function Configuracoes() {
   const insets = useSafeAreaInsets();
   const [saindo, setSaindo] = useState(false);
-  // Preferência guardada só no aparelho; o envio de notificações ainda não existe na API
+  // Notificações no celular: a preferência vale no servidor (que deixa de enviar).
+  // Só aparece no app instalado; na web não há push
   const [notificacoesAtivas, setNotificacoesAtivas] = useState(true);
+  const [avisoNotificacoes, setAvisoNotificacoes] = useState("");
 
   useEffect(() => {
-    AsyncStorage.getItem("notificacoes_ativas")
-      .then((valor) => {
-        if (valor !== null) setNotificacoesAtivas(valor === "1");
-      })
+    notificacoesLigadas()
+      .then(setNotificacoesAtivas)
       .catch(() => {});
   }, []);
 
-  function alternarNotificacoes(ativas: boolean) {
+  async function alternarNotificacoes(ativas: boolean) {
+    setAvisoNotificacoes("");
     setNotificacoesAtivas(ativas);
+    const permitido = await registrarAparelho(ativas);
+    if (!permitido) {
+      // Ligou, mas o celular bloqueou: continua desligado até liberar nos ajustes
+      setNotificacoesAtivas(false);
+      setAvisoNotificacoes(
+        "Permita as notificações do app AACJ nos ajustes do celular.",
+      );
+      return;
+    }
     AsyncStorage.setItem("notificacoes_ativas", ativas ? "1" : "0").catch(
       () => {},
     );
@@ -93,26 +108,35 @@ export default function Configuracoes() {
           <Text style={configuracoesStyle.sectionTitle}>Conta</Text>
 
           <View style={configuracoesStyle.card}>
-            <View style={configuracoesStyle.row}>
-              <Image
-                source={require("@/assets/images/img/sinoPreto.png")}
-                style={configuracoesStyle.rowIcon}
-                tintColor={cores.preto}
-                resizeMode="contain"
-              />
+            {pushDisponivel && (
+              <>
+              <View style={configuracoesStyle.row}>
+                <Image
+                  source={require("@/assets/images/img/sinoPreto.png")}
+                  style={configuracoesStyle.rowIcon}
+                  tintColor={cores.preto}
+                  resizeMode="contain"
+                />
 
-              <Text style={configuracoesStyle.rowLabel}>Notificações</Text>
+                <Text style={configuracoesStyle.rowLabel}>Notificações</Text>
 
-              <Switch
-                value={notificacoesAtivas}
-                onValueChange={alternarNotificacoes}
-                trackColor={{ false: cores.cinza, true: cores.vermelho }}
-                thumbColor={cores.branco}
-                // Na web a bolinha ligada usa outra prop (verde por padrão), que não está na tipagem
-                {...({ activeThumbColor: cores.branco } as object)}
-                accessibilityLabel="Notificações"
-              />
-            </View>
+                <Switch
+                  value={notificacoesAtivas}
+                  onValueChange={alternarNotificacoes}
+                  trackColor={{ false: cores.cinza, true: cores.vermelho }}
+                  thumbColor={cores.branco}
+                  // Na web a bolinha ligada usa outra prop (verde por padrão), que não está na tipagem
+                  {...({ activeThumbColor: cores.branco } as object)}
+                  accessibilityLabel="Notificações"
+                />
+              </View>
+                {avisoNotificacoes !== "" && (
+                  <Text style={configuracoesStyle.avisoNotificacoes}>
+                    {avisoNotificacoes}
+                  </Text>
+                )}
+              </>
+            )}
 
             <View style={[configuracoesStyle.row, configuracoesStyle.rowLast]}>
               <Image

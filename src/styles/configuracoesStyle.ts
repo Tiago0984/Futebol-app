@@ -160,6 +160,13 @@ const configuracoesStyle = StyleSheet.create({
     fontWeight: "700",
     color: cores.vermelho,
   },
+  avisoNotificacoes: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.vermelho,
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+  },
 });
 
 export default configuracoesStyle;

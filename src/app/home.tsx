@@ -17,6 +17,7 @@ import { router } from "expo-router";
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import { API } from "@/config/api";
+import { registrarAparelho } from "@/utils/notificacoes";
 
 import fundoStyle from "@/styles/fundoStyle";
 import homeStyle from "@/styles/homeStyle";
@@ -290,6 +291,8 @@ export default function Home() {
       voltarAoPrimeiroSlide();
     }
     carregarDados();
+    // Notificações no celular: registra (ou renova) este aparelho para quem entrou
+    registrarAparelho();
 
     // Banners gerais (rota pública): à parte, para uma falha aqui não afetar o resto da Home
     fetch(`${API}/banners`, { headers: { Accept: "application/json" } })

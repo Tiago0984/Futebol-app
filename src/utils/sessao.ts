@@ -1,10 +1,12 @@
 import { API } from "@/config/api";
+import { removerAparelho } from "@/utils/notificacoes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 
 // Tudo o que a sessão guarda no aparelho (o device_id fica: é da instalação)
 export const CHAVES_SESSAO = [
   "token",
+  "push_token",
   "perfil",
   "atleta_selecionado",
   "nome_responsavel",
@@ -44,6 +46,11 @@ export async function ehResponsavel() {
 export async function sairDaConta() {
   const token = await AsyncStorage.getItem("token");
   if (token) {
+    // Este aparelho para de receber os avisos (no máximo 3 s, para não prender a saída)
+    await Promise.race([
+      removerAparelho(),
+      new Promise((pronto) => setTimeout(pronto, 3000)),
+    ]);
     // Sem resposta em 5 s, desiste para não prender o usuário na tela
     const controle = new AbortController();
     const limite = setTimeout(() => controle.abort(), 5000);

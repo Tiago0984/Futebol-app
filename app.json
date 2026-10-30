@@ -42,6 +42,13 @@
           "cameraPermission": "O app usa a câmera para você tirar a foto do seu perfil.",
           "microphonePermission": false
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#D71920",
+          "defaultChannel": "default"
+        }
       ]
     ],
     "experiments": {
