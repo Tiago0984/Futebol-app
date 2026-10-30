@@ -180,13 +180,6 @@ export default function UltimosResultados() {
               )}
             </View>
             <View style={ultimosResultadosStyle.headerIconsRow}>
-              <View style={ultimosResultadosStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={ultimosResultadosStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>

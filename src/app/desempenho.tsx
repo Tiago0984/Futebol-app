@@ -63,13 +63,6 @@ export default function Desempenho() {
           </View>
 
           <View style={desempenhoStyle.headerIconsRow}>
-            <View style={desempenhoStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/shoppingbranco.png")}
-                style={desempenhoStyle.headerIcon}
-                resizeMode="contain"
-              />
-            </View>
 
             <BotaoNotificacoes abaAtiva="desempenho" />
           </View>

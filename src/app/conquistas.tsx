@@ -79,13 +79,6 @@ export default function Conquistas() {
               </Text>
             </View>
             <View style={conquistasStyle.headerIconsRow}>
-              <View style={conquistasStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={conquistasStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>

@@ -164,13 +164,6 @@ export default function Classificacao() {
               )}
             </View>
             <View style={classificacaoStyle.headerIconsRow}>
-              <View style={classificacaoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={classificacaoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>

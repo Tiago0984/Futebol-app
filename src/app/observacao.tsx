@@ -63,13 +63,6 @@ export default function Observacao() {
               </Text>
             </View>
             <View style={observacaoStyle.headerIconsRow}>
-              <View style={observacaoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={observacaoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>

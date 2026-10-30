@@ -143,13 +143,6 @@ export default function Perfil() {
           </View>
 
           <View style={perfilStyle.headerIconsRow}>
-            <View style={perfilStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/shoppingbranco.png")}
-                style={perfilStyle.headerIcon}
-                resizeMode="contain"
-              />
-            </View>
 
             <BotaoNotificacoes abaAtiva="perfil" />
           </View>

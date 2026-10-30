@@ -263,15 +263,6 @@ export default function AjudaPerguntas() {
           </Text>
 
           <View style={ajudaPerguntasStyle.headerIcons}>
-            <View style={ajudaPerguntasStyle.headerIconButton}>
-              <Image
-                source={require(
-                  "@/assets/images/img/shoppingbranco.png",
-                )}
-                style={ajudaPerguntasStyle.headerIcon}
-                resizeMode="contain"
-              />
-            </View>
 
             <BotaoNotificacoes abaAtiva="perfil" />
           </View>

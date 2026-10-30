@@ -529,13 +529,6 @@ export default function CampeonatoDetalhe() {
           </View>
 
           <View style={campeonatoDetalheStyle.headerIconsRow}>
-            <View style={campeonatoDetalheStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/shoppingbranco.png")}
-                style={campeonatoDetalheStyle.headerIcon}
-                resizeMode="contain"
-              />
-            </View>
             <BotaoNotificacoes abaAtiva="campeonatos" />
           </View>
         </View>

@@ -113,13 +113,6 @@ export default function AvaliacaoFisica() {
               </Text>
             </View>
             <View style={avaliacaoFisicaStyle.headerIconsRow}>
-              <View style={avaliacaoFisicaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={avaliacaoFisicaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>

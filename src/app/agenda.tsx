@@ -653,13 +653,6 @@ export default function Agenda() {
             </Text>
           </View>
           <View style={agendaStyle.headerIconsRow}>
-            <View style={agendaStyle.headerIconButton}>
-              <Image
-                source={require("@/assets/images/img/shoppingbranco.png")}
-                style={agendaStyle.headerIcon}
-                resizeMode="contain"
-              />
-            </View>
             <BotaoNotificacoes abaAtiva="agenda" />
           </View>
         </View>

@@ -79,13 +79,6 @@ export default function Evolucao() {
               </Text>
             </View>
             <View style={evolucaoStyle.headerIconsRow}>
-              <View style={evolucaoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={evolucaoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>

@@ -437,13 +437,6 @@ export default function MeusDados() {
             </Text>
 
             <View style={editarPerfilStyle.headerIconsRow}>
-              <View style={editarPerfilStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={editarPerfilStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
 
               <BotaoNotificacoes abaAtiva="perfil" />
             </View>

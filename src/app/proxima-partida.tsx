@@ -165,13 +165,6 @@ export default function ProximaPartida() {
               )}
             </View>
             <View style={proximaPartidaStyle.headerIconsRow}>
-              <View style={proximaPartidaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={proximaPartidaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>

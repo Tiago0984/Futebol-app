@@ -82,13 +82,6 @@ export default function Configuracoes() {
             </Text>
 
             <View style={configuracoesStyle.headerIconsRow}>
-              <View style={configuracoesStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={configuracoesStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
 
               <BotaoNotificacoes abaAtiva="perfil" />
             </View>

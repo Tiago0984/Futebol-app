@@ -149,13 +149,6 @@ export default function AlterarSenha() {
             </Text>
 
             <View style={alterarSenhaStyle.headerIconsRow}>
-              <View style={alterarSenhaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={alterarSenhaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
 
               <BotaoNotificacoes abaAtiva="perfil" />
             </View>

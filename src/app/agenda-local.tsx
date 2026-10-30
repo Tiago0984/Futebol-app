@@ -99,14 +99,6 @@ export default function AgendaLocal() {
             </Text>
 
             <View style={agendaLocalStyle.headerIcons}>
-              <Pressable style={agendaLocalStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={agendaLocalStyle.headerIcon}
-                  contentFit="contain"
-                  tintColor={cores.branco}
-                />
-              </Pressable>
 
               <BotaoNotificacoes abaAtiva="agenda" />
             </View>

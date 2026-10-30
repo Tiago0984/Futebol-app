@@ -292,13 +292,6 @@ export default function Campeonatos() {
               </Text>
             </View>
             <View style={campeonatosStyle.headerIconsRow}>
-              <View style={campeonatosStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={campeonatosStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="campeonatos" />
             </View>
           </View>

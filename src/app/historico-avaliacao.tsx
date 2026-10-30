@@ -93,13 +93,6 @@ export default function HistoricoAvaliacao() {
               </Text>
             </View>
             <View style={historicoAvaliacaoStyle.headerIconsRow}>
-              <View style={historicoAvaliacaoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={historicoAvaliacaoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>

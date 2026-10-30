@@ -745,13 +745,6 @@ export default function DetalheCompromisso() {
               <Text style={treinoTecnicoStyle.backChevron}>‹</Text>
             </Pressable>
             <View style={treinoTecnicoStyle.headerIconsRow}>
-              <View style={treinoTecnicoStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={treinoTecnicoStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="agenda" />
             </View>
           </View>

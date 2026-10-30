@@ -519,13 +519,6 @@ export default function Home() {
             </View>
 
             <View style={homeStyle.headerIconsRow}>
-              <View style={homeStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={homeStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
 
               <BotaoNotificacoes abaAtiva="home" />
             </View>

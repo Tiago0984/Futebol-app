@@ -73,13 +73,6 @@ export default function Metas() {
               </Text>
             </View>
             <View style={metasStyle.headerIconsRow}>
-              <View style={metasStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={metasStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>

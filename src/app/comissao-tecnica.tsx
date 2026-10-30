@@ -316,13 +316,6 @@ export default function ComissaoTecnica() {
               Comissão Técnica
             </Text>
             <View style={comissaoTecnicaStyle.headerIconsRow}>
-              <View style={comissaoTecnicaStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={comissaoTecnicaStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="agenda" />
             </View>
           </View>

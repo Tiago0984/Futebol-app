@@ -170,13 +170,6 @@ export default function Indicadores() {
               </Text>
             </View>
             <View style={indicadoresStyle.headerIconsRow}>
-              <View style={indicadoresStyle.headerIconButton}>
-                <Image
-                  source={require("@/assets/images/img/shoppingbranco.png")}
-                  style={indicadoresStyle.headerIcon}
-                  resizeMode="contain"
-                />
-              </View>
               <BotaoNotificacoes abaAtiva="desempenho" />
             </View>
           </View>
