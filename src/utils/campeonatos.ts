@@ -155,6 +155,21 @@ export function gruposDaCategoria(c: DadosCampeonato, idCategoria: number | null
   );
 }
 
+// Cada consulta cobre até 93 dias, incluindo as duas pontas do período.
+function periodosDosJogos(jogos: Jogo[]) {
+  const dias = [...new Set(jogos.map((j) => j.data_jogo.slice(0, 10)))].sort();
+  const periodos: { de: string; ate: string }[] = [];
+  for (const dia of dias) {
+    const atual = periodos[periodos.length - 1];
+    if (!atual || (Date.parse(dia) - Date.parse(atual.de)) / 86400000 >= 93) {
+      periodos.push({ de: dia, ate: dia });
+    } else {
+      atual.ate = dia;
+    }
+  }
+  return periodos;
+}
+
 /**
  * Busca o campeonato, as categorias do atleta nele (para abrir já na dele) e os jogos da
  * agenda do atleta (só esses abrem o detalhe do compromisso). A categoria mostrada é a
@@ -179,12 +194,11 @@ export function useCampeonato(id: string | undefined, categoriaDaRota?: string) 
         Authorization: `Bearer ${token}`,
       };
       try {
-        const [resposta, respostaMeus, respostaJogos] = await Promise.all([
+        const [resposta, respostaMeus] = await Promise.all([
           fetch(`${API}/campeonatos/${id}`, {
             headers: { Accept: "application/json" },
           }),
           fetch(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
-          fetch(await urlDoAtleta("/agenda?tipo=JOGO"), { headers }),
         ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
@@ -217,14 +231,33 @@ export function useCampeonato(id: string | undefined, categoriaDaRota?: string) 
             ]);
           }
         }
-        if (respostaJogos.ok) {
-          const jsonJogos = await respostaJogos.json();
-          const eventos = [
-            ...(jsonJogos.data?.passados ?? []),
-            ...(jsonJogos.data?.proximos ?? []),
-          ];
-          setEventosNaAgenda(eventos.map((e: { id_evento: number }) => e.id_evento));
+        const dados: DadosCampeonato = json.data;
+        // O período retorna todos os eventos, sem depender da página da agenda.
+        const respostasJogos = await Promise.all(
+          periodosDosJogos(dados.jogos).map(async ({ de, ate }) => {
+            const parametros = new URLSearchParams({ de, ate, tipo: "JOGO" });
+            return fetch(await urlDoAtleta(`/agenda?${parametros}`), { headers });
+          }),
+        );
+        if (!ativa) return;
+        if (respostasJogos.some((r) => r.status === 401 || r.status === 403)) {
+          await AsyncStorage.multiRemove(CHAVES_SESSAO);
+          router.replace("/selecao-perfil");
+          return;
         }
+        const eventosPorPeriodo = await Promise.all(
+          respostasJogos.map(async (respostaJogos) => {
+            if (!respostaJogos.ok) return [];
+            const jsonJogos = await respostaJogos.json();
+            return jsonJogos.success
+              ? (jsonJogos.data.eventos as { id_evento: number }[])
+              : [];
+          }),
+        );
+        if (!ativa) return;
+        setEventosNaAgenda([
+          ...new Set(eventosPorPeriodo.flat().map((e) => e.id_evento)),
+        ]);
         setCampeonato(json.data);
       } catch (e) {
         console.log("Erro ao buscar o campeonato:", e);
