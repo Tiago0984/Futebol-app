@@ -137,6 +137,38 @@ const redefinirSenhaStyle = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 18,
   },
+  subtitulo: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: 14,
+    color: cores.branco,
+    marginBottom: 12,
+  },
+  linhaCodigo: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 12,
+    marginBottom: 20,
+  },
+  campoCodigo: {
+    width: 48,
+    height: 56,
+    borderRadius: 10,
+    backgroundColor: cores.branco,
+    color: cores.preto,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: 24,
+    textAlign: "center",
+  },
+  erroSenha: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 13,
+    color: cores.vermelho,
+    textAlign: "center",
+    marginBottom: 16,
+  },
+  saveButtonDisabled: {
+    opacity: 0.6,
+  },
   saveButtonText: {
     fontFamily: fontes.OpenSans_Bold,
     fontSize: 15,

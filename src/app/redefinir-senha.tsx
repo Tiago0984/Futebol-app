@@ -1,10 +1,12 @@
+import { API } from "@/config/api";
+import { buscarComPrazo } from "@/utils/buscarComPrazo";
+import { mensagensDeErro } from "@/utils/formatos";
 import redefinirSenhaStyle from "@/styles/redefinirSenhastyle";
 import { router, useLocalSearchParams } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Image,
-  ImageBackground,
   Pressable,
   ScrollView,
   Text,
@@ -13,11 +15,100 @@ import {
 } from "react-native";
 
 export default function RedefinirSenha() {
-  const { perfil } = useLocalSearchParams<{ perfil?: string }>();
+  const { email, perfil } = useLocalSearchParams<{ email?: string; perfil?: string }>();
+  const perfilDaConta = perfil === "responsavel" ? "responsavel" : "atleta";
+  const [verSenha, setVerSenha] = useState(false);
+  const [verConfirmarSenha, setVerConfirmarSenha] = useState(false);
+  const [codigo, setCodigo] = useState(["", "", "", ""]);
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [novaSenhaVisivel, setNovaSenhaVisivel] = useState(false);
-  const [confirmarSenhaVisivel, setConfirmarSenhaVisivel] = useState(false);
+  const [mensagem, setMensagem] = useState("");
+  const [carregando, setCarregando] = useState(false);
+  const camposCodigo = useRef<(TextInput | null)[]>([]);
+
+  function alterarDigito(texto: string, indice: number) {
+    const digito = texto.replace(/\D/g, "").slice(0, 1);
+    setCodigo((atual) => atual.map((valor, posicao) => posicao === indice ? digito : valor));
+    if (digito && indice < 3) camposCodigo.current[indice + 1]?.focus();
+  }
+
+  function voltarDigito(tecla: string, indice: number) {
+    if (tecla === "Backspace" && !codigo[indice] && indice > 0) {
+      camposCodigo.current[indice - 1]?.focus();
+    }
+  }
+
+  async function salvarNovaSenha() {
+    if (carregando) return;
+    setMensagem("");
+    if (!email?.trim()) {
+      setMensagem("E-mail não informado. Solicite um novo código.");
+      return;
+    }
+    if (!/^\d{4}$/.test(codigo.join(""))) {
+      setMensagem("Informe os 4 dígitos do código.");
+      return;
+    }
+    if (!novaSenha || !confirmarSenha) {
+      setMensagem("Preencha os campos de senha.");
+      return;
+    }
+    if (novaSenha.length < 8) {
+      setMensagem("A senha deve ter pelo menos 8 caracteres.");
+      return;
+    }
+    if (novaSenha !== confirmarSenha) {
+      setMensagem("As senhas não correspondem.");
+      return;
+    }
+
+    setCarregando(true);
+    const headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+    try {
+      const respostaCodigo = await buscarComPrazo(`${API}/auth/validar-codigo`, {
+        method: "POST",
+        headers,
+        // O backend precisa do perfil para localizar a conta deste e-mail.
+        body: JSON.stringify({ email: email.trim(), perfil: perfilDaConta, codigo: codigo.join("") }),
+      });
+      const jsonCodigo = await respostaCodigo.json();
+      if (!respostaCodigo.ok || !jsonCodigo.success) {
+        const erros = mensagensDeErro(jsonCodigo);
+        setMensagem(erros.campos.codigo ?? jsonCodigo.message ?? "Não foi possível validar o código.");
+        return;
+      }
+      const resetToken = jsonCodigo.data?.reset_token;
+      if (typeof resetToken !== "string" || !resetToken) {
+        setMensagem("Token de redefinição não recebido.");
+        return;
+      }
+      // O token serve somente para esta tentativa e não vai para o AsyncStorage.
+      const resposta = await buscarComPrazo(`${API}/auth/redefinir-senha`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          reset_token: resetToken,
+          nova_senha: novaSenha,
+          nova_senha_confirmation: confirmarSenha,
+        }),
+      });
+      const json = await resposta.json();
+      if (!resposta.ok || !json.success) {
+        const erros = mensagensDeErro(json);
+        setMensagem(erros.campos.nova_senha ?? erros.campos.nova_senha_confirmation ?? json.message ?? "Não foi possível salvar a senha.");
+        return;
+      }
+      // O app tem logins por perfil; a rota inicial apenas retoma a sessão.
+      router.replace(perfilDaConta === "responsavel" ? "/login-responsavel" : "/login-atleta");
+    } catch {
+      setMensagem("Não foi possível conectar ao servidor.");
+    } finally {
+      setCarregando(false);
+    }
+  }
 
   return (
     <View style={redefinirSenhaStyle.container}>
@@ -65,6 +156,25 @@ export default function RedefinirSenha() {
         </View>
 
         <View style={redefinirSenhaStyle.body}>
+          <Text style={redefinirSenhaStyle.subtitulo}>Código de verificação</Text>
+          <View style={redefinirSenhaStyle.linhaCodigo}>
+            {codigo.map((digito, indice) => (
+              <TextInput
+                key={indice}
+                ref={(campo) => { camposCodigo.current[indice] = campo; }}
+                style={redefinirSenhaStyle.campoCodigo}
+                value={digito}
+                editable={!carregando}
+                onChangeText={(texto) => alterarDigito(texto, indice)}
+                onKeyPress={({ nativeEvent }) => voltarDigito(nativeEvent.key, indice)}
+                keyboardType="number-pad"
+                maxLength={1}
+                selectTextOnFocus
+                textAlign="center"
+                accessibilityLabel={`Dígito ${indice + 1} do código`}
+              />
+            ))}
+          </View>
           <View style={redefinirSenhaStyle.inputWrapper}>
             <Image
               source={require("@/assets/images/img/cadeadoPreto.png")}
@@ -75,14 +185,15 @@ export default function RedefinirSenha() {
               style={redefinirSenhaStyle.input}
               placeholder="Nova senha"
               placeholderTextColor="#8D8D8D"
+              editable={!carregando}
               value={novaSenha}
               onChangeText={setNovaSenha}
-              secureTextEntry={!novaSenhaVisivel}
+              secureTextEntry={!verSenha}
             />
-            <Pressable onPress={() => setNovaSenhaVisivel(!novaSenhaVisivel)}>
+            <Pressable onPress={() => setVerSenha(!verSenha)}>
               <Image
                 source={
-                  novaSenhaVisivel
+                  verSenha
                     ? require("@/assets/images/img/olhofechado.png")
                     : require("@/assets/images/img/olhoaberto.png")
                 }
@@ -102,16 +213,17 @@ export default function RedefinirSenha() {
               style={redefinirSenhaStyle.input}
               placeholder="Confirmar nova senha"
               placeholderTextColor="#8D8D8D"
+              editable={!carregando}
               value={confirmarSenha}
               onChangeText={setConfirmarSenha}
-              secureTextEntry={!confirmarSenhaVisivel}
+              secureTextEntry={!verConfirmarSenha}
             />
             <Pressable
-              onPress={() => setConfirmarSenhaVisivel(!confirmarSenhaVisivel)}
+              onPress={() => setVerConfirmarSenha(!verConfirmarSenha)}
             >
               <Image
                 source={
-                  confirmarSenhaVisivel
+                  verConfirmarSenha
                     ? require("@/assets/images/img/olhofechado.png")
                     : require("@/assets/images/img/olhoaberto.png")
                 }
@@ -123,7 +235,7 @@ export default function RedefinirSenha() {
 
           <View style={redefinirSenhaStyle.requirementsCard}>
             <Text style={redefinirSenhaStyle.requirementsTitle}>
-              Ainda não possui acesso?
+              Requisitos da senha
             </Text>
             <View style={redefinirSenhaStyle.requirementRow}>
               <Image
@@ -135,31 +247,21 @@ export default function RedefinirSenha() {
                 Mínimo de 8 caracteres
               </Text>
             </View>
-            <View style={redefinirSenhaStyle.requirementRow}>
-              <Image
-                source={require("@/assets/images/img/circulo.png")}
-                style={redefinirSenhaStyle.requirementIcon}
-                resizeMode="contain"
-              />
-              <Text style={redefinirSenhaStyle.requirementText}>
-                Pelo menos uma letra
-              </Text>
-            </View>
-            <View style={redefinirSenhaStyle.requirementRow}>
-              <Image
-                source={require("@/assets/images/img/circulo.png")}
-                style={redefinirSenhaStyle.requirementIcon}
-                resizeMode="contain"
-              />
-              <Text style={redefinirSenhaStyle.requirementText}>
-                Pelo menos um número
-              </Text>
-            </View>
           </View>
 
-          <Pressable style={redefinirSenhaStyle.saveButton}>
+          {mensagem !== "" && (
+            <Text style={redefinirSenhaStyle.erroSenha}>{mensagem}</Text>
+          )}
+          <Pressable
+            style={[
+              redefinirSenhaStyle.saveButton,
+              carregando && redefinirSenhaStyle.saveButtonDisabled,
+            ]}
+            onPress={salvarNovaSenha}
+            disabled={carregando}
+          >
             <Text style={redefinirSenhaStyle.saveButtonText}>
-              Salvar nova senha
+              {carregando ? "Salvando..." : "Salvar senha"}
             </Text>
           </Pressable>
 

@@ -107,6 +107,14 @@ const esqueciSenhaStyle = StyleSheet.create({
   sendButtonDisabled: {
     opacity: 0.6,
   },
+  erroSolicitacao: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: 13,
+    color: cores.vermelho,
+    textAlign: "center",
+    marginTop: 16,
+    marginBottom: -14,
+  },
   // Mensagem de erro acima do botão Enviar link
   mensagemText: {
     fontFamily: fontes.OpenSans_SemiBold,

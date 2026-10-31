@@ -1,4 +1,5 @@
 import { API } from "@/config/api";
+import { buscarComPrazo } from "@/utils/buscarComPrazo";
 import esqueciSenhaStyle from "@/styles/esqueciSenhaStyle";
 import { mensagensDeErro } from "@/utils/formatos";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,47 +17,51 @@ import {
 
 export default function EsqueciSenha() {
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
-  const perfilDoLink = perfil === "responsavel" ? "responsavel" : "atleta";
+  const perfilDaConta = perfil === "responsavel" ? "responsavel" : "atleta";
+  const [modalEnviarLink, setModalEnviarLink] = useState(false);
   const [email, setEmail] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [mensagemModal, setMensagemModal] = useState("");
-  const [erro, setErro] = useState("");
-  const [enviando, setEnviando] = useState(false);
+  const [carregando, setCarregando] = useState(false);
+  const [mensagem, setMensagem] = useState("");
 
-  // A resposta é a mesma exista ou não o e-mail (a API não revela quem está
-  // cadastrado); o modal mostra a mensagem dela, que já diz a validade do link
-  async function enviarLink() {
-    if (enviando) return;
+  async function solicitarCodigo() {
+    if (carregando) return;
     if (!email.trim()) {
-      setErro("Informe seu e-mail.");
+      setMensagem("Informe seu e-mail.");
       return;
     }
-    setErro("");
-    setEnviando(true);
+    setMensagem("");
+    setCarregando(true);
     try {
-      const resposta = await fetch(`${API}/auth/esqueci-senha`, {
+      const resposta = await buscarComPrazo(`${API}/auth/esqueci-senha`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({ email: email.trim(), perfil: perfilDoLink }),
+        // O perfil identifica a conta certa quando o e-mail existe nos dois cadastros.
+        body: JSON.stringify({ email: email.trim(), perfil: perfilDaConta }),
       });
       const json = await resposta.json();
-
-      // 422 e-mail inválido | 429 muitos pedidos seguidos
       if (!resposta.ok || !json.success) {
-        setErro(mensagensDeErro(json).geral);
+        const erros = mensagensDeErro(json);
+        setMensagem(erros.campos.email ?? json.message ?? "Não foi possível solicitar o código.");
         return;
       }
-      setMensagemModal(json.message);
-      setModalVisible(true);
-    } catch (e) {
-      console.log("Erro ao pedir o link de nova senha:", e);
-      setErro("Não foi possível conectar ao servidor.");
+      setModalEnviarLink(true);
+    } catch {
+      setMensagem("Não foi possível conectar ao servidor.");
     } finally {
-      setEnviando(false);
+      setCarregando(false);
     }
+  }
+
+  function fecharModal() {
+    setModalEnviarLink(false);
+    // O código é digitado na próxima tela; e-mail e perfil identificam a solicitação.
+    router.push({
+      pathname: "/redefinir-senha",
+      params: { email: email.trim(), perfil: perfilDaConta },
+    });
   }
 
   return (
@@ -92,7 +97,7 @@ export default function EsqueciSenha() {
           />
           <Text style={esqueciSenhaStyle.title}>Esqueceu sua senha?</Text>
           <Text style={esqueciSenhaStyle.subtitle}>
-            Informe o e-mail utilizado no seu cadastro e{"\n"}enviaremos um link
+            Informe o e-mail utilizado no seu cadastro e{"\n"}enviaremos um código de 4 dígitos
             para redefinir sua senha
           </Text>
           <View style={esqueciSenhaStyle.badge}>
@@ -119,6 +124,7 @@ export default function EsqueciSenha() {
               style={esqueciSenhaStyle.input}
               placeholder="Digite seu e-mail"
               placeholderTextColor="#8D8D8D"
+              editable={!carregando}
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
@@ -126,20 +132,20 @@ export default function EsqueciSenha() {
             />
           </View>
 
-          {erro !== "" && (
-            <Text style={esqueciSenhaStyle.mensagemText}>{erro}</Text>
+          {mensagem !== "" && (
+            <Text style={esqueciSenhaStyle.erroSolicitacao}>{mensagem}</Text>
           )}
 
           <Pressable
             style={[
               esqueciSenhaStyle.sendButton,
-              enviando && esqueciSenhaStyle.sendButtonDisabled,
+              carregando && esqueciSenhaStyle.sendButtonDisabled,
             ]}
-            onPress={enviarLink}
-            disabled={enviando}
+            onPress={solicitarCodigo}
+            disabled={carregando}
           >
             <Text style={esqueciSenhaStyle.sendButtonText}>
-              {enviando ? "Enviando..." : "Enviar link"}
+              {carregando ? "Enviando..." : "Enviar código"}
             </Text>
           </Pressable>
 
@@ -165,25 +171,22 @@ export default function EsqueciSenha() {
       </ScrollView>
 
       <Modal
-        visible={modalVisible}
+        visible={modalEnviarLink}
         transparent
         animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={fecharModal}
       >
         <View style={esqueciSenhaStyle.modalOverlay}>
           <View style={esqueciSenhaStyle.modalCard}>
-            <Text style={esqueciSenhaStyle.modalTitle}>Enviar link</Text>
-            <Text style={esqueciSenhaStyle.modalText}>{mensagemModal}</Text>
+            <Text style={esqueciSenhaStyle.modalTitle}>Código solicitado</Text>
+            {/* O retorno agora orienta a digitar o código, sem mencionar link. */}
+            <Text style={esqueciSenhaStyle.modalText}>
+              Se o e-mail estiver cadastrado, você receberá um código de 4 dígitos.
+              Confira sua caixa de entrada e a pasta de spam para continuar.
+            </Text>
             <Pressable
               style={esqueciSenhaStyle.modalButton}
-              onPress={() => {
-                setModalVisible(false);
-                router.navigate(
-                  perfilDoLink === "responsavel"
-                    ? "/login-responsavel"
-                    : "/login-atleta",
-                );
-              }}
+              onPress={fecharModal}
             >
               <Text style={esqueciSenhaStyle.modalButtonText}>OK</Text>
             </Pressable>
