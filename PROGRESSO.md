@@ -4,7 +4,7 @@
 > feito, as regras combinadas com o Tiago e o que falta. Confira o código antes de confiar no que está
 > aqui: o arquivo pode estar desatualizado em relação aos commits mais novos (`git log`).
 
-Última atualização: 30/10/2026. Para o último commit, veja `git log`.
+Última atualização: 31/10/2026. Para o último commit, veja `git log`.
 
 ## O projeto
 
@@ -12,7 +12,7 @@
   Leia `AGENTS.md`: as docs do Expo dessa versão ficam em https://docs.expo.dev/versions/v57.0.0/.
 - Telas em `src/app/`, estilos separados em `src/styles/<tela>Style.ts`, cores e fontes em `src/styles/variaveis.ts`,
   componentes em `src/components/` (`tabBar`, `botaoNotificacoes`) e utilitários de formatação em `src/utils/formatos.ts`.
-- Fluxo de entrada: `index.tsx` (preloader) → `selecao-perfil.tsx` → `login-atleta.tsx` ou `login-responsavel.tsx` → `home.tsx`.
+- Fluxo de entrada: `index.tsx` mantém a animação e retoma a sessão salva: sem token → seleção de perfil; atleta ou responsável com filho selecionado → Home; responsável sem filho selecionado → escolha do atleta. Se outra tela ganhar foco (por exemplo, pelo push), o redirecionamento inicial é cancelado.
 
 ## API (backend Laravel, em outro repositório)
 
@@ -65,7 +65,7 @@ com o `SERVIDOR` em produção.
 |---|---|---|
 | Login do atleta | Integrado (`POST /auth/login` com `perfil: "atleta"`), mensagem de erro na tela, "Entrando..." | `login-atleta.tsx`, `config/api.ts` |
 | Home: nome, categoria, foto, posição | `GET /atleta`. Foto `null` → ícone padrão. Goleiro pela `posicao_atleta` | `home.tsx` |
-| Home: carrossel do topo | Slides nesta ordem: (1) o **próximo jogo**: primeiro `JOGO` não cancelado de `GET /agenda?tipo=JOGO` (servidor sem o filtro ignora o `?tipo`; se a chamada falhar, usa a página 1 da agenda); toque abre o detalhe do jogo. (2) os **campeonatos do atleta**: `GET /campeonatos-do-atleta` (fundo `banner_url`, escudo `logo_url`, sem imagem usa as padrão; tipo, "Em andamento"/"Começa em", nome, "Convocação no Sub-13 Feminino · camisa 8" ou as categorias, datas); toque abre Campeonatos (telas ainda com dados de exemplo, sem id); servidor sem a rota (404) só pula. (3) os **banners do painel**: `GET /banners` (público; foto, título e subtítulo; ordem e ativo vêm do painel). Passa sozinho a cada 6 s, desliza com o dedo e os pontos levam ao slide (na web o mouse não arrasta). Espera a agenda chegar e volta ao 1º slide quando a lista muda. Sem nenhum slide, some | `home.tsx` |
+| Home: carrossel do topo | Slides nesta ordem: (1) o **próximo jogo**: primeiro `JOGO` não cancelado de `GET /agenda?tipo=JOGO` (servidor sem o filtro ignora o `?tipo`; se a chamada falhar, usa a página 1 da agenda); toque abre o detalhe do jogo. (2) os **campeonatos do atleta**: `GET /campeonatos-do-atleta` (fundo `banner_url`, escudo `logo_url`, sem imagem usa as padrão; tipo, "Em andamento"/"Começa em", nome, "Convocação no Sub-13 Feminino · camisa 8" ou as categorias, datas); toque abre o detalhe do campeonato com seu id; servidor sem a rota (404) só pula. (3) os **banners do painel**: `GET /banners` (público; foto, título e subtítulo; ordem e ativo vêm do painel). Passa sozinho a cada 6 s, desliza com o dedo e os pontos levam ao slide (na web o mouse não arrasta). Espera a agenda chegar e volta ao 1º slide quando a lista muda. Sem nenhum slide, some | `home.tsx` |
 | Home: próximas atividades | Os 3 primeiros não cancelados de `proximos` (mesma chamada do banner): "Hoje / Amanhã / Quarta-feira · 28/10/2026", título, local (sem local, a categoria) e horário (sem horário, "A definir"). Vazio: "Nenhuma atividade marcada por enquanto." Toque abre o detalhe do compromisso (servidor sem o detalhe: a Agenda) | `home.tsx` |
 | Home: sessão | Qualquer uma das chamadas (atleta, agenda, jogos, estatísticas, campeonatos) com 401 ou 403 apaga a sessão e volta para o login | `home.tsx` |
 | Home: saudação | Bom dia / Boa tarde / Boa noite pelo horário do aparelho | `home.tsx` |
@@ -79,28 +79,72 @@ com o `SERVIDOR` em produção.
 | Sair da conta | `sairDaConta()` chama `POST /auth/logout` (desiste em 5 s), apaga a sessão (`CHAVES_SESSAO`: token, perfil, atleta_selecionado e nome_responsavel) mesmo se falhar e vai para `/selecao-perfil`. Usada no Perfil e em Configurações | `utils/sessao.ts` |
 | Alterar senha | `PUT /atleta/senha`, segue o guia do professor. A lista de requisitos ficou só com "Mínimo 8 caracteres", com o check reagindo ao que é digitado | `alterar-senha.tsx` |
 | Agenda | `GET /agenda?page=N`, recarrega ao voltar para a tela e busca mais páginas ao rolar. Timeline: os 3 `passados` da API, o card de próximo compromisso (primeiro que **não terminou** e não foi cancelado; ao terminar, vira passado na virada do minuto) e os futuros, com cabeçalho a cada dia ("Hoje", "Quinta · 05/11"). Filtros: um botão por tipo da API. Status só Confirmado ou Cancelado. O card mostra a descrição e "Chegar às" nos jogos. O card do próximo ("Ver detalhes") e qualquer item da timeline abrem o detalhe do compromisso; servidor sem o detalhe (sem o campo `responsavel` nos eventos) esconde o "Ver detalhes" e o toque não faz nada. A linha de pessoa mostra o `responsavel` ou, sem ele, a `categoria`. A faixa mostra a semana do dia selecionado (bolinha = dia com compromisso; toque rola a lista). Rolando com o dedo, o mês, a semana e o dia destacado seguem o dia que está no alto da lista (com os passados no alto, fica em hoje); durante a rolagem feita pelo app (toque nos dias, setas, calendário) o cabeçalho espera ela terminar. As setas de mês e de semana não voltam antes de hoje; o botão do calendário e a troca de filtro voltam para hoje. Um cancelado antes do próximo fica antes do card, na ordem das datas | `agenda.tsx` |
-| Detalhe do compromisso | `GET /agenda/{idEvento}`, uma tela para todos os tipos (visual da antiga `treino-tecnico.tsx`): Confirmado/Cancelado, "Faltam 2h 15min" / "Faltam 3 dias" / "Acontecendo agora" / "Concluído", título inteiro, dia, horário com duração, local (com local cadastrado: o `local_detalhe.nome` e o endereço embaixo). No jogo, card "AACJ × adversário" (placar quando jogado), campeonato ou "Amistoso", fase, pênaltis, confronto e "Chegar às" (só antes do jogo). Categoria, responsável e descrição só quando vêm. Ações rápidas: Abrir mapa (o `local_detalhe.mapa_url`; com `local_detalhe: null`, local só em texto, o botão some; servidor antigo sem o campo: busca pelo texto do local), Adicionar ao calendário (link do Google Agenda preenchido; local = nome + ", " + endereço), Compartilhar (compartilhamento do sistema, com nome + endereço; onde não há, copia o texto) e Entrar em contato. O "Entrar em contato" e o toque na linha "Responsável" (com ›) abrem o perfil da Comissão Técnica e só existem com `responsavel_id`; o responsável em texto antigo aparece sem botão. 404: "Este compromisso não está mais na sua agenda." As telas antigas (`treino-tecnico`, `detalhe-proxima-partida`, `agenda-local`) continuam no projeto com dados de exemplo | `detalhe-compromisso.tsx`, `utils/eventos.ts` |
+| Detalhe do compromisso | `GET /agenda/{idEvento}`, uma tela para todos os tipos (visual da antiga `treino-tecnico.tsx`): Confirmado/Cancelado, "Faltam 2h 15min" / "Faltam 3 dias" / "Acontecendo agora" / "Concluído", título inteiro, dia, horário com duração, local (com local cadastrado: o `local_detalhe.nome` e o endereço embaixo). No jogo, card "AACJ × adversário" (placar quando jogado), campeonato ou "Amistoso", fase, pênaltis, confronto e "Chegar às" (só antes do jogo). Categoria, responsável e descrição só quando vêm. Ações rápidas: Abrir mapa (o `local_detalhe.mapa_url`; com `local_detalhe: null`, local só em texto, o botão some; servidor antigo sem o campo: busca pelo texto do local), Adicionar ao calendário (link do Google Agenda preenchido; local = nome + ", " + endereço), Compartilhar (compartilhamento do sistema, com nome + endereço; onde não há, copia o texto) e Entrar em contato. O "Entrar em contato" e o toque na linha "Responsável" (com ›) abrem o perfil da Comissão Técnica e só existem com `responsavel_id`; o responsável em texto antigo aparece sem botão. 404: "Este compromisso não está mais na sua agenda." A contagem atualiza na virada do minuto enquanto a tela está em foco e usa fim, início ou dia para concluir, mesmo se `concluido` ainda vier false. As rotas antigas `treino-tecnico` e `agenda-local` foram removidas; os estilos compartilhados do detalhe foram preservados | `detalhe-compromisso.tsx`, `utils/eventos.ts` |
 | Comissão Técnica | `GET /comissao-tecnica/{id}` (o `responsavel_id` do compromisso), aberta pelo detalhe do compromisso: foto (só a autorizada; sem ela, o ícone), nome, cargo, categoria principal, tempo na AACJ, licença, especialidade e categorias atendidas (a principal em destaque). Cada linha só aparece com o dado. Contato institucional: some quando `contato` é `null`; o telefone abre a discagem e o e-mail o app de e-mail. 404 (profissional desativado): "Este profissional não está mais disponível." Sem o selo "Confirmado" | `comissao-tecnica.tsx` |
 | Sino (todas as telas) | O próprio componente busca `GET /notificacoes/nao-lidas` sempre que a tela aparece; nenhuma tela passa o número. 0 esconde a bolinha; mais de 9 mostra "9+". Com o responsável, conta os avisos que ele ainda não leu do filho escolhido | `components/botaoNotificacoes.tsx` |
-| Notificações | `GET /notificacoes?page=N` (20 por página, mais ao rolar). Seções Hoje / Ontem / Esta semana (desde segunda) / Anteriores, pela `data`. Categorias: **Agenda** (INSCRICAO, REMOCAO, ALTERACAO, CANCELAMENTO, REATIVACAO e AGENDA) e **Avisos da AACJ** (AVISO). Tocar marca como lido (`PATCH /notificacoes/{id}/lida`) e, se for da Agenda, abre a Agenda; o recado da AACJ não abre outra tela. "Marcar todas como lidas": com "Todas" usa `PATCH /notificacoes/lidas`; com uma categoria, marca só os avisos dela que estão na tela | `notificacoes.tsx` |
+| Notificações | `GET /notificacoes?page=N` (20 por página, mais ao rolar). Seções Hoje / Ontem / Esta semana (desde segunda) / Anteriores, pela `data`. Categorias: **Agenda** (INSCRICAO, REMOCAO, ALTERACAO, CANCELAMENTO, REATIVACAO e AGENDA) e **Avisos da AACJ** (AVISO). Tocar marca como lido (`PATCH /notificacoes/{id}/lida`) e, se for da Agenda e houver `id_evento`, abre o detalhe do compromisso; sem id, abre a Agenda; o recado da AACJ não abre outra tela. "Marcar todas como lidas": com "Todas" usa `PATCH /notificacoes/lidas`; com uma categoria, marca só os avisos dela que estão na tela | `notificacoes.tsx` |
 | Esqueci minha senha | `POST /auth/esqueci-senha` com `email` e o `perfil` que vem do login (atleta ou responsável). O modal mostra a `message` da API (link vale 24 horas); o OK volta para o login do perfil. Erros (vazio, 422, 429, sem conexão) aparecem acima do botão. A resposta é a mesma exista ou não o e-mail. No backend local o e-mail vai para o log; e-mail de verdade só pela produção, e só para quem pode entrar no app | `esqueci-senha.tsx` |
-| Campeonatos | Tudo com a API (30/10). **Lista** (`GET /campeonatos` + `campeonatos-do-atleta`): filtros Todos/Meus/Em andamento/Em breve/Encerrados, card com `resumo` ("Fase de grupos · Rodada 4 de 5" só com `rodada_atual` e `total_rodadas`, senão "6 de 10 jogos"; sem resumo, pelas datas) e a participação ("Convocação no Sub-13 · camisa 10"). **Detalhe** (`GET /campeonatos/{id}`): categorias, informações, progresso, campanha da AACJ calculada pelos jogos com `da_aacj` (nos pênaltis conta quem passou), próxima partida ("Ver detalhes" só se o jogo está na agenda), classificação resumida, últimos resultados com Vitória/Empate/Derrota, próximas partidas e "Ver completo". **Classificação**, **Últimos resultados** e **Próximas partidas** completas (`?id=&categoria=`). Busca e regras em `utils/campeonatos.ts`. Mata-mata vem com tabela zerada: não aparece. A antiga `detalhe-proxima-partida` saiu | `campeonatos.tsx`, `campeonato-detalhe.tsx`, `classificacao.tsx`, `ultimos-resultados.tsx`, `proxima-partida.tsx` |
+| Campeonatos | Tudo com a API (30/10). **Lista** (`GET /campeonatos` + `campeonatos-do-atleta`): filtros Todos/Meus/Em andamento/Em breve/Encerrados, card com `resumo` ("Fase de grupos · Rodada 4 de 5" só com `rodada_atual` e `total_rodadas`, senão "6 de 10 jogos"; sem resumo, pelas datas) e a participação ("Convocação no Sub-13 · camisa 10"). **Detalhe** (`GET /campeonatos/{id}`): categorias, informações, progresso, campanha da AACJ calculada somente com exatamente um time com `da_aacj === true` e resultado válido (nos pênaltis conta quem passou), próxima partida ("Ver detalhes" só se o jogo está na agenda), classificação resumida, últimos resultados com Vitória/Empate/Derrota, próximas partidas e "Ver completo". **Classificação**, **Últimos resultados** e **Próximas partidas** completas (`?id=&categoria=`). Busca e regras em `utils/campeonatos.ts`; o vínculo com a agenda usa os dias dos jogos em períodos de até 93 dias (`de`, `ate`, `tipo=JOGO`), sem paginação. Mata-mata vem com tabela zerada: não aparece. A antiga `detalhe-proxima-partida` saiu | `campeonatos.tsx`, `campeonato-detalhe.tsx`, `classificacao.tsx`, `ultimos-resultados.tsx`, `proxima-partida.tsx` |
 | Sua participação (jogo) | No detalhe do compromisso, `jogo.participacao` (sempre presente): convocação e camisa, escalação (titular/reserva e posição) ou "A definir pelo técnico" | `detalhe-compromisso.tsx` |
 | Tela inicial e cabeçalhos | "Fazer matrícula" abre `SITE/cadastro` e "Conheça a AACJ" a home do site (`SITE` em `config/api.ts`). O ícone da loja saiu de todos os cabeçalhos (30/10) | `selecao-perfil.tsx` |
-| Desempenho | Desativado: saiu do menu e da Home. As telas continuam no projeto (a Ajuda ainda tem a categoria "Desempenho") | — |
+| Fale conosco | Formulário no app: POST autenticado em /fale-conosco para atleta ou responsável, assunto e mensagem obrigatórios, carregando, 422 por campo, 404 com aviso de indisponibilidade e 429 com Retry-After. Só o sucesso 201 limpa os campos. A rota ainda depende da publicação do backend; não usa /contato do site | `fale-conosco.tsx` |
+| Conexão e fontes | `buscarComPrazo` limita fetch a 15 s nos dois logins, Home (inclusive banners), detalhe e hook de campeonato; erros mostram mensagem de conexão. Falha de fontes libera a splash e permite o fallback do sistema | `utils/buscarComPrazo.ts`, `_layout.tsx` |
+| Desempenho | Desativado: saiu do menu, da Home e da Ajuda. As oito telas foram mantidas por decisão do Tiago em 31/10 | — |
 
 ## O que falta (sugestão de ordem)
 
-1. **Antes de entregar ao cliente (levantado em 30/10):**
-   - "Fale conosco": o "Enviar mensagem" não faz nada (`fale-conosco.tsx`). Falta o Tiago escolher: e-mail, WhatsApp ou a página `/contato` do site;
-   - Configurações: "Privacidade" e "Atualizações" têm a seta mas não abrem nada (tirar a seta ou ligar a algum conteúdo);
-   - Ajuda: tirar a categoria "Desempenho" (a área está desativada); avaliar apagar as telas de exemplo sem acesso (`treino-tecnico`, `agenda-local` e as do Desempenho);
-   - produção: limpar dados de teste (banners "teste", endereço de teste do "Campo AACJ", contas de teste) e passar os acessos ao cliente;
-   - notificações no celular: backend (pedido em 30/10) e o app nas lojas (build do EAS, Firebase e Apple).
-2. Detalhes da Agenda, sem pressa (testada em 24/10 com a Joana local, a do servidor e 48 compromissos simulados):
-   - a contagem dos filtros usa os `totais` da API (todas as páginas); só no servidor sem `totais` ela soma o que já carregou;
-   - com poucos compromissos, o dia tocado no fim da lista não chega ao topo, porque a lista acaba antes;
-   - títulos longos são cortados na timeline ("Time Azul x Time Visi…"); no detalhe do compromisso aparecem inteiros;
+### Concluído em 31/10/2026
+
+- Entrada com sessão salva e cancelamento do redirecionamento quando outra tela recebe foco.
+- Campanha e resultados somente com identificação válida da AACJ; pênaltis exigem os dois placares.
+- Avisos da Agenda abrem o compromisso quando há id_evento; lista e push compartilham o destino.
+- Falha de fontes não prende a splash; contagem do compromisso atualiza por minuto e para ao sair.
+- Detalhes das partidas usam a agenda por períodos de até 93 dias, cobrindo os dias dos jogos do campeonato.
+- Prazo de 15 s nos fluxos solicitados, sem trocar o endereço de produção ou criar uma camada global de HTTP.
+- Configurações: Privacidade removida por decisão do Tiago; Atualizações mostra somente a versão, sem seta.
+- Ajuda: categoria e orientações de Desempenho removidas; a busca inativa foi escondida.
+- Fale conosco mantém o formulário no app e envia assunto e mensagem à nova rota autenticada. Campos são
+  preservados em 404, 422, 429, erro de conexão e timeout; somente 201 confirma e limpa. Retry-After aceita
+  segundos ou data HTTP e bloqueia novo envio até o prazo. A decisão final substitui a abertura de /contato.
+- Rotas de exemplo treino-tecnico e agenda-local removidas. Os estilos treinoTecnicoStyle e
+  detalheProximaPartidaStyle continuam porque o detalhe do compromisso usa ambos.
+
+### Antes de entregar ao cliente
+
+1. Backend: implementar/publicar POST /api/v1/fale-conosco, autenticado para atleta e responsável, com
+   { assunto, mensagem }. Contrato informado pelo Tiago: 201 no sucesso, 422 com errors por campo,
+   429 com Retry-After. Enquanto retornar 404, o app mostra “O envio de mensagens ainda não está disponível.”.
+   No 429: “Você enviou muitas mensagens. Tente de novo em alguns instantes.”.
+   Para a web ler o prazo, expor Retry-After no CORS (Access-Control-Expose-Headers). O backend não foi alterado.
+2. Validar a entrega real da mensagem depois da publicação da rota; os cenários desta etapa usaram respostas
+   interceptadas no navegador, sem enviar mensagens, autenticar ou alterar dados na produção.
+3. Notificações no celular: backend (pedido em 30/10), Firebase/FCM e Apple/APNs; testar o toque em push real
+   num aparelho. Nesta etapa foi verificada a navegação equivalente no navegador, não a entrega nativa.
+4. Produção: conferir e limpar dados de teste e passar os acessos ao cliente; nenhuma limpeza foi feita aqui.
+5. As oito telas de Desempenho permanecem por decisão do Tiago: desempenho, avaliacao-fisica, conquistas,
+   evolucao, historico-avaliacao, indicadores, metas e observacao. Não apagar sem nova autorização.
+6. A rota residual redefinir-senha continua sem ação de salvar; sua integração não entrou nesta etapa.
+
+### Agenda e trabalho posterior
+
+- Os filtros da Agenda e das notificações ainda operam sobre os itens já carregados; corrigir a combinação
+  entre filtro e paginação em outra etapa. A contagem dos filtros da Agenda já usa totais de todas as páginas.
+- Com poucos compromissos, o dia tocado no fim da lista pode não chegar ao topo por falta de espaço de rolagem.
+- Títulos longos continuam cortados na timeline; no detalhe aparecem inteiros.
+- Adiados por orientação do Tiago: SecureStore, HTTP unificado, estado central de sessão, validação de todo
+  JSON, listas virtualizadas, testes/CI e revisão de acessibilidade.
+
+### Verificação desta etapa
+
+- git pull sem novidades; npm install sem alterações no package-lock.json. Sem push, build ou deploy.
+- TypeScript passou sem emitir arquivos. Lint inicial: 20 erros e 4 avisos; após as mudanças: 7 erros e
+  3 avisos, todos preexistentes. A atualização da entrada eliminou os alertas daquele arquivo.
+- Navegador com Expo web e API simulada: quatro destinos de entrada e navegação antecipada; campanha e
+  resultados; avisos com e sem evento; falha das cinco fontes; relógio antes/durante/depois e conclusão sem
+  fim ou horário; 27 partidas em dois períodos nos dois perfis; timeout nos fluxos solicitados; controles,
+  rotas removidas e formulário de contato (validação, 201, 404, 422, 429, falha de rede, timeout e 401).
+- O formulário foi testado como atleta e responsável; Retry-After foi verificado em segundos e em data HTTP.
+- Os scripts de verificação são temporários e externos ao repositório; nenhuma suíte de testes foi adicionada.
 
 ## Pendências do lado do backend
 
@@ -111,8 +155,8 @@ com o `SERVIDOR` em produção.
   para `{ periodo, eventos, totais }`), `totais` por tipo e `concluido`; detalhe `GET /agenda/{idEvento}` (só campos
   seguros: adversário, fase, rodada, prorrogação, pênaltis, confronto; sem colegas nem escalação); `responsavel` em todo
   evento (campo opcional "Responsável pela atividade" no evento e na Grade de Treinos); e a súmula (S2), que preenche
-  gols e assistências nas estatísticas quando o jogo tem gol lançado (sem súmula continua `null`). O `?de=&ate=` ainda
-  não é usado pelo app (serviria para voltar a semanas passadas na Agenda).
+  gols e assistências nas estatísticas quando o jogo tem gol lançado (sem súmula continua `null`). O `?de=&ate=` agora é usado
+  nos detalhes dos campeonatos; a tela Agenda continua usando a resposta paginada.
 - **Comissão técnica: publicada na produção em 25/10** (C1 cadastro no admin, C2 select "Responsável pela atividade" no
   Calendário e na Grade, C3 `GET /comissao-tecnica/{id}`). Agenda e detalhe trazem `responsavel` (texto) e
   `responsavel_id`. Falta o Tiago conferir no admin da produção o select e o cadastro com foto, e escolher um
