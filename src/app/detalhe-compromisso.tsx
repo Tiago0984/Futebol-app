@@ -7,6 +7,7 @@ import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import treinoTecnicoStyle from "@/styles/treinoTecnicoStyle";
 import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 import {
+  chaveDoDia,
   formatarDiaCompromisso,
   formatarDuracao,
   linkGoogleAgenda,
@@ -15,8 +16,8 @@ import {
 } from "@/utils/eventos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from "expo-clipboard";
-import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   Image,
   Linking,
@@ -86,8 +87,11 @@ const escudoPadrao = require("@/assets/images/img/escudovermelho.png");
 // "Faltam 2h 15min", "Faltam 3 dias", "Acontecendo agora" ou "Concluído"; null no cancelado
 function contagem(evento: EventoDetalhe, agora: Date) {
   if (evento.situacao === "CANCELADO") return null;
-  const terminou =
-    evento.concluido ?? (evento.fim ? new Date(evento.fim) <= agora : false);
+  const referencia = evento.fim ?? evento.inicio;
+  // Um false da API fica antigo enquanto a tela está aberta; vale o horário também.
+  const terminou = evento.concluido === true || (referencia
+    ? new Date(referencia) <= agora
+    : evento.data.slice(0, 10) < chaveDoDia(agora));
   if (terminou) return { texto: "Concluído", concluido: true };
   if (!evento.inicio) return null;
   const minutos = Math.ceil(
@@ -130,6 +134,20 @@ export default function DetalheCompromisso() {
   const [evento, setEvento] = useState<EventoDetalhe | null>(null);
   const [erro, setErro] = useState("");
   const [aviso, setAviso] = useState("");
+  const [agora, setAgora] = useState(() => new Date());
+
+  useFocusEffect(
+    useCallback(() => {
+      let timer: ReturnType<typeof setTimeout>;
+      const atualizar = () => {
+        setAgora(new Date());
+        timer = setTimeout(atualizar, 60000 - (Date.now() % 60000));
+      };
+      // Atualiza ao voltar e acompanha a mesma virada de minuto da Agenda.
+      timer = setTimeout(atualizar, 0);
+      return () => clearTimeout(timer);
+    }, []),
+  );
 
   useEffect(() => {
     let ativa = true;
@@ -287,7 +305,7 @@ export default function DetalheCompromisso() {
   } else {
     const visual = visualDoTipo(evento.tipo);
     const cancelado = evento.situacao === "CANCELADO";
-    const restante = contagem(evento, new Date());
+    const restante = contagem(evento, agora);
     const duracao = formatarDuracao(evento.inicio, evento.fim);
     const jogo = evento.jogo;
     const times = jogo ? timesDoJogo(jogo) : null;
