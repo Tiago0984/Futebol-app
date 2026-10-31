@@ -1,3 +1,4 @@
+import { buscarComPrazo } from "@/utils/buscarComPrazo";
 import TabBar from "@/components/tabBar";
 import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import detalheCompromissoStyle from "@/styles/detalheCompromissoStyle";
@@ -158,7 +159,7 @@ export default function DetalheCompromisso() {
         return;
       }
       try {
-        const resposta = await fetch(await urlDoAtleta(`/agenda/${id}`), {
+        const resposta = await buscarComPrazo(await urlDoAtleta(`/agenda/${id}`), {
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${token}`,

@@ -1,3 +1,4 @@
+import { buscarComPrazo } from "@/utils/buscarComPrazo";
 import { API } from "@/config/api";
 import loginAtletaStyle from "@/styles/loginAtletaStyle";
 import { cores } from "@/styles/variaveis";
@@ -45,7 +46,7 @@ export default function LoginAtleta() {
     }
     setCarregando(true);
     try {
-      const resposta = await fetch(`${API}/auth/login`, {
+      const resposta = await buscarComPrazo(`${API}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

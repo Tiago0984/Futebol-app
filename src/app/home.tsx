@@ -1,3 +1,4 @@
+import { buscarComPrazo } from "@/utils/buscarComPrazo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -175,6 +176,7 @@ function exibirNumero(valor: number | null | undefined) {
 
 export default function Home() {
   const [atleta, setAtleta] = useState<Atleta | null>(null);
+  const [erroConexao, setErroConexao] = useState("");
   // Só com o responsável logado: a saudação é para ele, os dados são do filho
   const [nomeResponsavel, setNomeResponsavel] = useState<string | null>(null);
   const [proximoJogo, setProximoJogo] = useState<Evento | null>(null);
@@ -222,12 +224,12 @@ export default function Home() {
           respostaEstatisticas,
           respostaCampeonatos,
         ] = await Promise.all([
-          fetch(await urlDoAtleta("/atleta"), { headers }),
-          fetch(await urlDoAtleta("/agenda"), { headers }),
+          buscarComPrazo(await urlDoAtleta("/atleta"), { headers }),
+          buscarComPrazo(await urlDoAtleta("/agenda"), { headers }),
           // Só os jogos, para o banner achar o próximo mesmo com muitos treinos antes
-          fetch(await urlDoAtleta("/agenda?tipo=JOGO"), { headers }),
-          fetch(await urlDoAtleta("/atleta/estatisticas"), { headers }),
-          fetch(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
+          buscarComPrazo(await urlDoAtleta("/agenda?tipo=JOGO"), { headers }),
+          buscarComPrazo(await urlDoAtleta("/atleta/estatisticas"), { headers }),
+          buscarComPrazo(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
         ]);
 
         // Token vencido, encerrado ou atleta inativado (em qualquer uma das
@@ -286,6 +288,7 @@ export default function Home() {
         }
       } catch (erro) {
         console.log("Erro ao buscar dados da Home:", erro);
+        setErroConexao("Não foi possível conectar ao servidor.");
       }
       setAgendaCarregada(true);
       voltarAoPrimeiroSlide();
@@ -295,7 +298,7 @@ export default function Home() {
     registrarAparelho();
 
     // Banners gerais (rota pública): à parte, para uma falha aqui não afetar o resto da Home
-    fetch(`${API}/banners`, { headers: { Accept: "application/json" } })
+    buscarComPrazo(`${API}/banners`, { headers: { Accept: "application/json" } })
       .then((resposta) => resposta.json())
       .then((json) => {
         if (json.success) {
@@ -303,7 +306,10 @@ export default function Home() {
           voltarAoPrimeiroSlide();
         }
       })
-      .catch((erro) => console.log("Erro ao buscar os banners:", erro));
+      .catch((erro) => {
+        console.log("Erro ao buscar os banners:", erro);
+        setErroConexao("Não foi possível conectar ao servidor.");
+      });
   }, []);
 
   // Mostra primeiro o time em que o atleta está escalado; sem escalação, o time da casa
@@ -863,6 +869,9 @@ export default function Home() {
             </Pressable>
           </View>
 
+          {erroConexao !== "" && (
+            <Text style={homeStyle.activitySubtitle}>{erroConexao}</Text>
+          )}
           {proximasAtividades?.length === 0 && (
             <Text style={homeStyle.activitySubtitle}>
               Nenhuma atividade marcada por enquanto.

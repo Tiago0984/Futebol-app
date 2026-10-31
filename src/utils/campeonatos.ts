@@ -1,3 +1,4 @@
+import { buscarComPrazo } from "@/utils/buscarComPrazo";
 // Campeonato (GET /api/v1/campeonatos/{id}): tipos, placar do ponto de vista da AACJ,
 // datas e a busca usada pelo detalhe e pelas telas de "ver tudo"
 import { API } from "@/config/api";
@@ -195,10 +196,10 @@ export function useCampeonato(id: string | undefined, categoriaDaRota?: string) 
       };
       try {
         const [resposta, respostaMeus] = await Promise.all([
-          fetch(`${API}/campeonatos/${id}`, {
+          buscarComPrazo(`${API}/campeonatos/${id}`, {
             headers: { Accept: "application/json" },
           }),
-          fetch(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
+          buscarComPrazo(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
         ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
@@ -236,7 +237,7 @@ export function useCampeonato(id: string | undefined, categoriaDaRota?: string) 
         const respostasJogos = await Promise.all(
           periodosDosJogos(dados.jogos).map(async ({ de, ate }) => {
             const parametros = new URLSearchParams({ de, ate, tipo: "JOGO" });
-            return fetch(await urlDoAtleta(`/agenda?${parametros}`), { headers });
+            return buscarComPrazo(await urlDoAtleta(`/agenda?${parametros}`), { headers });
           }),
         );
         if (!ativa) return;
