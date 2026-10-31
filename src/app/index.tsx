@@ -1,7 +1,8 @@
 import { Image } from "expo-image";
-import { useEffect, useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback, useEffect, useState } from "react";
 import { Animated, Easing, Text, View } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import preloaderStyle from "@/styles/preloaderStyle";
@@ -10,12 +11,12 @@ import fundoStyle from "@/styles/fundoStyle";
 export default function Index() {
   const insets = useSafeAreaInsets();
 
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.92)).current;
-  const progressAnim = useRef(new Animated.Value(0)).current;
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [scaleAnim] = useState(() => new Animated.Value(0.92));
+  const [progressAnim] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
-    Animated.parallel([
+    const animacao = Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 800,
@@ -36,18 +37,41 @@ export default function Index() {
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: false,
       }),
-    ]).start();
+    ]);
+    animacao.start();
 
-    /*
-     * Após o carregamento, direciona
-     * para a seleção de perfil.
-     */
-    const timer = setTimeout(() => {
-      router.replace("/selecao-perfil");
-    }, 2000);
+    return () => animacao.stop();
+  }, [fadeAnim, scaleAnim, progressAnim]);
 
-    return () => clearTimeout(timer);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let ativa = true;
+      const timer = setTimeout(async () => {
+        try {
+          const [token, perfil, atleta] = await Promise.all([
+            AsyncStorage.getItem("token"),
+            AsyncStorage.getItem("perfil"),
+            AsyncStorage.getItem("atleta_selecionado"),
+          ]);
+          // O toque no push pode abrir outra tela enquanto a sessão é lida.
+          if (!ativa) return;
+          const destino = !token
+            ? "/selecao-perfil"
+            : perfil === "responsavel" && !atleta
+              ? "/escolha-atleta"
+              : "/home";
+          router.replace(destino);
+        } catch {
+          if (ativa) router.replace("/selecao-perfil");
+        }
+      }, 2000);
+
+      return () => {
+        ativa = false;
+        clearTimeout(timer);
+      };
+    }, []),
+  );
 
   return (
     <View style={fundoStyle.container}>
