@@ -127,6 +127,22 @@ const faleConoscoStyle = StyleSheet.create({
     color: cores.branco,
   },
 
+  sendButtonDisabled: {
+    opacity: 0.6,
+  },
+  erroCampo: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.vermelho,
+    marginTop: 8,
+  },
+  sucesso: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.verde,
+    marginTop: 8,
+  },
+
   /* ATENDIMENTO */
 
   attendanceSection: {

@@ -2,15 +2,20 @@ import TabBar from "@/components/tabBar";
 import faleConoscoStyle from "@/styles/faleConoscoStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
-import { SITE } from "@/config/api";
+import { API } from "@/config/api";
+import { cores } from "@/styles/variaveis";
+import { buscarComPrazo } from "@/utils/buscarComPrazo";
+import { mensagensDeErro } from "@/utils/formatos";
+import { CHAVES_SESSAO } from "@/utils/sessao";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Image,
-  Linking,
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,14 +23,92 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function FaleConosco() {
   const insets = useSafeAreaInsets();
 
+  const [assunto, setAssunto] = useState("");
+  const [mensagem, setMensagem] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [aguardando, setAguardando] = useState(false);
   const [erro, setErro] = useState("");
+  const [sucesso, setSucesso] = useState("");
+  const [errosCampos, setErrosCampos] = useState<Record<string, string>>({});
+  const timerRetentativa = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  async function abrirContato() {
+  useEffect(() => () => {
+    if (timerRetentativa.current) clearTimeout(timerRetentativa.current);
+  }, []);
+
+  function aguardarNovaTentativa(retryAfter: string | null) {
+    if (!retryAfter) return;
+    const segundos = Number(retryAfter);
+    const espera = Number.isFinite(segundos)
+      ? segundos * 1000
+      : Date.parse(retryAfter) - Date.now();
+    if (!Number.isFinite(espera) || espera <= 0) return;
+    if (timerRetentativa.current) clearTimeout(timerRetentativa.current);
+    setAguardando(true);
+    // Retry-After aceita segundos ou uma data HTTP.
+    timerRetentativa.current = setTimeout(
+      () => setAguardando(false),
+      Math.min(espera, 2147483647),
+    );
+  }
+
+  async function enviarMensagem() {
+    if (enviando || aguardando) return;
     setErro("");
+    setSucesso("");
+    const campos: Record<string, string> = {};
+    if (!assunto.trim()) campos.assunto = "Informe o assunto.";
+    if (!mensagem.trim()) campos.mensagem = "Escreva sua mensagem.";
+    setErrosCampos(campos);
+    if (Object.keys(campos).length > 0) return;
+
+    setEnviando(true);
     try {
-      await Linking.openURL(`${SITE}/contato`);
-    } catch {
-      setErro("Não foi possível abrir a página de contato. Tente novamente.");
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        router.replace("/selecao-perfil");
+        return;
+      }
+      const resposta = await buscarComPrazo(`${API}/fale-conosco`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ assunto: assunto.trim(), mensagem: mensagem.trim() }),
+      });
+      if (resposta.status === 401 || resposta.status === 403) {
+        await AsyncStorage.multiRemove(CHAVES_SESSAO);
+        router.replace("/selecao-perfil");
+        return;
+      }
+      if (resposta.status === 404) {
+        setErro("O envio de mensagens ainda não está disponível.");
+        return;
+      }
+      if (resposta.status === 429) {
+        setErro("Você enviou muitas mensagens. Tente de novo em alguns instantes.");
+        aguardarNovaTentativa(resposta.headers.get("Retry-After"));
+        return;
+      }
+      const json = await resposta.json().catch(() => null);
+      if (resposta.status === 201) {
+        setAssunto("");
+        setMensagem("");
+        setSucesso(json?.message ?? "Mensagem enviada com sucesso.");
+        return;
+      }
+      const erros = mensagensDeErro(json ?? {});
+      setErrosCampos(erros.campos);
+      setErro(Object.keys(erros.campos).length === 0
+        ? (json?.message ?? "Não foi possível enviar sua mensagem.")
+        : "");
+    } catch (falha) {
+      console.log("Erro ao enviar a mensagem:", falha);
+      setErro("Não foi possível conectar ao servidor.");
+    } finally {
+      setEnviando(false);
     }
   }
 
@@ -67,16 +150,81 @@ export default function FaleConosco() {
           <View style={faleConoscoStyle.headerSpacer} />
         </View>
 
+        {/* FORMULÁRIO */}
         <View style={faleConoscoStyle.formCard}>
-          <Text style={faleConoscoStyle.attendanceValue}>
-            Envie sua mensagem pela página de contato da AACJ.
-          </Text>
-          <Pressable style={faleConoscoStyle.sendButton} onPress={abrirContato}>
-            <Text style={faleConoscoStyle.sendButtonText}>Abrir página de contato</Text>
-          </Pressable>
-          {erro !== "" && (
-            <Text style={faleConoscoStyle.attendanceValue}>{erro}</Text>
+          {/* ASSUNTO */}
+          <View style={faleConoscoStyle.inputWrapper}>
+            <Image
+              source={require("@/assets/images/img/tag.png")}
+              style={faleConoscoStyle.inputIcon}
+              resizeMode="contain"
+            />
+
+            <TextInput
+              style={faleConoscoStyle.assuntoInput}
+              editable={!enviando}
+              value={assunto}
+              onChangeText={setAssunto}
+              placeholder="Assunto"
+              placeholderTextColor={cores.cinza}
+              autoCapitalize="sentences"
+              autoCorrect
+            />
+          </View>
+
+          {errosCampos.assunto && (
+            <Text style={faleConoscoStyle.erroCampo}>{errosCampos.assunto}</Text>
           )}
+
+          {/* MENSAGEM */}
+          <View
+            style={[
+              faleConoscoStyle.inputWrapper,
+              faleConoscoStyle.messageWrapper,
+            ]}
+          >
+            <Image
+              source={require("@/assets/images/img/mensagem.png")}
+              style={faleConoscoStyle.inputIcon}
+              resizeMode="contain"
+            />
+
+            <TextInput
+              style={faleConoscoStyle.messageInput}
+              editable={!enviando}
+              value={mensagem}
+              onChangeText={setMensagem}
+              placeholder="Mensagem"
+              placeholderTextColor={cores.cinza}
+              multiline
+              scrollEnabled
+              textAlignVertical="top"
+              autoCapitalize="sentences"
+              autoCorrect
+            />
+          </View>
+
+          {errosCampos.mensagem && (
+            <Text style={faleConoscoStyle.erroCampo}>{errosCampos.mensagem}</Text>
+          )}
+          {erro !== "" && <Text style={faleConoscoStyle.erroCampo}>{erro}</Text>}
+          {sucesso !== "" && (
+            <Text style={faleConoscoStyle.sucesso}>{sucesso}</Text>
+          )}
+
+          {/* ENVIAR */}
+          <Pressable
+            style={[
+              faleConoscoStyle.sendButton,
+              (enviando || aguardando) && faleConoscoStyle.sendButtonDisabled,
+            ]}
+            onPress={enviarMensagem}
+            disabled={enviando || aguardando}
+          >
+            <Text style={faleConoscoStyle.sendButtonText}>
+              {enviando ? "Enviando..." : aguardando ? "Aguarde para reenviar" : "Enviar mensagem"}
+            </Text>
+          </Pressable>
         </View>
 
         {/* ATENDIMENTO */}
@@ -86,7 +234,7 @@ export default function FaleConosco() {
 
             <View style={faleConoscoStyle.attendanceBlock}>
               <Text style={faleConoscoStyle.attendanceValue}>
-                Consulte os canais oficiais e as informações de atendimento na página de contato.
+                Envie suas dúvidas e sugestões para a equipe da AACJ pelo formulário acima.
               </Text>
             </View>
           </View>
