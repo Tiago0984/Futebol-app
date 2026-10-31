@@ -88,12 +88,16 @@ export const jogado = (j: Jogo) =>
 // Resultado do ponto de vista da AACJ (nos pênaltis, conta quem passou); null quando
 // nenhum dos times é da AACJ, os dois são, ou o servidor ainda não diz qual é
 export function resultadoDaAacj(j: Jogo) {
-  const casa = !!j.time_casa.da_aacj;
-  const fora = !!j.time_visitante.da_aacj;
+  const casa = j.time_casa.da_aacj === true;
+  const fora = j.time_visitante.da_aacj === true;
   if (!jogado(j) || casa === fora) return null;
   let nossos = casa ? j.placar_time_casa_jogos! : j.placar_time_visitante_jogos!;
   let deles = casa ? j.placar_time_visitante_jogos! : j.placar_time_casa_jogos!;
-  if (nossos === deles && j.penaltis_time_casa_jogos !== null) {
+  if (
+    nossos === deles &&
+    j.penaltis_time_casa_jogos != null &&
+    j.penaltis_time_visitante_jogos != null
+  ) {
     nossos = casa ? j.penaltis_time_casa_jogos! : j.penaltis_time_visitante_jogos!;
     deles = casa ? j.penaltis_time_visitante_jogos! : j.penaltis_time_casa_jogos!;
   }

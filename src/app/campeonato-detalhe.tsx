@@ -85,17 +85,19 @@ export default function CampeonatoDetalhe() {
     // Campanha da AACJ pelos jogos dela com placar (vale também no mata-mata; nos pênaltis
     // conta quem passou). Gols só do tempo normal. Sem time marcado da_aacj, não aparece
     const jogosDaAacj = realizados.filter(
-      (j) => j.time_casa.da_aacj !== j.time_visitante.da_aacj,
+      (j) =>
+        (j.time_casa.da_aacj === true) !== (j.time_visitante.da_aacj === true) &&
+        resultadoDaAacj(j) !== null,
     );
     const campanha = jogosDaAacj.reduce(
       (t, j) => {
-        const casa = !!j.time_casa.da_aacj;
+        const casa = j.time_casa.da_aacj === true;
         t.pro += casa ? j.placar_time_casa_jogos! : j.placar_time_visitante_jogos!;
         t.contra += casa ? j.placar_time_visitante_jogos! : j.placar_time_casa_jogos!;
         const r = resultadoDaAacj(j);
         if (r === "VITORIA") t.v++;
         else if (r === "EMPATE") t.e++;
-        else t.d++;
+        else if (r === "DERROTA") t.d++;
         return t;
       },
       { v: 0, e: 0, d: 0, pro: 0, contra: 0 },
