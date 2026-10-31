@@ -83,12 +83,13 @@ com o `SERVIDOR` em produção.
 | Comissão Técnica | `GET /comissao-tecnica/{id}` (o `responsavel_id` do compromisso), aberta pelo detalhe do compromisso: foto (só a autorizada; sem ela, o ícone), nome, cargo, categoria principal, tempo na AACJ, licença, especialidade e categorias atendidas (a principal em destaque). Cada linha só aparece com o dado. Contato institucional: some quando `contato` é `null`; o telefone abre a discagem e o e-mail o app de e-mail. 404 (profissional desativado): "Este profissional não está mais disponível." Sem o selo "Confirmado" | `comissao-tecnica.tsx` |
 | Sino (todas as telas) | O próprio componente busca `GET /notificacoes/nao-lidas` sempre que a tela aparece; nenhuma tela passa o número. 0 esconde a bolinha; mais de 9 mostra "9+". Com o responsável, conta os avisos que ele ainda não leu do filho escolhido | `components/botaoNotificacoes.tsx` |
 | Notificações | `GET /notificacoes?page=N` (20 por página, mais ao rolar). Seções Hoje / Ontem / Esta semana (desde segunda) / Anteriores, pela `data`. Categorias: **Agenda** (INSCRICAO, REMOCAO, ALTERACAO, CANCELAMENTO, REATIVACAO e AGENDA) e **Avisos da AACJ** (AVISO). Tocar marca como lido (`PATCH /notificacoes/{id}/lida`) e, se for da Agenda e houver `id_evento`, abre o detalhe do compromisso; sem id, abre a Agenda; o recado da AACJ não abre outra tela. "Marcar todas como lidas": com "Todas" usa `PATCH /notificacoes/lidas`; com uma categoria, marca só os avisos dela que estão na tela | `notificacoes.tsx` |
-| Esqueci minha senha | `POST /auth/esqueci-senha` com `email` e o `perfil` que vem do login (atleta ou responsável). O modal mostra a `message` da API (link vale 24 horas); o OK volta para o login do perfil. Erros (vazio, 422, 429, sem conexão) aparecem acima do botão. A resposta é a mesma exista ou não o e-mail. No backend local o e-mail vai para o log; e-mail de verdade só pela produção, e só para quem pode entrar no app | `esqueci-senha.tsx` |
+| Esqueci minha senha | POST /auth/esqueci-senha com email e perfil (atleta ou responsável), usando prazo de 15 s. Sucesso abre modal sobre código de quatro dígitos; fechar pelo OK ou pelo sistema abre /redefinir-senha com email e perfil. Estados e nomes seguem o resumo do guia do professor. Erros aparecem em erroSolicitacao | `esqueci-senha.tsx` |
+| Redefinir senha | Quatro dígitos numéricos com avanço de foco e Backspace. Na mesma salvarNovaSenha: POST /auth/validar-codigo com email, perfil e codigo; depois POST /auth/redefinir-senha com reset_token, nova_senha e nova_senha_confirmation. O token fica apenas na memória da tentativa. Só o sucesso final retorna ao login do perfil. Validações locais na ordem do guia, 422 por campo e prazo de 15 s por chamada; aguarda publicação do backend | `redefinir-senha.tsx` |
 | Campeonatos | Tudo com a API (30/10). **Lista** (`GET /campeonatos` + `campeonatos-do-atleta`): filtros Todos/Meus/Em andamento/Em breve/Encerrados, card com `resumo` ("Fase de grupos · Rodada 4 de 5" só com `rodada_atual` e `total_rodadas`, senão "6 de 10 jogos"; sem resumo, pelas datas) e a participação ("Convocação no Sub-13 · camisa 10"). **Detalhe** (`GET /campeonatos/{id}`): categorias, informações, progresso, campanha da AACJ calculada somente com exatamente um time com `da_aacj === true` e resultado válido (nos pênaltis conta quem passou), próxima partida ("Ver detalhes" só se o jogo está na agenda), classificação resumida, últimos resultados com Vitória/Empate/Derrota, próximas partidas e "Ver completo". **Classificação**, **Últimos resultados** e **Próximas partidas** completas (`?id=&categoria=`). Busca e regras em `utils/campeonatos.ts`; o vínculo com a agenda usa os dias dos jogos em períodos de até 93 dias (`de`, `ate`, `tipo=JOGO`), sem paginação. Mata-mata vem com tabela zerada: não aparece. A antiga `detalhe-proxima-partida` saiu | `campeonatos.tsx`, `campeonato-detalhe.tsx`, `classificacao.tsx`, `ultimos-resultados.tsx`, `proxima-partida.tsx` |
 | Sua participação (jogo) | No detalhe do compromisso, `jogo.participacao` (sempre presente): convocação e camisa, escalação (titular/reserva e posição) ou "A definir pelo técnico" | `detalhe-compromisso.tsx` |
 | Tela inicial e cabeçalhos | "Fazer matrícula" abre `SITE/cadastro` e "Conheça a AACJ" a home do site (`SITE` em `config/api.ts`). O ícone da loja saiu de todos os cabeçalhos (30/10) | `selecao-perfil.tsx` |
 | Fale conosco | Formulário no app: POST autenticado em /fale-conosco para atleta ou responsável, assunto e mensagem obrigatórios, carregando, 422 por campo, 404 com aviso de indisponibilidade e 429 com Retry-After. Só o sucesso 201 limpa os campos. A rota ainda depende da publicação do backend; não usa /contato do site | `fale-conosco.tsx` |
-| Conexão e fontes | `buscarComPrazo` limita fetch a 15 s nos dois logins, Home (inclusive banners), detalhe e hook de campeonato; erros mostram mensagem de conexão. Falha de fontes libera a splash e permite o fallback do sistema | `utils/buscarComPrazo.ts`, `_layout.tsx` |
+| Conexão e fontes | `buscarComPrazo` limita fetch a 15 s nos dois logins, Home (inclusive banners), detalhe, hook de campeonato e recuperação de senha; erros mostram mensagem de conexão. Falha de fontes libera a splash e permite o fallback do sistema | `utils/buscarComPrazo.ts`, `_layout.tsx` |
 | Desempenho | Desativado: saiu do menu, da Home e da Ajuda. As oito telas foram mantidas por decisão do Tiago em 31/10 | — |
 
 ## O que falta (sugestão de ordem)
@@ -123,7 +124,9 @@ com o `SERVIDOR` em produção.
 4. Produção: conferir e limpar dados de teste e passar os acessos ao cliente; nenhuma limpeza foi feita aqui.
 5. As oito telas de Desempenho permanecem por decisão do Tiago: desempenho, avaliacao-fisica, conquistas,
    evolucao, historico-avaliacao, indicadores, metas e observacao. Não apagar sem nova autorização.
-6. A rota residual redefinir-senha continua sem ação de salvar; sua integração não entrou nesta etapa.
+6. Recuperação por código: finalizar/publicar validar-codigo e redefinir-senha no backend e confirmar o envio
+   de código de quatro dígitos por esqueci-senha. O app está integrado ao contrato fornecido pelo Tiago;
+   nenhuma senha ou conta real foi alterada nos testes.
 
 ### Agenda e trabalho posterior
 
@@ -145,6 +148,23 @@ com o `SERVIDOR` em produção.
   rotas removidas e formulário de contato (validação, 201, 404, 422, 429, falha de rede, timeout e 401).
 - O formulário foi testado como atleta e responsável; Retry-After foi verificado em segundos e em data HTTP.
 - Os scripts de verificação são temporários e externos ao repositório; nenhuma suíte de testes foi adicionada.
+
+### Recuperação por código — 31/10/2026
+
+- A solicitação e a redefinição seguem o resumo das etapas 1 a 11 do guia do professor fornecido pelo Tiago.
+  Os nomes de estados, funções, botões e estilos pedidos foram mantidos; os estilos existentes não foram alterados.
+- Diferenças do app: email e perfil seguem juntos até a validação; o modal orienta sobre código; o sucesso
+  retorna para login-atleta ou login-responsavel porque a rota inicial retoma sessões; reset_token não é persistido.
+- Contrato de validar-codigo: envia email, perfil e codigo (string com quatro dígitos); recebe data.reset_token.
+  Contrato de redefinir-senha: envia somente reset_token, nova_senha e nova_senha_confirmation.
+- Cenários simulados no Expo web: sucesso dos dois perfis, estados Enviando/Salvando, ordem das chamadas,
+  parâmetros e payloads, código com zero inicial, cinco validações locais na ordem do guia, foco e Backspace,
+  ausência de reset_token, 422 de e-mail/código/senha, falha de rede nas três rotas e timeout de 15 s em cada uma.
+  Verificado que senha e token não foram escritos em localStorage/sessionStorage. Layout conferido em 320 e 430 px.
+- TypeScript passou; os quatro arquivos de tela/estilo passaram no lint sem avisos. Lint geral continua com
+  os 7 erros preexistentes e agora 2 avisos (o import sem uso de redefinir-senha foi removido).
+- Preservados CRLF, o SERVIDOR de produção e as dependências. Sem envios reais, alteração do Laravel, build,
+  deploy ou push. A entrega de e-mail e o fluxo nativo ainda precisam de validação após a publicação da API.
 
 ## Pendências do lado do backend
 
