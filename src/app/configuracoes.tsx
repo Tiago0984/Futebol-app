@@ -104,54 +104,35 @@ export default function Configuracoes() {
         </View>
 
         {/* CONTA */}
-        <View style={configuracoesStyle.section}>
-          <Text style={configuracoesStyle.sectionTitle}>Conta</Text>
-
-          <View style={configuracoesStyle.card}>
-            {pushDisponivel && (
-              <>
-              <View style={configuracoesStyle.row}>
+        {pushDisponivel && (
+          <View style={configuracoesStyle.section}>
+            <Text style={configuracoesStyle.sectionTitle}>Conta</Text>
+            <View style={configuracoesStyle.card}>
+              <View style={[configuracoesStyle.row, configuracoesStyle.rowLast]}>
                 <Image
                   source={require("@/assets/images/img/sinoPreto.png")}
                   style={configuracoesStyle.rowIcon}
                   tintColor={cores.preto}
                   resizeMode="contain"
                 />
-
                 <Text style={configuracoesStyle.rowLabel}>Notificações</Text>
-
                 <Switch
                   value={notificacoesAtivas}
                   onValueChange={alternarNotificacoes}
                   trackColor={{ false: cores.cinza, true: cores.vermelho }}
                   thumbColor={cores.branco}
-                  // Na web a bolinha ligada usa outra prop (verde por padrão), que não está na tipagem
                   {...({ activeThumbColor: cores.branco } as object)}
                   accessibilityLabel="Notificações"
                 />
               </View>
-                {avisoNotificacoes !== "" && (
-                  <Text style={configuracoesStyle.avisoNotificacoes}>
-                    {avisoNotificacoes}
-                  </Text>
-                )}
-              </>
-            )}
-
-            <View style={[configuracoesStyle.row, configuracoesStyle.rowLast]}>
-              <Image
-                source={require("@/assets/images/img/cadeadoPretoFundoTransparente.png")}
-                style={configuracoesStyle.rowIcon}
-                tintColor={cores.preto}
-                resizeMode="contain"
-              />
-
-              <Text style={configuracoesStyle.rowLabel}>Privacidade</Text>
-
-              <Text style={configuracoesStyle.rowArrow}>{">"}</Text>
+              {avisoNotificacoes !== "" && (
+                <Text style={configuracoesStyle.avisoNotificacoes}>
+                  {avisoNotificacoes}
+                </Text>
+              )}
             </View>
           </View>
-        </View>
+        )}
 
         {/* APLICATIVO */}
         <View style={configuracoesStyle.sectionCompact}>
@@ -169,8 +150,6 @@ export default function Configuracoes() {
               <Text style={configuracoesStyle.rowLabel}>Atualizações</Text>
 
               <Text style={configuracoesStyle.rowValue}>1.0.0</Text>
-
-              <Text style={configuracoesStyle.rowArrow}>{">"}</Text>
             </View>
           </View>
         </View>

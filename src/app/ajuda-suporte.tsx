@@ -13,7 +13,6 @@ import {
   Pressable,
   ScrollView,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -33,11 +32,6 @@ const perguntas: Pergunta[] = [
     pergunta: "Como atualizar minha senha?",
     resposta:
       "Na área Usuário, acesse as opções de segurança da sua conta. Informe sua senha atual e cadastre uma nova senha seguindo as orientações apresentadas pelo aplicativo. Caso não consiga acessar sua conta, utilize a opção de recuperação de senha.",
-  },
-  {
-    pergunta: "Onde vejo minhas avaliações?",
-    resposta:
-      "Suas avaliações ficam disponíveis na área Desempenho. Nessa seção você pode acompanhar seu índice geral, evolução, presença, treinos, jogos, avaliações e outros indicadores registrados pela comissão.",
   },
   {
     pergunta: "Como acompanhar meus campeonatos?",
@@ -132,22 +126,6 @@ export default function AjudaSuporte() {
           </Text>
         </View>
 
-        {/* BUSCA */}
-        <View style={ajudaSuporteStyle.searchBox}>
-          <View style={ajudaSuporteStyle.searchIcon}>
-            <View style={ajudaSuporteStyle.searchIconCircle} />
-            <View style={ajudaSuporteStyle.searchIconHandle} />
-          </View>
-
-          <TextInput
-            style={ajudaSuporteStyle.searchInput}
-            placeholder="Buscar uma dúvida"
-            placeholderTextColor={cores.cinza}
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-        </View>
-
         {/* CATEGORIAS */}
         <View style={ajudaSuporteStyle.categoriesSection}>
           <Text style={ajudaSuporteStyle.sectionTitle}>
@@ -210,35 +188,6 @@ export default function AjudaSuporte() {
 
               <Text style={ajudaSuporteStyle.categoryDescription}>
                 Competições, jogos e classificação
-              </Text>
-            </View>
-          </Pressable>
-
-          <Pressable
-            style={ajudaSuporteStyle.categoryRow}
-            onPress={() =>
-              router.navigate({
-                pathname: "/ajuda-perguntas",
-                params: {
-                  categoria: "desempenho",
-                },
-              })
-            }
-          >
-            <View style={ajudaSuporteStyle.categoryIconBox}>
-              <Image
-                source={require("@/assets/images/img/desempenhoBranco.png")}
-                style={ajudaSuporteStyle.categoryIcon}
-                tintColor={cores.vermelho}
-                resizeMode="contain"
-              />
-            </View>
-
-            <View style={ajudaSuporteStyle.categoryTextCol}>
-              <Text style={ajudaSuporteStyle.categoryTitle}>Desempenho</Text>
-
-              <Text style={ajudaSuporteStyle.categoryDescription}>
-                Avaliações, metas e evolução
               </Text>
             </View>
           </Pressable>

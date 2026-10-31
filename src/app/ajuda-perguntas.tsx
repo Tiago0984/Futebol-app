@@ -79,39 +79,6 @@ const perguntasPorCategoria = {
     },
   ],
 
-  desempenho: [
-    {
-      pergunta: "Como funciona o índice geral de evolução?",
-      resposta:
-        "O índice geral de evolução reúne os principais indicadores registrados nas suas avaliações e permite acompanhar seu desenvolvimento ao longo do tempo.",
-    },
-    {
-      pergunta: "Como são calculadas minhas avaliações?",
-      resposta:
-        "As avaliações são registradas pela comissão técnica com base nos critérios utilizados nos treinamentos e atividades da AACJ.",
-    },
-    {
-      pergunta: "Onde vejo meu histórico de avaliações?",
-      resposta:
-        "Seu histórico de avaliações pode ser consultado na área Desempenho, permitindo acompanhar os registros realizados ao longo das temporadas.",
-    },
-    {
-      pergunta: "Como funcionam minhas metas?",
-      resposta:
-        "As metas representam objetivos definidos para acompanhar sua evolução. Conforme os resultados são registrados, o progresso pode ser acompanhado nesta área.",
-    },
-    {
-      pergunta: "Como funciona a frequência?",
-      resposta:
-        "A frequência apresenta sua participação nos treinos, jogos e demais atividades registradas pela AACJ.",
-    },
-    {
-      pergunta: "Onde vejo minhas conquistas?",
-      resposta:
-        "As conquistas ficam disponíveis na área Desempenho e representam marcos alcançados durante sua trajetória na AACJ.",
-    },
-  ],
-
   agenda: [
     {
       pergunta: "Onde vejo meus próximos treinos?",
@@ -146,14 +113,12 @@ type Categoria = keyof typeof perguntasPorCategoria;
 const nomesCategorias: Record<Categoria, string> = {
   conta: "Conta e perfil",
   campeonatos: "Campeonatos",
-  desempenho: "Desempenho",
   agenda: "Agenda",
 };
 
 const iconesCategorias: Record<Categoria, number> = {
   conta: require("@/assets/images/img/userPreto.png"),
   campeonatos: require("@/assets/images/img/trofeu.png"),
-  desempenho: require("@/assets/images/img/desempenhoBranco.png"),
   agenda: require("@/assets/images/img/agendaBranca.png"),
 };
 
@@ -171,7 +136,7 @@ export default function AjudaPerguntas() {
   const categoriaValida: Categoria =
     categoriaParam && categoriaParam in perguntasPorCategoria
       ? (categoriaParam as Categoria)
-      : "desempenho";
+      : "conta";
 
   const nomeCategoria = nomesCategorias[categoriaValida];
   const perguntas = perguntasPorCategoria[categoriaValida];
