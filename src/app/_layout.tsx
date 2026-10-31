@@ -41,10 +41,12 @@ async function abrirNotificacao(resposta: Notifications.NotificationResponse) {
 }
 
 export default function RootLayout() {
-  const [fontesLoaded] = useFonts(fontesCarregar);
+  const [fontesLoaded, erroFontes] = useFonts(fontesCarregar);
+  // Se a fonte falhar, o sistema mantém o app utilizável.
+  const fontesProntas = fontesLoaded || !!erroFontes;
 
   useEffect(() => {
-    if (!pushDisponivel || !fontesLoaded) return;
+    if (!pushDisponivel || !fontesProntas) return;
     // App aberto pela notificação (estava fechado)
     Notifications.getLastNotificationResponseAsync().then((resposta) => {
       if (resposta) {
@@ -56,15 +58,15 @@ export default function RootLayout() {
     const assinatura =
       Notifications.addNotificationResponseReceivedListener(abrirNotificacao);
     return () => assinatura.remove();
-  }, [fontesLoaded]);
+  }, [fontesProntas]);
 
   useEffect(() => {
-    if (fontesLoaded) {
+    if (fontesProntas) {
       SplashScreen.hideAsync();
     }
-  }, [fontesLoaded]);
+  }, [fontesProntas]);
 
-  if (!fontesLoaded) {
+  if (!fontesProntas) {
     return null;
   }
   return (
