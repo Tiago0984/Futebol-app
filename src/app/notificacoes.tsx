@@ -16,6 +16,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import notificacoesStyle from "@/styles/notificacoesStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
+import { abrirDestinoDoAviso } from "@/utils/eventos";
 
 type FiltroLeitura = "todas" | "naoLidas";
 
@@ -260,7 +261,7 @@ export default function Notificacoes() {
     );
   }
 
-  // Toque no aviso: marca como lido e, se for da agenda, abre a Agenda.
+  // Toque no aviso: marca como lido e abre o compromisso quando houver.
   // Espera a API responder para o sino da próxima tela já vir atualizado
   const abrirNotificacao = async (notificacao: Notificacao) => {
     if (!notificacao.lida) {
@@ -277,7 +278,7 @@ export default function Notificacoes() {
     }
 
     if (categoriaDe(notificacao) === "agenda") {
-      router.navigate("/agenda");
+      abrirDestinoDoAviso(notificacao.id_evento, "/agenda");
     }
   };
 

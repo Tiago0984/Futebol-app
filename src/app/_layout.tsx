@@ -1,4 +1,4 @@
-import { Stack, router } from "expo-router";
+import { Stack } from "expo-router";
 
 import { useFonts } from "expo-font";
 import { OpenSans_700Bold, OpenSans_400Regular, OpenSans_600SemiBold } from "@expo-google-fonts/open-sans";
@@ -11,7 +11,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { abrirDetalhe } from "@/utils/eventos";
+import { abrirDestinoDoAviso } from "@/utils/eventos";
 import { pushDisponivel } from "@/utils/notificacoes";
 
 SplashScreen.preventAutoHideAsync();
@@ -37,11 +37,7 @@ async function abrirNotificacao(resposta: Notifications.NotificationResponse) {
     await AsyncStorage.setItem("atleta_selecionado", String(dados.id_atleta));
   }
   const idEvento = Number(dados.id_evento);
-  if (idEvento) {
-    abrirDetalhe(idEvento);
-  } else {
-    router.navigate("/notificacoes");
-  }
+  abrirDestinoDoAviso(idEvento, "/notificacoes");
 }
 
 export default function RootLayout() {

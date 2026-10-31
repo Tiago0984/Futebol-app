@@ -147,3 +147,12 @@ export function abrirDetalhe(idEvento: number) {
     params: { id: String(idEvento) },
   });
 }
+
+// Lista e push compartilham o destino do compromisso.
+export function abrirDestinoDoAviso(idEvento: number | null | undefined, semEvento: "/agenda" | "/notificacoes") {
+  if (idEvento) {
+    abrirDetalhe(idEvento);
+  } else {
+    router.navigate(semEvento);
+  }
+}
