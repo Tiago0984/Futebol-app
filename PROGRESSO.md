@@ -59,6 +59,16 @@ Sem `--prod`, o deploy vira só uma prévia (`aacjapp--xxxx.expo.app`). A produ�
 um ou dois minutos para trocar; depois disso, recarregar sem cache. Para testar no celular: `npx expo start` e abrir no Expo Go,
 com o `SERVIDOR` em produção.
 
+## App Android (APK fora da loja)
+
+Pacote `br.com.aacj.app`; push pelo Firebase `aacj-6daae` (a chave FCM V1 já está no EAS, não vai para o git).
+
+- **Atualização pelo ar** (telas, textos, lógica): `npx eas-cli update --channel preview --environment preview -m "o que mudou"`.
+  O celular baixa ao abrir o app e aplica na abertura seguinte.
+- **APK novo** (ícone, nome, permissões, biblioteca nativa nova ou atualização do Expo):
+  `npx eas-cli build -p android --profile preview` e instalar por cima pelo link. O `runtimeVersion` é por
+  fingerprint: se a mudança mexe na parte nativa, o `eas update` não chega nos APKs antigos e é preciso gerar outro.
+
 ## O que já está feito
 
 | Parte | Situação | Onde |
