@@ -15,8 +15,11 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginAtleta() {
+  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  const insets = useSafeAreaInsets();
   const [verSenha, setVerSenha] = useState(false);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -101,7 +104,7 @@ export default function LoginAtleta() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={loginAtletaStyle.scrollContent}
+        contentContainerStyle={[loginAtletaStyle.scrollContent, { paddingBottom: insets.bottom }]}
         bounces={false}
       >
         <View style={loginAtletaStyle.heroContent}>

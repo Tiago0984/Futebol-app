@@ -15,8 +15,11 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginResponsavel() {
+  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  const insets = useSafeAreaInsets();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [senhaVisivel, setSenhaVisivel] = useState(false);
@@ -117,7 +120,7 @@ export default function LoginResponsavel() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={loginResponsavelStyle.scrollContent}
+        contentContainerStyle={[loginResponsavelStyle.scrollContent, { paddingBottom: insets.bottom }]}
         bounces={false}
       >
         <View style={loginResponsavelStyle.heroContent}>

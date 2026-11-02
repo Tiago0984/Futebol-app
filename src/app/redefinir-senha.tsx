@@ -13,8 +13,11 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function RedefinirSenha() {
+  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  const insets = useSafeAreaInsets();
   const { email, perfil } = useLocalSearchParams<{ email?: string; perfil?: string }>();
   const perfilDaConta = perfil === "responsavel" ? "responsavel" : "atleta";
   const [verSenha, setVerSenha] = useState(false);
@@ -132,7 +135,7 @@ export default function RedefinirSenha() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={redefinirSenhaStyle.scrollContent}
+        contentContainerStyle={[redefinirSenhaStyle.scrollContent, { paddingBottom: insets.bottom }]}
         bounces={false}
       >
         <View style={redefinirSenhaStyle.heroContent}>

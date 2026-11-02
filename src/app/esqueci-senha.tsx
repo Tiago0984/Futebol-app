@@ -14,8 +14,11 @@ import {
     TextInput,
     View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function EsqueciSenha() {
+  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  const insets = useSafeAreaInsets();
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
   const perfilDaConta = perfil === "responsavel" ? "responsavel" : "atleta";
   const [modalEnviarLink, setModalEnviarLink] = useState(false);
@@ -86,7 +89,7 @@ export default function EsqueciSenha() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={esqueciSenhaStyle.scrollContent}
+        contentContainerStyle={[esqueciSenhaStyle.scrollContent, { paddingBottom: insets.bottom }]}
         bounces={false}
       >
         <View style={esqueciSenhaStyle.heroContent}>

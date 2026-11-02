@@ -3,8 +3,11 @@ import selecaoPerfilStyle from "@/styles/selecaoPerfilStyle";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
+  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  const insets = useSafeAreaInsets();
   return (
     <View style={selecaoPerfilStyle.container}>
       <Image
@@ -27,7 +30,7 @@ export default function Index() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={selecaoPerfilStyle.scrollContent}
+        contentContainerStyle={[selecaoPerfilStyle.scrollContent, { paddingBottom: insets.bottom }]}
         bounces={false}
       >
         <View style={selecaoPerfilStyle.heroContent}>
