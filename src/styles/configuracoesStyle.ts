@@ -167,6 +167,14 @@ const configuracoesStyle = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 10,
   },
+
+  avisoAtualizacao: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.cinza,
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+  },
 });
 
 export default configuracoesStyle;

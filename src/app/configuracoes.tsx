@@ -11,10 +11,24 @@ import {
 } from "@/utils/notificacoes";
 import { sairDaConta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Constants from "expo-constants";
 import { router } from "expo-router";
+import * as Updates from "expo-updates";
 import { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, Switch, Text, View } from "react-native";
+import { Image, Platform, Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+const VERSAO = Constants.expoConfig?.version ?? "1.0.0";
+// Atualização pelo ar (EAS Update): só no app instalado; no Expo Go e no modo de teste não existe
+const atualizacaoPeloAr = Platform.OS !== "web" && !__DEV__ && Updates.isEnabled;
+
+// Data da atualização em uso ("atualizado em 01/11"); null no modo de teste
+function dataDaAtualizacao() {
+  const d = Updates.createdAt;
+  if (!atualizacaoPeloAr || !d) return null;
+  const dois = (n: number) => String(n).padStart(2, "0");
+  return `${dois(d.getDate())}/${dois(d.getMonth() + 1)}/${d.getFullYear()}`;
+}
 
 export default function Configuracoes() {
   const insets = useSafeAreaInsets();
@@ -45,6 +59,42 @@ export default function Configuracoes() {
     AsyncStorage.setItem("notificacoes_ativas", ativas ? "1" : "0").catch(
       () => {},
     );
+  }
+
+  // "procurando" e "baixando" travam o botão; os outros textos aparecem embaixo da linha
+  const [atualizacao, setAtualizacao] = useState("");
+  const ocupado = atualizacao === "procurando" || atualizacao === "baixando";
+
+  async function procurarAtualizacao() {
+    if (ocupado) return;
+    if (Platform.OS === "web") {
+      // A web já carrega a versão publicada ao recarregar a página
+      window.location.reload();
+      return;
+    }
+    if (!atualizacaoPeloAr) {
+      setAtualizacao("As atualizações funcionam só no app instalado.");
+      return;
+    }
+    try {
+      setAtualizacao("procurando");
+      const verificacao = await Updates.checkForUpdateAsync();
+      if (!verificacao.isAvailable) {
+        setAtualizacao("Você já está na versão mais recente.");
+        return;
+      }
+      setAtualizacao("baixando");
+      const baixada = await Updates.fetchUpdateAsync();
+      if (!baixada.isNew) {
+        setAtualizacao("Você já está na versão mais recente.");
+        return;
+      }
+      // Reinicia já na versão nova
+      await Updates.reloadAsync();
+    } catch (erro) {
+      console.log("Erro ao procurar atualização:", erro);
+      setAtualizacao("Não foi possível procurar atualizações. Verifique a internet.");
+    }
   }
 
   async function handleSair() {
@@ -139,7 +189,13 @@ export default function Configuracoes() {
           <Text style={configuracoesStyle.sectionTitle}>Aplicativo</Text>
 
           <View style={configuracoesStyle.card}>
-            <View style={[configuracoesStyle.row, configuracoesStyle.rowLast]}>
+            <Pressable
+              style={[configuracoesStyle.row, configuracoesStyle.rowLast]}
+              onPress={procurarAtualizacao}
+              disabled={ocupado}
+              accessibilityRole="button"
+              accessibilityLabel="Procurar atualizações"
+            >
               <Image
                 source={require("@/assets/images/img/refresh.png")}
                 style={configuracoesStyle.rowIcon}
@@ -147,10 +203,21 @@ export default function Configuracoes() {
                 resizeMode="contain"
               />
 
-              <Text style={configuracoesStyle.rowLabel}>Atualizações</Text>
+              <Text style={configuracoesStyle.rowLabel}>
+                {atualizacao === "procurando"
+                  ? "Procurando..."
+                  : atualizacao === "baixando"
+                    ? "Baixando atualização..."
+                    : "Atualizações"}
+              </Text>
 
-              <Text style={configuracoesStyle.rowValue}>1.0.0</Text>
-            </View>
+              <Text style={configuracoesStyle.rowValue}>{VERSAO}</Text>
+            </Pressable>
+            {!ocupado && (atualizacao !== "" || dataDaAtualizacao()) && (
+              <Text style={configuracoesStyle.avisoAtualizacao}>
+                {atualizacao || `Atualizado em ${dataDaAtualizacao()}`}
+              </Text>
+            )}
           </View>
         </View>
 
