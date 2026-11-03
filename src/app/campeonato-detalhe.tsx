@@ -17,6 +17,8 @@ import {
   resultadoDaAacj,
   useCampeonato,
   voltarParaCampeonatos,
+  andamentoDoCampeonato,
+  type Resumo,
 } from "@/utils/campeonatos";
 import { abrirDetalhe, chaveDoDia } from "@/utils/eventos";
 import { router, useLocalSearchParams } from "expo-router";
@@ -58,17 +60,34 @@ export default function CampeonatoDetalhe() {
     const hoje = chaveDoDia(new Date());
     const inicio = c.data_inicio_campeonato.slice(0, 10);
     const fim = c.data_fim_campeonato.slice(0, 10);
-    const situacao =
-      fim < hoje ? "ENCERRADO" : inicio > hoje ? "EM_BREVE" : "ANDAMENTO";
-
     const jogos = jogosDaCategoria(c, idCategoria);
     const realizados = jogos.filter(jogado);
     const pendentes = jogos.filter((j) => !jogado(j));
-    const progresso = jogos.length
-      ? Math.floor((realizados.length / jogos.length) * 100)
-      : 0;
-    // Fase atual: a do próximo jogo sem placar; tudo jogado, a do último
-    const faseAtual = (pendentes[0] ?? realizados[realizados.length - 1])?.fase;
+    // Andamento da categoria: o do servidor (o mesmo da lista); servidor antigo, pelos jogos
+    // (fase atual: a do próximo jogo sem placar; tudo jogado, a do último)
+    const categoria = c.categorias.find((cat) => cat.id_categoria === idCategoria);
+    const resumo: Resumo = categoria?.resumo ?? {
+      fase_atual_label: (pendentes[0] ?? realizados[realizados.length - 1])?.fase ?? null,
+      rodada_atual: null,
+      total_rodadas: null,
+      jogos_realizados: realizados.length,
+      total_jogos: jogos.length,
+    };
+    const andamento = andamentoDoCampeonato(
+      c,
+      hoje,
+      resumo,
+      categoria?.encerrada ?? c.encerrado,
+    );
+    const situacao = andamento.situacao;
+    const aguardando = resumo.jogos_aguardando_resultado ?? 0;
+    // Todos os jogos marcados disputados, sem campeão e ainda no período
+    const proximaFase =
+      categoria?.encerrada === false &&
+      situacao === "ANDAMENTO" &&
+      resumo.total_jogos > 0 &&
+      resumo.jogos_realizados === resumo.total_jogos;
+    const campeao = categoria?.campeao ?? null;
     const futuros = jogosFuturos(jogos, hoje);
     const proximo = futuros[0];
     const proximos = futuros.slice(1, 4);
@@ -190,11 +209,7 @@ export default function CampeonatoDetalhe() {
                       campeonatoDetalheStyle.statusPillTextEncerrado,
                   ]}
                 >
-                  {situacao === "ENCERRADO"
-                    ? "Encerrado"
-                    : situacao === "EM_BREVE"
-                      ? "Em breve"
-                      : "Em andamento"}
+                  {andamento.selo}
                 </Text>
               </View>
             </View>
@@ -221,7 +236,7 @@ export default function CampeonatoDetalhe() {
         )}
 
         {/* PROGRESSO: jogos já marcados (o mata-mata entra quando é montado) */}
-        {jogos.length > 0 && (
+        {resumo.total_jogos > 0 && (
           <View style={campeonatoDetalheStyle.section}>
             <Text style={campeonatoDetalheStyle.sectionTitle}>
               Progresso do campeonato
@@ -231,11 +246,11 @@ export default function CampeonatoDetalhe() {
               <View style={campeonatoDetalheStyle.progressRoundCol}>
                 <Text style={campeonatoDetalheStyle.progressLabel}>Jogos</Text>
                 <Text style={campeonatoDetalheStyle.progressValue}>
-                  {realizados.length} de {jogos.length}
+                  {resumo.jogos_realizados} de {resumo.total_jogos}
                 </Text>
               </View>
               <Text style={campeonatoDetalheStyle.progressPercent}>
-                {progresso}%
+                {andamento.progresso}%
               </Text>
             </View>
 
@@ -243,18 +258,88 @@ export default function CampeonatoDetalhe() {
               <View
                 style={[
                   campeonatoDetalheStyle.progressFill,
-                  { width: `${progresso}%` },
+                  { width: `${andamento.progresso}%` },
                 ]}
               />
             </View>
 
-            {faseAtual && (
+            {resumo.fase_atual_label && (
               <Text style={campeonatoDetalheStyle.nextPhaseText}>
                 Fase atual:{" "}
                 <Text style={campeonatoDetalheStyle.nextPhaseValue}>
-                  {faseAtual}
+                  {resumo.fase_atual_label}
+                  {resumo.rodada_atual && resumo.total_rodadas
+                    ? ` · Rodada ${resumo.rodada_atual} de ${resumo.total_rodadas}`
+                    : ""}
                 </Text>
               </Text>
+            )}
+            {aguardando > 0 && (
+              <Text style={campeonatoDetalheStyle.nextPhaseText}>
+                {aguardando === 1
+                  ? "1 jogo aguardando o resultado"
+                  : `${aguardando} jogos aguardando o resultado`}
+              </Text>
+            )}
+            {proximaFase && aguardando === 0 && (
+              <Text style={campeonatoDetalheStyle.nextPhaseText}>
+                Todos os jogos marcados foram disputados. Aguardando os próximos jogos.
+              </Text>
+            )}
+          </View>
+        )}
+
+        {/* CAMPEÃO da categoria: só quando o servidor diz que ela acabou */}
+        {campeao && (
+          <View style={campeonatoDetalheStyle.section}>
+            <Text style={campeonatoDetalheStyle.sectionTitle}>
+              {campeao.situacao === "sorteio" ? "Resultado final" : "🏆 Campeão"}
+            </Text>
+            {campeao.situacao === "sorteio" ? (
+              <Text style={campeonatoDetalheStyle.nextPhaseText}>
+                Empate em todos os critérios no 1º lugar: o campeão será definido por sorteio.
+              </Text>
+            ) : (
+              <View style={campeonatoDetalheStyle.podio}>
+                {[
+                  { rotulo: "Campeão", time: campeao.campeao },
+                  { rotulo: "Vice", time: campeao.vice },
+                  { rotulo: "3º lugar", time: campeao.terceiro },
+                ]
+                  .filter((p) => p.time)
+                  .map((p, i) => (
+                    <View
+                      key={p.rotulo}
+                      style={[
+                        campeonatoDetalheStyle.podioLinha,
+                        i === 0 && campeonatoDetalheStyle.podioLinhaCampeao,
+                      ]}
+                    >
+                      <Image
+                        source={
+                          p.time!.logo_url
+                            ? { uri: p.time!.logo_url }
+                            : require("@/assets/images/img/escudovermelho.png")
+                        }
+                        style={campeonatoDetalheStyle.podioEscudo}
+                        resizeMode="contain"
+                      />
+                      <View style={{ flex: 1 }}>
+                        <Text style={campeonatoDetalheStyle.podioRotulo}>
+                          {p.rotulo}
+                        </Text>
+                        <Text style={campeonatoDetalheStyle.podioNome} numberOfLines={2}>
+                          {p.time!.nome}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+                {campeao.como && (
+                  <Text style={campeonatoDetalheStyle.nextPhaseText}>
+                    {campeao.como}
+                  </Text>
+                )}
+              </View>
             )}
           </View>
         )}

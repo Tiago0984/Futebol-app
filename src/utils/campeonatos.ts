@@ -7,7 +7,132 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 
-export type Categoria = { id_categoria: number; rotulo: string };
+// Andamento pelos jogos já marcados (o total cresce quando o mata-mata é montado).
+// jogos_aguardando_resultado: já terminaram e estão sem placar (servidor antigo não manda)
+export type Resumo = {
+  fase_atual_label: string | null;
+  rodada_atual: number | null;
+  total_rodadas: number | null;
+  jogos_realizados: number;
+  total_jogos: number;
+  jogos_aguardando_resultado?: number;
+};
+
+// Time no pódio: o nome vem em "nome" (não nome_time)
+export type TimeDoPodio = {
+  id_time: number;
+  nome: string;
+  logo_url: string | null;
+  da_aacj?: boolean;
+};
+
+// "sorteio": terminou empatado em tudo no 1º lugar, sem campeão definido
+export type Campeao = {
+  situacao: "campeao" | "sorteio";
+  como: string | null;
+  campeao: TimeDoPodio | null;
+  vice: TimeDoPodio | null;
+  terceiro: TimeDoPodio | null;
+};
+
+// resumo, encerrada e campeao por categoria: servidor antigo não manda
+export type Categoria = {
+  id_categoria: number;
+  rotulo: string;
+  resumo?: Resumo | null;
+  encerrada?: boolean;
+  campeao?: Campeao | null;
+};
+
+export type Situacao = "ANDAMENTO" | "EM_BREVE" | "ENCERRADO";
+
+export const ROTULO_SITUACAO: Record<Situacao, string> = {
+  ANDAMENTO: "Em andamento",
+  EM_BREVE: "Em breve",
+  ENCERRADO: "Encerrado",
+};
+
+// Situação e progresso pelas datas (recortadas do texto, sem passar pelo fuso do aparelho)
+function andamentoPelasDatas(inicio: string, fim: string, hoje: string) {
+  if (fim < hoje) {
+    return {
+      situacao: "ENCERRADO" as Situacao,
+      texto: `Encerrado em ${diaMes(fim)}`,
+      progresso: 100,
+    };
+  }
+  if (inicio > hoje) {
+    return {
+      situacao: "EM_BREVE" as Situacao,
+      texto: `Começa em ${diaMes(inicio)}`,
+      progresso: 0,
+    };
+  }
+  const dia = (chave: string) => {
+    const [a, m, d] = chave.split("-").map(Number);
+    return Date.UTC(a, m - 1, d) / 86400000;
+  };
+  const total = dia(fim) - dia(inicio) + 1;
+  const passados = dia(hoje) - dia(inicio) + 1;
+  return {
+    situacao: "ANDAMENTO" as Situacao,
+    texto: `Termina em ${diaMes(fim)}`,
+    // Para baixo: 100% só quando terminar
+    progresso: Math.min(99, Math.max(0, Math.floor((passados / total) * 100))),
+  };
+}
+
+/**
+ * Situação (filtros e ordem), selo, texto ("Fase de grupos · Rodada 4 de 5") e progresso,
+ * iguais na lista e no detalhe. encerrado = o servidor diz que acabou (há campeão ou sorteio);
+ * undefined = servidor antigo, vale só a data. 100% só quando acabou de verdade: com todos os
+ * jogos marcados disputados e sem campeão, falta a próxima fase (ou o encerramento)
+ */
+export function andamentoDoCampeonato(
+  datas: { data_inicio_campeonato: string; data_fim_campeonato: string },
+  hoje: string,
+  r: Resumo | null | undefined,
+  encerrado: boolean | undefined,
+) {
+  const inicio = datas.data_inicio_campeonato.slice(0, 10);
+  const fim = datas.data_fim_campeonato.slice(0, 10);
+  const pelasDatas = andamentoPelasDatas(inicio, fim, hoje);
+  const situacao: Situacao = encerrado ? "ENCERRADO" : pelasDatas.situacao;
+  const aguardando = r?.jogos_aguardando_resultado ?? 0;
+  const selo =
+    !encerrado && aguardando > 0 && situacao === "ENCERRADO"
+      ? "Aguardando resultados"
+      : ROTULO_SITUACAO[situacao];
+
+  if (!r || r.total_jogos === 0) {
+    return {
+      situacao,
+      selo,
+      texto: encerrado ? `Encerrado em ${diaMes(fim)}` : pelasDatas.texto,
+      progresso: encerrado ? 100 : pelasDatas.progresso,
+    };
+  }
+
+  const tudoJogado = r.jogos_realizados === r.total_jogos;
+  const etapa = aguardando
+    ? `${aguardando} aguardando resultado`
+    : tudoJogado && encerrado === false && situacao === "ANDAMENTO"
+      ? "Aguardando próximos jogos"
+      : r.rodada_atual && r.total_rodadas
+        ? `Rodada ${r.rodada_atual} de ${r.total_rodadas}`
+        : `${r.jogos_realizados} de ${r.total_jogos} ${r.total_jogos === 1 ? "jogo" : "jogos"}`;
+  const progresso = Math.floor((r.jogos_realizados / r.total_jogos) * 100);
+  return {
+    situacao,
+    selo,
+    texto: [r.fase_atual_label, etapa].filter(Boolean).join(" · "),
+    progresso: encerrado
+      ? 100
+      : encerrado === false && tudoJogado && situacao === "ANDAMENTO"
+        ? 99
+        : progresso,
+  };
+}
 
 // da_aacj: time da AACJ (tipo_time INTERNO); null ou ausente = não se sabe
 export type Time = {
@@ -69,6 +194,9 @@ export type DadosCampeonato = {
   data_inicio_campeonato: string;
   data_fim_campeonato: string;
   categorias: Categoria[];
+  // Servidor antigo não manda
+  resumo?: Resumo | null;
+  encerrado?: boolean;
   jogos: Jogo[];
   classificacao: ClassificacaoCategoria[];
 };

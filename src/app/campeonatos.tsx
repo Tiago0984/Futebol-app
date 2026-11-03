@@ -5,6 +5,12 @@ import campeonatosStyle from "@/styles/campeonatosStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
+import {
+  andamentoDoCampeonato,
+  type Categoria,
+  type Resumo,
+  type Situacao,
+} from "@/utils/campeonatos";
 import { chaveDoDia } from "@/utils/eventos";
 import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,8 +26,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-type Categoria = { id_categoria: number; rotulo: string };
-
 // Só os campos de GET /api/v1/campeonatos usados nesta tela
 type Campeonato = {
   id_campeonato: number;
@@ -33,14 +37,9 @@ type Campeonato = {
   data_inicio_campeonato: string;
   data_fim_campeonato: string;
   categorias: Categoria[];
-  // Jogos já marcados (o total cresce quando o mata-mata é montado); servidor antigo não manda
-  resumo?: {
-    fase_atual_label: string | null;
-    rodada_atual: number | null;
-    total_rodadas: number | null;
-    jogos_realizados: number;
-    total_jogos: number;
-  } | null;
+  // Somando todas as categorias; servidor antigo não manda
+  resumo?: Resumo | null;
+  encerrado?: boolean;
 };
 
 // GET /api/v1/campeonatos-do-atleta: em quais o atleta participa e como
@@ -51,7 +50,6 @@ type Participacao = {
   categorias: Categoria[];
 };
 
-type Situacao = "ANDAMENTO" | "EM_BREVE" | "ENCERRADO";
 type Filtro = "TODOS" | "MEUS" | Situacao;
 
 const FILTROS: { valor: Filtro; rotulo: string }[] = [
@@ -61,66 +59,6 @@ const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: "EM_BREVE", rotulo: "Em breve" },
   { valor: "ENCERRADO", rotulo: "Encerrados" },
 ];
-
-// "2026-10-03T00:00:00-03:00" -> "03/10"
-function diaMes(data: string) {
-  return `${data.slice(8, 10)}/${data.slice(5, 7)}`;
-}
-
-// Com jogos marcados: "Fase de grupos · Rodada 4 de 5" (ou "6 de 10 jogos") e o progresso
-// pelos jogos com placar. Sem eles, a situação pelas datas
-function andamento(c: Campeonato, hoje: string) {
-  const pelasDatas = andamentoPelasDatas(c, hoje);
-  const r = c.resumo;
-  if (!r || r.total_jogos === 0) return pelasDatas;
-  const etapa =
-    r.rodada_atual && r.total_rodadas
-      ? `Rodada ${r.rodada_atual} de ${r.total_rodadas}`
-      : `${r.jogos_realizados} de ${r.total_jogos} ${r.total_jogos === 1 ? "jogo" : "jogos"}`;
-  return {
-    situacao: pelasDatas.situacao,
-    texto: [r.fase_atual_label, etapa].filter(Boolean).join(" · "),
-    progresso: Math.floor((r.jogos_realizados / r.total_jogos) * 100),
-  };
-}
-
-// Situação e progresso pelas datas (recortadas do texto, sem passar pelo fuso do aparelho)
-function andamentoPelasDatas(c: Campeonato, hoje: string) {
-  const inicio = c.data_inicio_campeonato.slice(0, 10);
-  const fim = c.data_fim_campeonato.slice(0, 10);
-  if (fim < hoje) {
-    return {
-      situacao: "ENCERRADO" as Situacao,
-      texto: `Encerrado em ${diaMes(fim)}`,
-      progresso: 100,
-    };
-  }
-  if (inicio > hoje) {
-    return {
-      situacao: "EM_BREVE" as Situacao,
-      texto: `Começa em ${diaMes(inicio)}`,
-      progresso: 0,
-    };
-  }
-  const dia = (chave: string) => {
-    const [a, m, d] = chave.split("-").map(Number);
-    return Date.UTC(a, m - 1, d) / 86400000;
-  };
-  const total = dia(fim) - dia(inicio) + 1;
-  const passados = dia(hoje) - dia(inicio) + 1;
-  return {
-    situacao: "ANDAMENTO" as Situacao,
-    texto: `Termina em ${diaMes(fim)}`,
-    // Para baixo: 100% só quando terminar
-    progresso: Math.min(99, Math.max(0, Math.floor((passados / total) * 100))),
-  };
-}
-
-const ROTULO_SITUACAO: Record<Situacao, string> = {
-  ANDAMENTO: "Em andamento",
-  EM_BREVE: "Em breve",
-  ENCERRADO: "Encerrado",
-};
 
 // Em andamento primeiro (o que termina antes), depois os próximos, depois os encerrados
 const ORDEM: Record<Situacao, number> = { ANDAMENTO: 0, EM_BREVE: 1, ENCERRADO: 2 };
@@ -211,8 +149,52 @@ export default function Campeonatos() {
     });
   }
 
-  // Linha de baixo do card: a participação do atleta ou, sem ela, as categorias
+  const hoje = chaveDoDia(new Date());
+
+  // Categorias do atleta neste campeonato (convocado ou só inscrito); vazio se não participa
+  function categoriasDoAtleta(c: Campeonato) {
+    const p = participacoes[c.id_campeonato];
+    if (!p) return [];
+    const ids = [...p.convocacoes, ...p.categorias].map((cat) => cat.id_categoria);
+    return c.categorias.filter((cat) => ids.includes(cat.id_categoria));
+  }
+
+  // Andamento do card: o da categoria do atleta quando ele participa (bate com o detalhe,
+  // que abre nela); senão, o do campeonato todo
+  function andamento(c: Campeonato) {
+    const minha = categoriasDoAtleta(c)[0];
+    if (minha?.resumo !== undefined) {
+      const a = andamentoDoCampeonato(c, hoje, minha.resumo, minha.encerrada);
+      return c.categorias.length > 1
+        ? { ...a, texto: `${minha.rotulo} · ${a.texto}` }
+        : a;
+    }
+    return andamentoDoCampeonato(c, hoje, c.resumo, c.encerrado);
+  }
+
+  // Campeões das categorias encerradas (só as do atleta, quando ele participa)
+  function campeoesTexto(c: Campeonato) {
+    const minhas = categoriasDoAtleta(c);
+    const categorias = minhas.length > 0 ? minhas : c.categorias;
+    return categorias
+      .filter((cat) => cat.campeao?.campeao)
+      .map((cat) =>
+        c.categorias.length > 1
+          ? `${cat.rotulo}: ${cat.campeao!.campeao!.nome}`
+          : cat.campeao!.campeao!.nome,
+      )
+      .join("\n");
+  }
+
+  // Linha de baixo do card: o campeão, a participação do atleta ou, sem eles, as categorias
   function participacaoTexto(c: Campeonato) {
+    const campeoes = campeoesTexto(c);
+    if (campeoes) {
+      return {
+        rotulo: campeoes.includes("\n") ? "🏆 Campeões" : "🏆 Campeão",
+        valor: campeoes,
+      };
+    }
     const p = participacoes[c.id_campeonato];
     if (p?.convocada && p.convocacoes.length > 0) {
       return {
@@ -234,9 +216,8 @@ export default function Campeonatos() {
     };
   }
 
-  const hoje = chaveDoDia(new Date());
   const lista = (campeonatos ?? [])
-    .map((c) => ({ c, a: andamento(c, hoje) }))
+    .map((c) => ({ c, a: andamento(c) }))
     .filter(({ c, a }) =>
       filtroAtivo === "TODOS"
         ? true
@@ -446,7 +427,7 @@ export default function Campeonatos() {
                               campeonatosStyle.statusPillTextEncerrado,
                           ]}
                         >
-                          {ROTULO_SITUACAO[a.situacao]}
+                          {a.selo}
                         </Text>
                       </View>
                     </View>

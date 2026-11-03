@@ -222,6 +222,46 @@ const campeonatoDetalheStyle = StyleSheet.create({
     color: cores.branco,
   },
 
+  /* CAMPEÃO */
+
+  podio: {
+    gap: 8,
+  },
+
+  podioLinha: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.14)",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+
+  podioLinhaCampeao: {
+    borderColor: "#E8B923",
+    backgroundColor: "rgba(232,185,35,0.12)",
+  },
+
+  podioEscudo: {
+    width: 36,
+    height: 36,
+  },
+
+  podioRotulo: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.legenda,
+    color: cores.branco70,
+  },
+
+  podioNome: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.destaqueLeve,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
   /* ESTATÍSTICAS */
 
   statsGrid: {
