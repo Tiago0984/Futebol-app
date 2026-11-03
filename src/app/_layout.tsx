@@ -6,6 +6,7 @@ import { Oswald_700Bold, Oswald_400Regular } from "@expo-google-fonts/oswald";
 
 import { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 import * as SplashScreen from "expo-splash-screen";
 import * as Notifications from "expo-notifications";
@@ -71,6 +72,8 @@ export default function RootLayout() {
   }
   return (
     <SafeAreaProvider>
+      {/* Todas as telas têm fundo escuro: os ícones da barra ficam claros */}
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
           headerShown: false,
