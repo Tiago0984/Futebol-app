@@ -287,7 +287,7 @@ export default function ComissaoTecnica() {
   }
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

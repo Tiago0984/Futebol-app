@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const GRAFICO_ALTURA = 40;
 const GRAFICO_ALTURA_PREENCHIMENTO = 120;
@@ -137,8 +138,9 @@ function MiniGrafico({ valores }: { valores: number[] }) {
 }
 
 export default function Indicadores() {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

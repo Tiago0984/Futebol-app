@@ -17,7 +17,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function EsqueciSenha() {
-  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  // Android: as barras do sistema ficam por cima da tela; o conteúdo fica entre elas
   const insets = useSafeAreaInsets();
   const { perfil } = useLocalSearchParams<{ perfil?: string }>();
   const perfilDaConta = perfil === "responsavel" ? "responsavel" : "atleta";
@@ -68,7 +68,7 @@ export default function EsqueciSenha() {
   }
 
   return (
-    <View style={esqueciSenhaStyle.container}>
+    <View style={[esqueciSenhaStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
         style={esqueciSenhaStyle.backgroundImage}

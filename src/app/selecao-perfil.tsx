@@ -6,10 +6,10 @@ import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
-  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  // Android: as barras do sistema ficam por cima da tela; o conteúdo fica entre elas
   const insets = useSafeAreaInsets();
   return (
-    <View style={selecaoPerfilStyle.container}>
+    <View style={[selecaoPerfilStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
         style={selecaoPerfilStyle.backgroundImage}

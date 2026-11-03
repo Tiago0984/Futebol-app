@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 import TabBar from "@/components/tabBar";
@@ -151,6 +152,7 @@ async function buscarPagina(
 }
 
 export default function Notificacoes() {
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{
     aba?: string | string[];
   }>();
@@ -409,7 +411,7 @@ export default function Notificacoes() {
   }
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

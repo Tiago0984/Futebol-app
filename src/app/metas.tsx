@@ -5,6 +5,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const metas = [
   {
@@ -36,12 +37,13 @@ const metas = [
 ];
 
 export default function Metas() {
+  const insets = useSafeAreaInsets();
   const [proximaMetaLargura, setProximaMetaLargura] = useState(0);
   const proximaMetaAltura =
     proximaMetaLargura > 0 ? proximaMetaLargura * (90 / 380) : undefined;
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

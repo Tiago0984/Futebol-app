@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 
@@ -41,6 +42,7 @@ const informacoes: Record<
 };
 
 export default function SobreAACJ() {
+  const insets = useSafeAreaInsets();
   const [secaoAberta, setSecaoAberta] = useState<Secao | null>(null);
 
   const animacoes = useRef<Record<Secao, Animated.Value>>({
@@ -114,7 +116,7 @@ export default function SobreAACJ() {
   };
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

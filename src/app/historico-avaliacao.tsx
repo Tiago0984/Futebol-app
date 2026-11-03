@@ -5,6 +5,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
 import { router } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const avaliacoes = [
   {
@@ -58,8 +59,9 @@ const avaliacoes = [
 ];
 
 export default function HistoricoAvaliacao() {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

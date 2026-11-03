@@ -19,6 +19,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Só os campos de um evento de GET /api/v1/agenda usados nesta tela
 type Evento = {
@@ -208,6 +209,7 @@ function idDaLinha(linha: Linha) {
 }
 
 export default function Agenda() {
+  const insets = useSafeAreaInsets();
   const [filtroAtivo, setFiltroAtivo] = useState<string | null>(null);
   const [passadosApi, setPassadosApi] = useState<Evento[]>([]);
   const [proximosApi, setProximosApi] = useState<Evento[]>([]);
@@ -627,7 +629,7 @@ export default function Agenda() {
   }
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

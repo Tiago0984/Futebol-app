@@ -86,7 +86,7 @@ export default function EscolhaAtleta() {
   }
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}
@@ -96,10 +96,7 @@ export default function EscolhaAtleta() {
 
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={[
-          escolhaAtletaStyle.scrollContent,
-          { paddingTop: insets.top },
-        ]}
+        contentContainerStyle={escolhaAtletaStyle.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         {/* Voltar só quando veio do Perfil; depois do login não há para onde voltar */}

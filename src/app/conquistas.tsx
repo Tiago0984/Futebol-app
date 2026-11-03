@@ -5,6 +5,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const conquistas = [
   {
@@ -35,6 +36,7 @@ const proximasConquistas = [
 ];
 
 export default function Conquistas() {
+  const insets = useSafeAreaInsets();
   const [linhaLargura, setLinhaLargura] = useState(0);
   const larguraCard = linhaLargura > 0 ? (linhaLargura - 3 * 10) / 4 : undefined;
   const alturaCard = larguraCard ? larguraCard * (120 / 90) : undefined;
@@ -47,7 +49,7 @@ export default function Conquistas() {
     : undefined;
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

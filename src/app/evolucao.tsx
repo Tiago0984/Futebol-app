@@ -5,6 +5,7 @@ import fundoStyle from "@/styles/fundoStyle";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const ALTURA_GRAFICO = 140;
 const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];
@@ -39,6 +40,7 @@ const fundamentos = [
 ];
 
 export default function Evolucao() {
+  const insets = useSafeAreaInsets();
   const [larguraGrafico, setLarguraGrafico] = useState(0);
 
   const pontos = VALORES.map((valor, index) => ({
@@ -47,7 +49,7 @@ export default function Evolucao() {
   }));
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

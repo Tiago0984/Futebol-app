@@ -13,6 +13,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 import TabBar from "@/components/tabBar";
@@ -175,6 +176,7 @@ function exibirNumero(valor: number | null | undefined) {
 }
 
 export default function Home() {
+  const insets = useSafeAreaInsets();
   const [atleta, setAtleta] = useState<Atleta | null>(null);
   const [erroConexao, setErroConexao] = useState("");
   // Só com o responsável logado: a saudação é para ele, os dados são do filho
@@ -504,7 +506,7 @@ export default function Home() {
         : estatisticasLinha;
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

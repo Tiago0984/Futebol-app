@@ -16,7 +16,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function RedefinirSenha() {
-  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  // Android: as barras do sistema ficam por cima da tela; o conteúdo fica entre elas
   const insets = useSafeAreaInsets();
   const { email, perfil } = useLocalSearchParams<{ email?: string; perfil?: string }>();
   const perfilDaConta = perfil === "responsavel" ? "responsavel" : "atleta";
@@ -114,7 +114,7 @@ export default function RedefinirSenha() {
   }
 
   return (
-    <View style={redefinirSenhaStyle.container}>
+    <View style={[redefinirSenhaStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
         style={redefinirSenhaStyle.backgroundImage}

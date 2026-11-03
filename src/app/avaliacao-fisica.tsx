@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const INDICE_PONTOS = 92;
 
@@ -47,6 +48,7 @@ const rotacaoDireita = -135 + (percentualDireita / 100) * 180;
 const rotacaoEsquerda = -135 + (percentualEsquerda / 100) * 180;
 
 export default function AvaliacaoFisica() {
+  const insets = useSafeAreaInsets();
   const [comparacaoLargura, setComparacaoLargura] = useState(0);
   const [gradeLargura, setGradeLargura] = useState(0);
   const larguraCard = gradeLargura > 0 ? (gradeLargura - 10) / 2 : undefined;
@@ -81,7 +83,7 @@ export default function AvaliacaoFisica() {
   });
 
   return (
-    <View style={fundoStyle.container}>
+    <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-aacj-app.png")}
         style={fundoStyle.backgroundImage}

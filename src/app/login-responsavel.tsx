@@ -18,7 +18,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LoginResponsavel() {
-  // Android: a barra de navegação fica por cima da tela; o fim da rolagem passa dela
+  // Android: as barras do sistema ficam por cima da tela; o conteúdo fica entre elas
   const insets = useSafeAreaInsets();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -99,7 +99,7 @@ export default function LoginResponsavel() {
   }
 
   return (
-    <View style={loginResponsavelStyle.container}>
+    <View style={[loginResponsavelStyle.container, { paddingTop: insets.top }]}>
       <Image
         source={require("@/assets/images/img/background-campo-vazio-AACJ.png")}
         style={loginResponsavelStyle.backgroundImage}
