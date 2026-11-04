@@ -69,6 +69,19 @@ Pacote `br.com.aacj.app`; push pelo Firebase `aacj-6daae` (a chave FCM V1 já es
   `npx eas-cli build -p android --profile preview` e instalar por cima pelo link. O `runtimeVersion` é por
   fingerprint: se a mudança mexe na parte nativa, o `eas update` não chega nos APKs antigos e é preciso gerar outro.
 
+### Como o Firebase foi configurado (refazer em outro projeto ou conta)
+
+Reconstituído em 04/11 a partir do repositório e do fluxo padrão do Expo: os nomes dos botões podem variar.
+
+1. No console do Firebase, criar o projeto e adicionar um app Android com o pacote `br.com.aacj.app`.
+2. Baixar o `google-services.json`, colocar na raiz do projeto e apontar `android.googleServicesFile` no `app.json`.
+   Esse arquivo só identifica o app e fica no git.
+3. Em Configurações do projeto > Contas de serviço, gerar uma nova chave privada (JSON). **Ela dá permissão de
+   envio: guardar fora do projeto e nunca colocar no git.**
+4. Enviar a chave ao Expo: `npx eas-cli credentials`, Android, perfil `preview`, Google Service Account, opção FCM V1.
+5. Gerar e instalar o APK, entrar no app e aceitar a permissão de notificações. A Home registra o aparelho em
+   `POST /dispositivos`; um aviso do painel deve chegar na barra do celular.
+
 ## O que já está feito
 
 | Parte | Situação | Onde |
