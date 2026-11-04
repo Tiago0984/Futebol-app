@@ -68,6 +68,7 @@ Pacote `br.com.aacj.app`; push pelo Firebase `aacj-6daae` (a chave FCM V1 já es
 - **APK novo** (ícone, nome, permissões, biblioteca nativa nova ou atualização do Expo):
   `npx eas-cli build -p android --profile preview` e instalar por cima pelo link. O `runtimeVersion` é por
   fingerprint: se a mudança mexe na parte nativa, o `eas update` não chega nos APKs antigos e é preciso gerar outro.
+  O fingerprint considera o fim de linha: o `.gitattributes` fixa CRLF no `eas.json`, no `google-services.json` e no `.gitignore`.
 
 ### Como o Firebase foi configurado (refazer em outro projeto ou conta)
 

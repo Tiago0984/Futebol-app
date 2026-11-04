@@ -1,0 +1,4 @@
+# Entram no fingerprint do EAS: com o mesmo fim de linha em qualquer PC, o eas update chega no APK
+.gitignore text eol=crlf
+eas.json text eol=crlf
+google-services.json text eol=crlf
