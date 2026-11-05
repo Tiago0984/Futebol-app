@@ -68,7 +68,7 @@ export default function Index() {
               <View style={selecaoPerfilStyle.cardTextCol}>
                 <Text style={selecaoPerfilStyle.cardTitle}>Atleta</Text>
                 <Text style={selecaoPerfilStyle.cardDescription}>
-                  Consulte seus treinos,{"\n"}campeonatos, frequência e desempenho.
+                  Consulte seus treinos,{"\n"}jogos, campeonatos e avisos.
                 </Text>
               </View>
             </View>
@@ -92,7 +92,7 @@ export default function Index() {
               <View style={selecaoPerfilStyle.cardTextCol}>
                 <Text style={selecaoPerfilStyle.cardTitle}>Responsável</Text>
                 <Text style={selecaoPerfilStyle.cardDescription}>
-                  Acompanhe frequência, evolução e comunicados do atleta.
+                  Acompanhe a agenda, os campeonatos e os avisos do atleta.
                 </Text>
               </View>
             </View>
