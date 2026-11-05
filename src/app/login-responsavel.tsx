@@ -131,7 +131,7 @@ export default function LoginResponsavel() {
           />
           <Text style={loginResponsavelStyle.title}>Área do Responsável</Text>
           <Text style={loginResponsavelStyle.subtitle}>
-            Acompanhe toda a evolução do seu atleta
+            Acompanhe a rotina do seu atleta
           </Text>
           <View style={loginResponsavelStyle.badge}>
             <Image

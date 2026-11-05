@@ -32,7 +32,7 @@ const informacoes: Record<
   termos: {
     titulo: "Termos de Uso",
     texto:
-      "O aplicativo AACJ é destinado ao acompanhamento das atividades, competições, desempenho e informações relacionadas à formação de atletas. Ao utilizar o aplicativo, o usuário se compromete a fornecer informações corretas e utilizar os recursos de forma responsável.",
+      "O aplicativo AACJ é destinado ao acompanhamento das atividades, competições e informações relacionadas à formação de atletas. Ao utilizar o aplicativo, o usuário se compromete a fornecer informações corretas e utilizar os recursos de forma responsável.",
   },
   contato: {
     titulo: "Contato",
