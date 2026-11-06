@@ -16,8 +16,10 @@ import {
   resultadoDaAacj,
   ROTULO_RESULTADO,
   useCampeonato,
+  vencedorDoJogo,
   voltarParaCampeonatos,
 } from "@/utils/campeonatos";
+import { abrirDetalhe } from "@/utils/eventos";
 import { useLocalSearchParams } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -29,7 +31,10 @@ export default function UltimosResultados() {
     id?: string;
     categoria?: string;
   }>();
-  const { campeonato, erro, idCategoria } = useCampeonato(id, categoria);
+  const { campeonato, erro, idCategoria, eventosNaAgenda } = useCampeonato(
+    id,
+    categoria,
+  );
 
   const rotuloCategoria = campeonato?.categorias.find(
     (cat) => cat.id_categoria === idCategoria,
@@ -77,11 +82,12 @@ export default function UltimosResultados() {
         <View style={ultimosResultadosStyle.listCard}>
           {resultados.map((j, index) => {
             const resultado = resultadoDaAacj(j);
-            // Escudo do adversário da AACJ; jogo sem a AACJ, o do mandante
+            // Escudo de quem ganhou; no empate, o da AACJ (jogo sem a AACJ, o do mandante)
             const escudo =
-              j.time_casa.da_aacj && !j.time_visitante.da_aacj
+              vencedorDoJogo(j) ??
+              (j.time_visitante.da_aacj && !j.time_casa.da_aacj
                 ? j.time_visitante
-                : j.time_casa;
+                : j.time_casa);
             const estiloPill =
               resultado === "VITORIA"
                 ? ultimosResultadosStyle.resultPillVitoria
@@ -94,15 +100,19 @@ export default function UltimosResultados() {
                 : resultado === "DERROTA"
                   ? cores.vermelho
                   : cores.cinza;
+            // Só os jogos da agenda do atleta têm detalhe
+            const temDetalhe = eventosNaAgenda.includes(j.id_evento);
 
             return (
-              <View
+              <Pressable
                 key={j.id_jogo}
                 style={[
                   ultimosResultadosStyle.resultItem,
                   index < resultados.length - 1 &&
                     ultimosResultadosStyle.resultItemDivider,
                 ]}
+                onPress={() => abrirDetalhe(j.id_evento)}
+                disabled={!temDetalhe}
               >
                 <Image
                   source={escudoDoTime(escudo)}
@@ -133,7 +143,10 @@ export default function UltimosResultados() {
                     </Text>
                   </View>
                 )}
-              </View>
+                {temDetalhe && (
+                  <Text style={ultimosResultadosStyle.resultSeta}>›</Text>
+                )}
+              </Pressable>
             );
           })}
         </View>

@@ -214,23 +214,31 @@ export function diaDaSemana(data: string) {
 export const jogado = (j: Jogo) =>
   j.placar_time_casa_jogos !== null && j.placar_time_visitante_jogos !== null;
 
+// Quem ganhou o jogo com placar (nos pênaltis, quem passou); null no empate
+export function vencedorDoJogo(j: Jogo) {
+  let casa = j.placar_time_casa_jogos!;
+  let fora = j.placar_time_visitante_jogos!;
+  if (
+    casa === fora &&
+    j.penaltis_time_casa_jogos != null &&
+    j.penaltis_time_visitante_jogos != null
+  ) {
+    casa = j.penaltis_time_casa_jogos;
+    fora = j.penaltis_time_visitante_jogos;
+  }
+  if (casa === fora) return null;
+  return casa > fora ? j.time_casa : j.time_visitante;
+}
+
 // Resultado do ponto de vista da AACJ (nos pênaltis, conta quem passou); null quando
 // nenhum dos times é da AACJ, os dois são, ou o servidor ainda não diz qual é
 export function resultadoDaAacj(j: Jogo) {
   const casa = j.time_casa.da_aacj === true;
   const fora = j.time_visitante.da_aacj === true;
   if (!jogado(j) || casa === fora) return null;
-  let nossos = casa ? j.placar_time_casa_jogos! : j.placar_time_visitante_jogos!;
-  let deles = casa ? j.placar_time_visitante_jogos! : j.placar_time_casa_jogos!;
-  if (
-    nossos === deles &&
-    j.penaltis_time_casa_jogos != null &&
-    j.penaltis_time_visitante_jogos != null
-  ) {
-    nossos = casa ? j.penaltis_time_casa_jogos! : j.penaltis_time_visitante_jogos!;
-    deles = casa ? j.penaltis_time_visitante_jogos! : j.penaltis_time_casa_jogos!;
-  }
-  return nossos > deles ? "VITORIA" : nossos < deles ? "DERROTA" : "EMPATE";
+  const vencedor = vencedorDoJogo(j);
+  if (!vencedor) return "EMPATE";
+  return vencedor.da_aacj === true ? "VITORIA" : "DERROTA";
 }
 
 export const ROTULO_RESULTADO = {

@@ -141,6 +141,13 @@ const ultimosResultadosStyle = StyleSheet.create({
     fontSize: fontSizes.corpo,
     color: cores.cinza,
   },
+  resultSeta: {
+    marginLeft: 6,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.titulo,
+    fontWeight: "700",
+    color: cores.cinza,
+  },
   resultPill: {
     justifyContent: "center",
     alignItems: "center",
