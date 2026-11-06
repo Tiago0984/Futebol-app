@@ -19,6 +19,7 @@ import {
   voltarParaCampeonatos,
   andamentoDoCampeonato,
   type Resumo,
+  type Situacao,
 } from "@/utils/campeonatos";
 import { abrirDetalhe, chaveDoDia } from "@/utils/eventos";
 import { router, useLocalSearchParams } from "expo-router";
@@ -95,7 +96,10 @@ export default function CampeonatoDetalhe() {
     const campeao = categoria?.campeao ?? null;
     const futuros = jogosFuturos(jogos, hoje);
     const proximo = futuros[0];
-    const proximos = futuros.slice(1, 4);
+    const proximos = futuros.slice(1);
+    // Só o jogo que está na agenda do atleta tem detalhe para abrir
+    const proximoTemDetalhe =
+      proximo && eventosNaAgenda.includes(proximo.id_evento);
     const ultimos = realizados.slice(-3).reverse();
 
     const grupos = gruposDaCategoria(c, idCategoria);
@@ -200,56 +204,12 @@ export default function CampeonatoDetalhe() {
         {seletorDeCategoria}
 
         {/* INFORMAÇÕES DO CAMPEONATO */}
-        <View style={[campeonatoDetalheStyle.infoCard, { marginTop: 16 }]}>
-          <Image
-            source={
-              c.logo_url
-                ? { uri: c.logo_url }
-                : require("@/assets/images/img/campeonatosVermelho.png")
-            }
-            style={campeonatoDetalheStyle.campeonatoLogo}
-            resizeMode="contain"
-          />
-
-          <View style={campeonatoDetalheStyle.infoContent}>
-            <View style={campeonatoDetalheStyle.infoHeaderRow}>
-              <View />
-              <View
-                style={[
-                  campeonatoDetalheStyle.statusPill,
-                  situacao === "EM_BREVE" && campeonatoDetalheStyle.statusPillEmBreve,
-                  situacao === "ENCERRADO" &&
-                    campeonatoDetalheStyle.statusPillEncerrado,
-                ]}
-              >
-                <Text
-                  style={[
-                    campeonatoDetalheStyle.statusPillText,
-                    situacao === "EM_BREVE" &&
-                      campeonatoDetalheStyle.statusPillTextEmBreve,
-                    situacao === "ENCERRADO" &&
-                      campeonatoDetalheStyle.statusPillTextEncerrado,
-                  ]}
-                >
-                  {andamento.selo}
-                </Text>
-              </View>
-            </View>
-
-            <View style={campeonatoDetalheStyle.infoRows}>
-              {linhasInfo.map((linha) => (
-                <View key={linha.rotulo} style={campeonatoDetalheStyle.infoRow}>
-                  <Text style={campeonatoDetalheStyle.infoLabel}>
-                    {linha.rotulo}
-                  </Text>
-                  <Text style={campeonatoDetalheStyle.infoValue}>
-                    {linha.valor}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </View>
-        </View>
+        <InfoCampeonato
+          logoUrl={c.logo_url}
+          selo={andamento.selo}
+          situacao={situacao}
+          linhas={linhasInfo}
+        />
 
         {c.descricao_campeonato && (
           <Text style={campeonatoDetalheStyle.descricao}>
@@ -385,7 +345,11 @@ export default function CampeonatoDetalhe() {
 
         {/* PRÓXIMA PARTIDA */}
         {proximo && (
-          <View style={campeonatoDetalheStyle.matchCard}>
+          <Pressable
+            style={campeonatoDetalheStyle.matchCard}
+            onPress={() => abrirDetalhe(proximo.id_evento)}
+            disabled={!proximoTemDetalhe}
+          >
             <Text style={campeonatoDetalheStyle.matchCardTitle}>
               Próxima partida
             </Text>
@@ -434,18 +398,14 @@ export default function CampeonatoDetalhe() {
               </View>
             </View>
 
-            {/* Só o jogo que está na agenda do atleta tem detalhe para abrir */}
-            {eventosNaAgenda.includes(proximo.id_evento) && (
-              <Pressable
-                style={campeonatoDetalheStyle.matchDetailsButton}
-                onPress={() => abrirDetalhe(proximo.id_evento)}
-              >
+            {proximoTemDetalhe && (
+              <View style={campeonatoDetalheStyle.matchDetailsButton}>
                 <Text style={campeonatoDetalheStyle.matchDetailsText}>
                   Ver detalhes {">"}
                 </Text>
-              </Pressable>
+              </View>
             )}
-          </View>
+          </Pressable>
         )}
 
         {/* CLASSIFICAÇÃO + RESULTADOS */}
@@ -549,19 +509,28 @@ export default function CampeonatoDetalhe() {
           </View>
         )}
 
-        {/* PRÓXIMAS PARTIDAS (depois da próxima) */}
-        {proximos.length > 0 && (
+        {/* PRÓXIMAS PARTIDAS (depois da próxima); sem jogo nenhum, vale o aviso lá de baixo */}
+        {jogos.length > 0 && (
           <View style={campeonatoDetalheStyle.upcomingSection}>
             <View style={campeonatoDetalheStyle.tableHeaderRow}>
               <Text style={campeonatoDetalheStyle.tableTitle}>
                 Próximas partidas
               </Text>
-              <Pressable onPress={() => verCompleto("/proxima-partida")}>
-                <Text style={campeonatoDetalheStyle.tableLink}>
-                  Ver completo {">"}
-                </Text>
-              </Pressable>
+              {proximos.length > 0 && (
+                <Pressable onPress={() => verCompleto("/proxima-partida")}>
+                  <Text style={campeonatoDetalheStyle.tableLink}>
+                    Ver completo {">"}
+                  </Text>
+                </Pressable>
+              )}
             </View>
+            {proximos.length === 0 && (
+              <Text style={campeonatoDetalheStyle.upcomingVazio}>
+                {proximo
+                  ? "Não há outras partidas marcadas por enquanto."
+                  : "Não há próximas partidas marcadas por enquanto."}
+              </Text>
+            )}
             {proximos.map((j) => (
               <View key={j.id_jogo} style={campeonatoDetalheStyle.upcomingRow}>
                 <Text style={campeonatoDetalheStyle.upcomingDate}>
@@ -647,6 +616,65 @@ export default function CampeonatoDetalhe() {
 
       {/* TabBar unificada */}
       <TabBar abaAtiva="campeonatos" />
+    </View>
+  );
+}
+
+// Card branco do topo: o logo com o status e, embaixo, as informações em linhas
+function InfoCampeonato({
+  logoUrl,
+  selo,
+  situacao,
+  linhas,
+}: {
+  logoUrl: string | null;
+  selo: string;
+  situacao: Situacao;
+  linhas: { rotulo: string; valor: string | null | undefined }[];
+}) {
+  return (
+    <View style={campeonatoDetalheStyle.infoCard}>
+      <View style={campeonatoDetalheStyle.infoTopo}>
+        <Image
+          source={
+            logoUrl
+              ? { uri: logoUrl }
+              : require("@/assets/images/img/campeonatosVermelho.png")
+          }
+          style={campeonatoDetalheStyle.campeonatoLogo}
+          resizeMode="contain"
+        />
+        <View
+          style={[
+            campeonatoDetalheStyle.statusPill,
+            situacao === "EM_BREVE" && campeonatoDetalheStyle.statusPillEmBreve,
+            situacao === "ENCERRADO" &&
+              campeonatoDetalheStyle.statusPillEncerrado,
+          ]}
+        >
+          <Text
+            style={[
+              campeonatoDetalheStyle.statusPillText,
+              situacao === "EM_BREVE" &&
+                campeonatoDetalheStyle.statusPillTextEmBreve,
+              situacao === "ENCERRADO" &&
+                campeonatoDetalheStyle.statusPillTextEncerrado,
+            ]}
+            numberOfLines={1}
+          >
+            {selo}
+          </Text>
+        </View>
+      </View>
+
+      <View style={campeonatoDetalheStyle.infoRows}>
+        {linhas.map((linha) => (
+          <View key={linha.rotulo} style={campeonatoDetalheStyle.infoRow}>
+            <Text style={campeonatoDetalheStyle.infoLabel}>{linha.rotulo}</Text>
+            <Text style={campeonatoDetalheStyle.infoValue}>{linha.valor}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }

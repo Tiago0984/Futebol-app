@@ -77,39 +77,30 @@ const campeonatoDetalheStyle = StyleSheet.create({
   /* CARD DE INFORMAÇÕES */
 
   infoCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "center",
-    width: "88%",
-    minHeight: 130,
-    marginTop: 3,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    marginTop: 16,
+    marginHorizontal: 20,
+    padding: 16,
     borderRadius: 16,
     backgroundColor: cores.branco,
   },
 
-  campeonatoLogo: {
-    width: 62,
-    height: 82,
-    marginRight: 12,
-  },
-
-  infoContent: {
-    flex: 1,
-    minWidth: 0,
-  },
-
-  infoHeaderRow: {
+  infoTopo: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    columnGap: 12,
+  },
+
+  campeonatoLogo: {
+    flexShrink: 0,
+    width: 56,
+    height: 56,
   },
 
   statusPill: {
-    alignSelf: "flex-end",
-    paddingHorizontal: 9,
-    height: 20,
+    flexShrink: 1,
+    paddingHorizontal: 10,
+    height: 24,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
@@ -117,32 +108,38 @@ const campeonatoDetalheStyle = StyleSheet.create({
   },
 
   statusPillText: {
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.pequeno,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.corpo,
+    fontWeight: "700",
     color: cores.verde,
   },
 
   infoRows: {
-    marginTop: 1,
+    marginTop: 12,
+    paddingTop: 12,
+    rowGap: 8,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(0,0,0,0.08)",
   },
 
   infoRow: {
     flexDirection: "row",
-    alignItems: "center",
-    marginTop: 3,
+    alignItems: "flex-start",
+    columnGap: 8,
   },
 
   infoLabel: {
-    width: 76,
+    width: 84,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.pequeno,
+    fontSize: fontSizes.corpoMedio,
     color: cores.cinza,
   },
 
   infoValue: {
     flex: 1,
-    fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.pequeno,
+    minWidth: 0,
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpoMedio,
     color: cores.preto,
   },
 
@@ -609,6 +606,13 @@ const campeonatoDetalheStyle = StyleSheet.create({
   upcomingSection: {
     marginHorizontal: 24,
     marginTop: 18,
+  },
+
+  upcomingVazio: {
+    marginTop: 6,
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.corpo,
+    color: cores.branco70,
   },
 
   upcomingHeader: {
