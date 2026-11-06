@@ -299,14 +299,41 @@ function periodosDosJogos(jogos: Jogo[]) {
   return periodos;
 }
 
+// Categorias de GET /api/v1/atleta, com o período em cada uma
+export type VinculoCategoria = {
+  id_categoria: number;
+  pivot: {
+    data_inicio_categoria_atleta: string | null;
+    data_fim_categoria_atleta: string | null;
+  };
+};
+
+// A categoria atual sempre conta; uma encerrada, só se ele esteve nela durante o campeonato
+export function categoriasNoPeriodo(
+  datas: { data_inicio_campeonato: string; data_fim_campeonato: string },
+  vinculos: VinculoCategoria[],
+) {
+  const inicio = datas.data_inicio_campeonato.slice(0, 10);
+  const fim = datas.data_fim_campeonato.slice(0, 10);
+  return vinculos
+    .filter(({ pivot }) => {
+      const entrou = pivot.data_inicio_categoria_atleta?.slice(0, 10);
+      const saiu = pivot.data_fim_categoria_atleta?.slice(0, 10);
+      return !saiu || (saiu >= inicio && (!entrou || entrou <= fim));
+    })
+    .map((vinculo) => vinculo.id_categoria);
+}
+
 /**
  * Busca o campeonato, as categorias do atleta nele (para abrir já na dele) e os jogos da
  * agenda do atleta (só esses abrem o detalhe do compromisso). A categoria mostrada é a
- * da rota (?categoria=), senão a do atleta, senão a primeira
+ * da rota (?categoria=), senão a do atleta, senão a primeira. meusSubs é null quando não
+ * deu para saber as categorias do atleta: aí nenhuma fica bloqueada
  */
 export function useCampeonato(id: string | undefined, categoriaDaRota?: string) {
   const [campeonato, setCampeonato] = useState<DadosCampeonato | null>(null);
   const [minhasCategorias, setMinhasCategorias] = useState<number[]>([]);
+  const [vinculos, setVinculos] = useState<VinculoCategoria[] | null>(null);
   const [eventosNaAgenda, setEventosNaAgenda] = useState<number[]>([]);
   const [erro, setErro] = useState("");
 
@@ -323,11 +350,12 @@ export function useCampeonato(id: string | undefined, categoriaDaRota?: string) 
         Authorization: `Bearer ${token}`,
       };
       try {
-        const [resposta, respostaMeus] = await Promise.all([
+        const [resposta, respostaMeus, respostaAtleta] = await Promise.all([
           buscarComPrazo(`${API}/campeonatos/${id}`, {
             headers: { Accept: "application/json" },
           }),
           buscarComPrazo(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
+          buscarComPrazo(await urlDoAtleta("/atleta"), { headers }),
         ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
@@ -347,7 +375,11 @@ export function useCampeonato(id: string | undefined, categoriaDaRota?: string) 
           return;
         }
 
-        // As duas abaixo são extras: sem elas as telas aparecem do mesmo jeito
+        // As abaixo são extras: sem elas as telas aparecem do mesmo jeito
+        if (respostaAtleta.ok) {
+          const jsonAtleta = await respostaAtleta.json();
+          if (jsonAtleta.success) setVinculos(jsonAtleta.data.categorias);
+        }
         if (respostaMeus.ok) {
           const jsonMeus = await respostaMeus.json();
           const meu = jsonMeus.data?.find(
@@ -398,16 +430,22 @@ export function useCampeonato(id: string | undefined, categoriaDaRota?: string) 
     };
   }, [id]);
 
+  const meusSubs =
+    campeonato && vinculos
+      ? [...minhasCategorias, ...categoriasNoPeriodo(campeonato, vinculos)]
+      : null;
+
   const idCategoria = !campeonato
     ? null
     : (campeonato.categorias.find((cat) => String(cat.id_categoria) === categoriaDaRota)
         ?.id_categoria ??
-      campeonato.categorias.find((cat) => minhasCategorias.includes(cat.id_categoria))
-        ?.id_categoria ??
+      campeonato.categorias.find((cat) =>
+        (meusSubs ?? minhasCategorias).includes(cat.id_categoria),
+      )?.id_categoria ??
       campeonato.categorias[0]?.id_categoria ??
       null);
 
-  return { campeonato, erro, idCategoria, eventosNaAgenda };
+  return { campeonato, erro, idCategoria, meusSubs, eventosNaAgenda };
 }
 
 export function voltarParaCampeonatos() {

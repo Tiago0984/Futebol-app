@@ -29,8 +29,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function CampeonatoDetalhe() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id?: string }>();
-  const { campeonato, erro, idCategoria: categoriaPadrao, eventosNaAgenda } =
-    useCampeonato(id);
+  const {
+    campeonato,
+    erro,
+    idCategoria: categoriaPadrao,
+    meusSubs,
+    eventosNaAgenda,
+  } = useCampeonato(id);
   // Categoria mostrada: a escolhida nos botões, senão a do atleta, senão a primeira
   const [categoriaEscolhida, setCategoriaEscolhida] = useState<number | null>(
     null,
@@ -147,35 +152,52 @@ export default function CampeonatoDetalhe() {
 
     const escudo = escudoDoTime;
 
-    conteudo = (
+    // Categorias do campeonato: troca o que aparece abaixo
+    const seletorDeCategoria = c.categorias.length > 1 && (
+      <View style={campeonatosStyle.filterRow}>
+        {c.categorias.map((cat) => {
+          const ativo = cat.id_categoria === idCategoria;
+          return (
+            <Pressable
+              key={cat.id_categoria}
+              style={[
+                campeonatosStyle.filterPill,
+                ativo && campeonatosStyle.filterPillActive,
+              ]}
+              onPress={() => setCategoriaEscolhida(cat.id_categoria)}
+            >
+              <Text
+                style={[
+                  campeonatosStyle.filterPillText,
+                  ativo && campeonatosStyle.filterPillTextActive,
+                ]}
+              >
+                {cat.rotulo}
+                {meusSubs?.includes(cat.id_categoria) && " (seu sub)"}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    );
+
+    // O atleta só vê as informações do sub dele; os outros mostram o aviso
+    const semAcesso =
+      meusSubs !== null &&
+      idCategoria !== null &&
+      !meusSubs.includes(idCategoria);
+
+    conteudo = semAcesso ? (
       <>
-        {/* Categorias do campeonato: troca o que aparece abaixo */}
-        {c.categorias.length > 1 && (
-          <View style={campeonatosStyle.filterRow}>
-            {c.categorias.map((cat) => {
-              const ativo = cat.id_categoria === idCategoria;
-              return (
-                <Pressable
-                  key={cat.id_categoria}
-                  style={[
-                    campeonatosStyle.filterPill,
-                    ativo && campeonatosStyle.filterPillActive,
-                  ]}
-                  onPress={() => setCategoriaEscolhida(cat.id_categoria)}
-                >
-                  <Text
-                    style={[
-                      campeonatosStyle.filterPillText,
-                      ativo && campeonatosStyle.filterPillTextActive,
-                    ]}
-                  >
-                    {cat.rotulo}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        )}
+        {seletorDeCategoria}
+        <Text style={campeonatosStyle.estadoTexto}>
+          Você não é do {categoria?.rotulo ?? "sub selecionado"}. As informações
+          dele aparecem só para os atletas desse sub.
+        </Text>
+      </>
+    ) : (
+      <>
+        {seletorDeCategoria}
 
         {/* INFORMAÇÕES DO CAMPEONATO */}
         <View style={[campeonatoDetalheStyle.infoCard, { marginTop: 16 }]}>
