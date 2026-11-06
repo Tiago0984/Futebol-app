@@ -62,6 +62,23 @@ export function chaveDoDia(data: Date) {
   return `${data.getFullYear()}-${mes}-${dia}`;
 }
 
+// Mesma regra da API para "concluído": passou o fim; sem fim, vale o início;
+// sem horário nenhum, só no dia seguinte. Um false da API fica antigo com a tela aberta: vale o horário também
+export function jaTerminou(
+  evento: {
+    data: string;
+    inicio: string | null;
+    fim: string | null;
+    concluido?: boolean;
+  },
+  agora: Date,
+) {
+  if (evento.concluido === true) return true;
+  const referencia = evento.fim ?? evento.inicio;
+  if (referencia) return new Date(referencia) <= agora;
+  return evento.data.slice(0, 10) < chaveDoDia(agora);
+}
+
 // "Hoje · 03/11/2026", "Amanhã · 04/11/2026" ou "Quinta-feira · 05/11/2026".
 // Recorta o texto da data (já vem no horário de Brasília) para o fuso do aparelho não trocar o dia
 export function formatarDiaCompromisso(data: string) {

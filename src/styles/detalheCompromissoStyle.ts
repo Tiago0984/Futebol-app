@@ -34,19 +34,9 @@ const detalheCompromissoStyle = StyleSheet.create({
     color: cores.vermelho,
   },
 
-  // "Concluído": pílula neutra no lugar da contagem regressiva
+  // "Concluído": a pílula verde do confirmado, apagada porque já passou
   concludedPill: {
-    backgroundColor: "rgba(255,255,255,0.12)",
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    height: 26,
-    justifyContent: "center",
-  },
-  concludedText: {
-    fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.corpoMedio,
-    fontWeight: "700",
-    color: cores.branco70,
+    opacity: 0.6,
   },
 
   // Título pode ocupar duas linhas (nomes de jogo são longos)

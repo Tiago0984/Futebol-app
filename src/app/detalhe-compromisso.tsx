@@ -8,9 +8,9 @@ import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import treinoTecnicoStyle from "@/styles/treinoTecnicoStyle";
 import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 import {
-  chaveDoDia,
   formatarDiaCompromisso,
   formatarDuracao,
+  jaTerminou,
   linkGoogleAgenda,
   nomePorTipo,
   visualDoTipo,
@@ -88,12 +88,7 @@ const escudoPadrao = require("@/assets/images/img/escudovermelho.png");
 // "Faltam 2h 15min", "Faltam 3 dias", "Acontecendo agora" ou "Concluído"; null no cancelado
 function contagem(evento: EventoDetalhe, agora: Date) {
   if (evento.situacao === "CANCELADO") return null;
-  const referencia = evento.fim ?? evento.inicio;
-  // Um false da API fica antigo enquanto a tela está aberta; vale o horário também.
-  const terminou = evento.concluido === true || (referencia
-    ? new Date(referencia) <= agora
-    : evento.data.slice(0, 10) < chaveDoDia(agora));
-  if (terminou) return { texto: "Concluído", concluido: true };
+  if (jaTerminou(evento, agora)) return { texto: "Concluído", concluido: true };
   if (!evento.inicio) return null;
   const minutos = Math.ceil(
     (new Date(evento.inicio).getTime() - agora.getTime()) / 60000,
@@ -329,33 +324,25 @@ export default function DetalheCompromisso() {
               </Text>
             </View>
           ) : (
-            <View style={treinoTecnicoStyle.confirmedPill}>
+            <View
+              style={[
+                treinoTecnicoStyle.confirmedPill,
+                restante?.concluido && detalheCompromissoStyle.concludedPill,
+              ]}
+            >
               <Image
                 source={require("@/assets/images/img/checkVerde.png")}
                 style={treinoTecnicoStyle.confirmedIcon}
                 resizeMode="contain"
               />
               <Text style={treinoTecnicoStyle.confirmedText} numberOfLines={1}>
-                Confirmado
+                {restante?.concluido ? "Concluído" : "Confirmado"}
               </Text>
             </View>
           )}
-          {restante && (
-            <View
-              style={
-                restante.concluido
-                  ? detalheCompromissoStyle.concludedPill
-                  : treinoTecnicoStyle.countdownPill
-              }
-            >
-              <Text
-                style={
-                  restante.concluido
-                    ? detalheCompromissoStyle.concludedText
-                    : treinoTecnicoStyle.countdownText
-                }
-                numberOfLines={1}
-              >
+          {restante && !restante.concluido && (
+            <View style={treinoTecnicoStyle.countdownPill}>
+              <Text style={treinoTecnicoStyle.countdownText} numberOfLines={1}>
                 {restante.texto}
               </Text>
             </View>
