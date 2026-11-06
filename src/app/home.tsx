@@ -54,6 +54,7 @@ type Atleta = {
     nome_categoria: string;
     pivot: {
       status_categoria_atleta: string;
+      data_inicio_categoria_atleta: string | null;
       data_fim_categoria_atleta: string | null;
     };
   }[];
@@ -120,6 +121,19 @@ type Slide =
 function diaMes(data: string, comAno = false) {
   const texto = `${data.slice(8, 10)}/${data.slice(5, 7)}`;
   return comAno ? `${texto}/${data.slice(0, 4)}` : texto;
+}
+
+// "03/02/2024 até hoje" na categoria atual; "03/02/2024 até 10/01/2025" nas anteriores
+function periodoDaCategoria(
+  pivot: Atleta["categorias"][number]["pivot"],
+  atual: boolean,
+) {
+  const inicio = pivot.data_inicio_categoria_atleta;
+  const fim = pivot.data_fim_categoria_atleta;
+  const textoFim = fim ? diaMes(fim, true) : atual ? "hoje" : "";
+  if (!inicio) return textoFim && `Até ${textoFim}`;
+  const textoInicio = diaMes(inicio, true);
+  return textoFim ? `${textoInicio} até ${textoFim}` : `Desde ${textoInicio}`;
 }
 
 // Linha do atleta no campeonato: a convocação (pode ser numa categoria acima) ou as categorias
@@ -408,7 +422,7 @@ export default function Home() {
     categoriaAtual?.nome_categoria ??
     "Categoria";
 
-  // Os cards abaixo são da categoria atual; o Total mostra só os gols
+  // Os cards abaixo são da categoria atual; o Total mostra gols e assistências
   const numeros = numerosCategoria;
 
   const estatisticasLinha: Estatistica[] = [
@@ -490,20 +504,35 @@ export default function Home() {
     },
   ];
 
-  // Gols desde que entrou na escolinha (null enquanto o painel não registra)
-  const golsTotal: Estatistica = {
-    id: "golsTotal",
-    titulo: "Gols",
-    valor: exibirNumero(estatisticasApi?.total.gols),
-    icone: require("@/assets/images/img/bolaVermelha.png"),
-  };
+  // Desde que entrou na escolinha, somando todas as categorias (null enquanto o painel não registra)
+  const estatisticasTotal: Estatistica[] = [
+    {
+      id: "golsTotal",
+      titulo: "Gols",
+      valor: exibirNumero(estatisticasApi?.total.gols),
+      icone: require("@/assets/images/img/bolaVermelha.png"),
+    },
+    {
+      id: "assistenciasTotal",
+      titulo: "Assistências",
+      valor: exibirNumero(estatisticasApi?.total.assistencias),
+      icone: require("@/assets/images/img/tenisvermelho.png"),
+    },
+  ];
 
   const estatisticas =
     modo === "total"
-      ? [golsTotal]
+      ? estatisticasTotal
       : tipoAtleta === "goleiro"
         ? estatisticasGoleiro
         : estatisticasLinha;
+
+  // Categorias do atleta, da primeira até a atual
+  const trajetoria = [...(atleta?.categorias ?? [])].sort((a, b) =>
+    (a.pivot.data_inicio_categoria_atleta ?? "").localeCompare(
+      b.pivot.data_inicio_categoria_atleta ?? "",
+    ),
+  );
 
   return (
     <View style={[fundoStyle.container, { paddingTop: insets.top }]}>
@@ -993,18 +1022,12 @@ export default function Home() {
             <Text style={homeStyle.statsModalTitle}>
               {modo === "categoria"
                 ? `Estatísticas — ${numerosCategoria?.categoria ?? rotuloCategoria}`
-                : "Gols desde que entrou na escolinha"}
+                : "Desde que entrou na escolinha"}
             </Text>
 
             <View style={homeStyle.statsGrid}>
               {estatisticas.map((estatistica) => (
-                <View
-                  key={estatistica.id}
-                  style={[
-                    homeStyle.statCard,
-                    modo === "total" && homeStyle.statCardFull,
-                  ]}
-                >
+                <View key={estatistica.id} style={homeStyle.statCard}>
                   <View style={homeStyle.statCardIcon}>
                     {"icone" in estatistica && estatistica.icone ? (
                       <Image
@@ -1040,6 +1063,32 @@ export default function Home() {
                 </View>
               ))}
             </View>
+
+            {modo === "total" && trajetoria.length > 0 && (
+              <View>
+                <Text style={homeStyle.trajetoriaTitulo}>
+                  {trajetoria.length > 1 ? "Categorias" : "Categoria"}
+                </Text>
+
+                {trajetoria.map((categoria) => (
+                  <View
+                    key={`${categoria.nome_categoria}-${categoria.pivot.data_inicio_categoria_atleta}`}
+                    style={homeStyle.trajetoriaLinha}
+                  >
+                    <Text style={homeStyle.trajetoriaNome}>
+                      {categoria.nome_categoria}
+                    </Text>
+
+                    <Text style={homeStyle.trajetoriaPeriodo}>
+                      {periodoDaCategoria(
+                        categoria.pivot,
+                        categoria === categoriaAtual,
+                      )}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         </View>
       </Modal>

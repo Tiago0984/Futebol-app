@@ -636,11 +636,6 @@ const homeStyle = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.06)",
   },
 
-  // Card único (Total: só os gols) ocupa a linha inteira
-  statCardFull: {
-    width: "100%",
-  },
-
   statCardIcon: {
     width: iconSizes.estatistica,
     height: iconSizes.estatistica,
@@ -688,6 +683,37 @@ const homeStyle = StyleSheet.create({
 
   goalkeeperIcon: {
     fontSize: fontSizes.titulo,
+  },
+
+  /* Categorias no Total do modal de estatísticas */
+  trajetoriaTitulo: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.corpo,
+    fontWeight: "700",
+    color: cores.branco,
+    marginTop: 10,
+    marginBottom: 4,
+  },
+
+  trajetoriaLinha: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.06)",
+  },
+
+  trajetoriaNome: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.branco,
+  },
+
+  trajetoriaPeriodo: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.apoio,
+    color: cores.branco70,
   },
 });
 
