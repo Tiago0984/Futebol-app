@@ -172,23 +172,16 @@ const campeonatosStyle = StyleSheet.create({
   cardContent: {
     padding: 18,
   },
-  cardTopRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    rowGap: 8,
-  },
   cardTitleRow: {
     flexDirection: "row",
-    alignItems: "center",
-    flexShrink: 1,
-    minWidth: 150,
+    alignItems: "flex-start",
   },
   cardTitleTextCol: {
-    flexShrink: 1,
+    flex: 1,
+    minWidth: 0,
   },
   cardIconCircle: {
+    flexShrink: 0,
     width: 48,
     height: 48,
     borderRadius: 14,
@@ -220,8 +213,8 @@ const campeonatosStyle = StyleSheet.create({
     marginTop: 2,
   },
   statusPill: {
-    flexShrink: 0,
-    marginLeft: "auto",
+    alignSelf: "flex-start",
+    marginTop: 8,
     backgroundColor: cores.verdeclaro,
     borderRadius: 14,
     paddingHorizontal: 10,
@@ -264,7 +257,13 @@ const campeonatosStyle = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    columnGap: 12,
     marginBottom: 8,
+  },
+  // O texto da etapa cede espaço; a porcentagem fica sempre inteira
+  progressLabelEtapa: {
+    flex: 1,
+    minWidth: 0,
   },
   progressLabelText: {
     fontFamily: fontes.OpenSans_Bold,
@@ -283,16 +282,10 @@ const campeonatosStyle = StyleSheet.create({
     backgroundColor: cores.vermelho,
   },
 
+  // Campeão ou convocação, os subs e, embaixo, o "Ver campeonato" à direita
   cardBottomRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    marginTop: 18,
-    rowGap: 6,
-  },
-  nextPhaseTextCol: {
-    flexShrink: 1,
+    marginTop: 16,
+    rowGap: 12,
   },
   nextPhaseLabel: {
     fontFamily: fontes.OpenSans_Regular,
@@ -306,8 +299,33 @@ const campeonatosStyle = StyleSheet.create({
     color: cores.branco,
     marginTop: 2,
   },
+  subsRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
+    marginTop: 6,
+  },
+  subSelo: {
+    maxWidth: "100%",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.14)",
+  },
+  subSeloDoAtleta: {
+    backgroundColor: cores.vermelho,
+  },
+  subSeloTexto: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpo,
+    color: cores.branco,
+  },
+  subSeloTextoDoAtleta: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontWeight: "700",
+  },
   verCampeonatoText: {
-    flexShrink: 0,
+    alignSelf: "flex-end",
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.destaqueLeve,
     fontWeight: "700",

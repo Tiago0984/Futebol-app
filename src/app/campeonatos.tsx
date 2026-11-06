@@ -7,9 +7,11 @@ import { TAB_BAR_BASE_PADDING_BOTTOM } from "@/styles/menuInferiorStyle";
 import { cores } from "@/styles/variaveis";
 import {
   andamentoDoCampeonato,
+  categoriasNoPeriodo,
   type Categoria,
   type Resumo,
   type Situacao,
+  type VinculoCategoria,
 } from "@/utils/campeonatos";
 import { chaveDoDia } from "@/utils/eventos";
 import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
@@ -50,11 +52,10 @@ type Participacao = {
   categorias: Categoria[];
 };
 
-type Filtro = "TODOS" | "MEUS" | Situacao;
+type Filtro = "TODOS" | Situacao;
 
 const FILTROS: { valor: Filtro; rotulo: string }[] = [
   { valor: "TODOS", rotulo: "Todos" },
-  { valor: "MEUS", rotulo: "Meus" },
   { valor: "ANDAMENTO", rotulo: "Em andamento" },
   { valor: "EM_BREVE", rotulo: "Em breve" },
   { valor: "ENCERRADO", rotulo: "Encerrados" },
@@ -73,6 +74,8 @@ export default function Campeonatos() {
   const [participacoes, setParticipacoes] = useState<
     Record<number, Participacao>
   >({});
+  // null = não veio: sem saber o sub do atleta, nada é escondido nem marcado
+  const [vinculos, setVinculos] = useState<VinculoCategoria[] | null>(null);
   const [erro, setErro] = useState("");
   // O "Atualizar" soma 1 e a busca roda de novo
   const [recarga, setRecarga] = useState(0);
@@ -86,14 +89,14 @@ export default function Campeonatos() {
         return;
       }
       try {
-        const [respostaLista, respostaMeus] = await Promise.all([
+        const headers = {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+        const [respostaLista, respostaMeus, respostaAtleta] = await Promise.all([
           fetch(`${API}/campeonatos`, { headers: { Accept: "application/json" } }),
-          fetch(await urlDoAtleta("/campeonatos-do-atleta"), {
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }),
+          fetch(await urlDoAtleta("/campeonatos-do-atleta"), { headers }),
+          fetch(await urlDoAtleta("/atleta"), { headers }),
         ]);
 
         // Token vencido, encerrado ou atleta inativado: volta para o login
@@ -121,6 +124,9 @@ export default function Campeonatos() {
             }
           }
         }
+        const jsonAtleta = respostaAtleta.ok ? await respostaAtleta.json() : null;
+        if (!ativa) return;
+        setVinculos(jsonAtleta?.success ? jsonAtleta.data.categorias : null);
         setParticipacoes(meus);
         setCampeonatos(jsonLista.data);
         setErro("");
@@ -159,6 +165,17 @@ export default function Campeonatos() {
     return c.categorias.filter((cat) => ids.includes(cat.id_categoria));
   }
 
+  // Subs do atleta no campeonato: os da participação (a convocação pode ser acima do dele)
+  // e aqueles em que ele estava durante o campeonato. null = não se sabe o sub dele
+  function subsDoAtleta(c: Campeonato) {
+    const minhas = categoriasDoAtleta(c);
+    if (!vinculos) return minhas.length > 0 ? minhas : null;
+    const ids = categoriasNoPeriodo(c, vinculos);
+    return c.categorias.filter(
+      (cat) => minhas.includes(cat) || ids.includes(cat.id_categoria),
+    );
+  }
+
   // Andamento do card: o da categoria do atleta quando ele participa (bate com o detalhe,
   // que abre nela); senão, o do campeonato todo
   function andamento(c: Campeonato) {
@@ -172,11 +189,9 @@ export default function Campeonatos() {
     return andamentoDoCampeonato(c, hoje, c.resumo, c.encerrado);
   }
 
-  // Campeões das categorias encerradas (só as do atleta, quando ele participa)
+  // Campeões das categorias encerradas (só as do atleta)
   function campeoesTexto(c: Campeonato) {
-    const minhas = categoriasDoAtleta(c);
-    const categorias = minhas.length > 0 ? minhas : c.categorias;
-    return categorias
+    return (subsDoAtleta(c) ?? c.categorias)
       .filter((cat) => cat.campeao?.campeao)
       .map((cat) =>
         c.categorias.length > 1
@@ -186,7 +201,7 @@ export default function Campeonatos() {
       .join("\n");
   }
 
-  // Linha de baixo do card: o campeão, a participação do atleta ou, sem eles, as categorias
+  // Linha acima dos subs: o campeão ou a convocação do atleta; sem eles, nada
   function participacaoTexto(c: Campeonato) {
     const campeoes = campeoesTexto(c);
     if (campeoes) {
@@ -204,26 +219,15 @@ export default function Campeonatos() {
           .join("\n"),
       };
     }
-    if (p) {
-      return {
-        rotulo: "Sua participação",
-        valor: `Sua categoria participa (${p.categorias.map((cat) => cat.rotulo).join(", ")})`,
-      };
-    }
-    return {
-      rotulo: "Categorias",
-      valor: c.categorias.map((cat) => cat.rotulo).join(" · ") || "—",
-    };
+    return null;
   }
 
+  // Campeonato sem o sub do atleta não aparece
   const lista = (campeonatos ?? [])
+    .filter((c) => subsDoAtleta(c)?.length !== 0)
     .map((c) => ({ c, a: andamento(c) }))
-    .filter(({ c, a }) =>
-      filtroAtivo === "TODOS"
-        ? true
-        : filtroAtivo === "MEUS"
-          ? !!participacoes[c.id_campeonato]
-          : a.situacao === filtroAtivo,
+    .filter(({ a }) =>
+      filtroAtivo === "TODOS" ? true : a.situacao === filtroAtivo,
     )
     .sort((x, y) => {
       if (x.a.situacao !== y.a.situacao) {
@@ -351,123 +355,24 @@ export default function Campeonatos() {
 
             {lista.length === 0 && (
               <Text style={campeonatosStyle.estadoTexto}>
-                {filtroAtivo === "MEUS"
-                  ? "Você ainda não participa de nenhum campeonato."
+                {filtroAtivo === "TODOS"
+                  ? "Nenhum campeonato do seu sub por enquanto."
                   : "Nenhum campeonato neste filtro."}
               </Text>
             )}
 
             {/* Cards dos CAMPEONATOS */}
-            {lista.map(({ c, a }) => {
-              const linha = participacaoTexto(c);
-              const subtitulo = [c.tipo_label, c.organizador_campeonato]
-                .filter(Boolean)
-                .join(" · ");
-              return (
-                <Pressable
-                  key={c.id_campeonato}
-                  style={[campeonatosStyle.card, { width: larguraCard }]}
-                  onPress={() => abrirCampeonato(c.id_campeonato)}
-                >
-                  <Image
-                    source={
-                      c.banner_url
-                        ? { uri: c.banner_url }
-                        : require("@/assets/images/img/fundoCardCampeonatos2.png")
-                    }
-                    style={campeonatosStyle.cardBanner}
-                    resizeMode="cover"
-                  />
-                  <View style={campeonatosStyle.cardBannerOverlay} />
-
-                  <View style={campeonatosStyle.cardContent}>
-                    <View style={campeonatosStyle.cardTopRow}>
-                      <View style={campeonatosStyle.cardTitleRow}>
-                        <View style={campeonatosStyle.cardIconCircle}>
-                          {c.logo_url ? (
-                            <Image
-                              source={{ uri: c.logo_url }}
-                              style={campeonatosStyle.cardLogo}
-                              resizeMode="contain"
-                            />
-                          ) : (
-                            <Image
-                              source={require("@/assets/images/img/campeonatosVermelho.png")}
-                              style={campeonatosStyle.cardIcon}
-                              resizeMode="contain"
-                            />
-                          )}
-                        </View>
-                        <View style={campeonatosStyle.cardTitleTextCol}>
-                          <Text style={campeonatosStyle.cardTitle}>
-                            {c.nome_campeonato}
-                          </Text>
-                          {subtitulo !== "" && (
-                            <Text style={campeonatosStyle.cardSubtitle}>
-                              {subtitulo}
-                            </Text>
-                          )}
-                        </View>
-                      </View>
-                      <View
-                        style={[
-                          campeonatosStyle.statusPill,
-                          a.situacao === "EM_BREVE" &&
-                            campeonatosStyle.statusPillEmBreve,
-                          a.situacao === "ENCERRADO" &&
-                            campeonatosStyle.statusPillEncerrado,
-                        ]}
-                      >
-                        <Text
-                          style={[
-                            campeonatosStyle.statusPillText,
-                            a.situacao === "EM_BREVE" &&
-                              campeonatosStyle.statusPillTextEmBreve,
-                            a.situacao === "ENCERRADO" &&
-                              campeonatosStyle.statusPillTextEncerrado,
-                          ]}
-                        >
-                          {a.selo}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View style={campeonatosStyle.progressSection}>
-                      <View style={campeonatosStyle.progressLabelRow}>
-                        <Text style={campeonatosStyle.progressLabelText}>
-                          {a.texto}
-                        </Text>
-                        <Text style={campeonatosStyle.progressLabelText}>
-                          {a.progresso}%
-                        </Text>
-                      </View>
-                      <View style={campeonatosStyle.progressTrack}>
-                        <View
-                          style={[
-                            campeonatosStyle.progressFill,
-                            { width: `${a.progresso}%` },
-                          ]}
-                        />
-                      </View>
-                    </View>
-
-                    <View style={campeonatosStyle.cardBottomRow}>
-                      <View style={campeonatosStyle.nextPhaseTextCol}>
-                        <Text style={campeonatosStyle.nextPhaseLabel}>
-                          {linha.rotulo}
-                        </Text>
-                        <Text style={campeonatosStyle.nextPhaseValue}>
-                          {linha.valor}
-                        </Text>
-                      </View>
-                      <Text style={campeonatosStyle.verCampeonatoText}>
-                        Ver campeonato {">"}
-                      </Text>
-                    </View>
-                  </View>
-                </Pressable>
-              );
-            })}
+            {lista.map(({ c, a }) => (
+              <CardCampeonato
+                key={c.id_campeonato}
+                c={c}
+                a={a}
+                linha={participacaoTexto(c)}
+                meusSubs={subsDoAtleta(c)}
+                largura={larguraCard}
+                aoAbrir={() => abrirCampeonato(c.id_campeonato)}
+              />
+            ))}
           </>
         )}
       </ScrollView>
@@ -475,5 +380,164 @@ export default function Campeonatos() {
       {/* TabBar unificada */}
       <TabBar abaAtiva="campeonatos" />
     </View>
+  );
+}
+
+// O status fica embaixo do nome, para não depender do tamanho dele; cada sub é um selo inteiro
+function CardCampeonato({
+  c,
+  a,
+  linha,
+  meusSubs,
+  largura,
+  aoAbrir,
+}: {
+  c: Campeonato;
+  a: ReturnType<typeof andamentoDoCampeonato>;
+  linha: { rotulo: string; valor: string } | null;
+  meusSubs: Categoria[] | null;
+  largura: number;
+  aoAbrir: () => void;
+}) {
+  const subtitulo = [c.tipo_label, c.organizador_campeonato]
+    .filter(Boolean)
+    .join(" · ");
+
+  return (
+    <Pressable
+      style={[campeonatosStyle.card, { width: largura }]}
+      onPress={aoAbrir}
+    >
+      <Image
+        source={
+          c.banner_url
+            ? { uri: c.banner_url }
+            : require("@/assets/images/img/fundoCardCampeonatos2.png")
+        }
+        style={campeonatosStyle.cardBanner}
+        resizeMode="cover"
+      />
+      <View style={campeonatosStyle.cardBannerOverlay} />
+
+      <View style={campeonatosStyle.cardContent}>
+        <View style={campeonatosStyle.cardTitleRow}>
+          <View style={campeonatosStyle.cardIconCircle}>
+            {c.logo_url ? (
+              <Image
+                source={{ uri: c.logo_url }}
+                style={campeonatosStyle.cardLogo}
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={require("@/assets/images/img/campeonatosVermelho.png")}
+                style={campeonatosStyle.cardIcon}
+                resizeMode="contain"
+              />
+            )}
+          </View>
+          <View style={campeonatosStyle.cardTitleTextCol}>
+            <Text style={campeonatosStyle.cardTitle} numberOfLines={2}>
+              {c.nome_campeonato}
+            </Text>
+            {subtitulo !== "" && (
+              <Text style={campeonatosStyle.cardSubtitle} numberOfLines={1}>
+                {subtitulo}
+              </Text>
+            )}
+            <View
+              style={[
+                campeonatosStyle.statusPill,
+                a.situacao === "EM_BREVE" && campeonatosStyle.statusPillEmBreve,
+                a.situacao === "ENCERRADO" &&
+                  campeonatosStyle.statusPillEncerrado,
+              ]}
+            >
+              <Text
+                style={[
+                  campeonatosStyle.statusPillText,
+                  a.situacao === "EM_BREVE" &&
+                    campeonatosStyle.statusPillTextEmBreve,
+                  a.situacao === "ENCERRADO" &&
+                    campeonatosStyle.statusPillTextEncerrado,
+                ]}
+                numberOfLines={1}
+              >
+                {a.selo}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={campeonatosStyle.progressSection}>
+          <View style={campeonatosStyle.progressLabelRow}>
+            <Text
+              style={[
+                campeonatosStyle.progressLabelText,
+                campeonatosStyle.progressLabelEtapa,
+              ]}
+              numberOfLines={2}
+            >
+              {a.texto}
+            </Text>
+            <Text style={campeonatosStyle.progressLabelText}>
+              {a.progresso}%
+            </Text>
+          </View>
+          <View style={campeonatosStyle.progressTrack}>
+            <View
+              style={[
+                campeonatosStyle.progressFill,
+                { width: `${a.progresso}%` },
+              ]}
+            />
+          </View>
+        </View>
+
+        <View style={campeonatosStyle.cardBottomRow}>
+          {linha && (
+            <View>
+              <Text style={campeonatosStyle.nextPhaseLabel}>{linha.rotulo}</Text>
+              <Text style={campeonatosStyle.nextPhaseValue}>{linha.valor}</Text>
+            </View>
+          )}
+          {c.categorias.length > 0 && (
+            <View>
+              <Text style={campeonatosStyle.nextPhaseLabel}>
+                {c.categorias.length > 1 ? "Categorias" : "Categoria"}
+              </Text>
+              <View style={campeonatosStyle.subsRow}>
+                {c.categorias.map((cat) => {
+                  const doAtleta = meusSubs?.includes(cat);
+                  return (
+                    <View
+                      key={cat.id_categoria}
+                      style={[
+                        campeonatosStyle.subSelo,
+                        doAtleta && campeonatosStyle.subSeloDoAtleta,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          campeonatosStyle.subSeloTexto,
+                          doAtleta && campeonatosStyle.subSeloTextoDoAtleta,
+                        ]}
+                        numberOfLines={1}
+                      >
+                        {cat.rotulo}
+                        {doAtleta && " (seu sub)"}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          )}
+          <Text style={campeonatosStyle.verCampeonatoText}>
+            Ver campeonato {">"}
+          </Text>
+        </View>
+      </View>
+    </Pressable>
   );
 }
