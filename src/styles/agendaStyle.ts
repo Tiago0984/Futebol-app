@@ -105,22 +105,18 @@ const agendaStyle = StyleSheet.create({
     height: 16,
   },
 
+  // Rola na horizontal; sem o flexGrow a faixa ocuparia a altura da tela
   weekStrip: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 8,
+    flexGrow: 0,
     marginTop: 18,
   },
-  // Setas de voltar e avançar semana, nas pontas da faixa, na altura dos números
-  weekSeta: {
-    paddingTop: 16,
+  // MARGEM_FAIXA de agenda.tsx
+  weekStripConteudo: {
+    paddingHorizontal: 8,
   },
-  // Seta que não pode ser usada (antes da semana ou do mês de hoje)
-  setaDesativada: {
-    opacity: 0.3,
-  },
+  // LARGURA_DIA_FAIXA de agenda.tsx
   weekDayCol: {
+    width: 48,
     alignItems: "center",
   },
   weekDayLabel: {
@@ -157,9 +153,18 @@ const agendaStyle = StyleSheet.create({
     backgroundColor: cores.vermelho,
     marginTop: 6,
   },
-  // Dia sem compromisso: a bolinha some, mas guarda o espaço para a faixa não pular
+  // Semana ainda carregando: a bolinha some, mas guarda o espaço para a faixa não pular
   weekDayDotVazio: {
     backgroundColor: "transparent",
+  },
+  // Dia sem compromisso; mesma altura da bolinha com a margem dela
+  weekDayX: {
+    height: 10,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.apoio,
+    lineHeight: 10,
+    fontWeight: "700",
+    color: cores.cinza,
   },
 
   todayCard: {
@@ -492,6 +497,10 @@ const agendaStyle = StyleSheet.create({
   passado: {
     opacity: 0.4,
   },
+  // O selo fica mais visível que o resto do item
+  statusPillPassado: {
+    opacity: 0.6,
+  },
   timelineIconSquare: {
     width: 40,
     height: 40,
@@ -561,6 +570,98 @@ const agendaStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.corpo,
     fontWeight: "700",
+  },
+
+  /* =========================
+     MODAL DO CALENDÁRIO
+  ========================= */
+
+  calendarioContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 20,
+  },
+  calendarioFundo: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+  calendarioCard: {
+    width: "100%",
+    maxWidth: 360,
+    alignSelf: "center",
+    padding: 16,
+    borderRadius: 18,
+    backgroundColor: cores.preto,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.12)",
+  },
+  calendarioTopo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  calendarioGrade: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  // Sete colunas
+  calendarioSigla: {
+    width: "14.28%",
+    marginBottom: 8,
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpo,
+    color: cores.cinza,
+    textAlign: "center",
+  },
+  calendarioCasa: {
+    width: "14.28%",
+    height: 42,
+    alignItems: "center",
+  },
+  calendarioDia: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  calendarioDiaHoje: {
+    borderWidth: 1,
+    borderColor: cores.vermelho,
+  },
+  calendarioNumero: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.corpoMedio,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+  calendarioBolinha: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: cores.vermelho,
+    marginTop: 2,
+  },
+  calendarioX: {
+    height: 10,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.apoio,
+    lineHeight: 10,
+    fontWeight: "700",
+    color: cores.cinza,
+  },
+  calendarioHoje: {
+    alignSelf: "center",
+    marginTop: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  calendarioHojeTexto: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.corpoMedio,
+    fontWeight: "700",
+    color: cores.vermelho,
   },
 });
 

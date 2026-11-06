@@ -3,13 +3,19 @@ import BotaoNotificacoes from "@/components/botaoNotificacoes";
 import agendaStyle from "@/styles/agendaStyle";
 import fundoStyle from "@/styles/fundoStyle";
 import { cores } from "@/styles/variaveis";
-import { abrirDetalhe, temDetalhe, visualDoTipo } from "@/utils/eventos";
+import {
+  abrirDetalhe,
+  jaTerminou,
+  temDetalhe,
+  visualDoTipo,
+} from "@/utils/eventos";
 import { CHAVES_SESSAO, urlDoAtleta } from "@/utils/sessao";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect } from "expo-router";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import {
   Image,
+  Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
@@ -18,6 +24,7 @@ import {
   Text,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -34,6 +41,7 @@ type Evento = {
   fim: string | null;
   local: string | null;
   situacao: "CONFIRMADO" | "CANCELADO";
+  concluido?: boolean;
   // Quem conduz a atividade; quando vem, aparece no lugar da categoria.
   // Servidor sem o detalhe do evento não manda o campo
   responsavel?: string | null;
@@ -61,8 +69,9 @@ const filtros: { rotulo: string; tipo: string | null }[] = [
   { rotulo: "Confraternizações", tipo: "CONFRATERNIZACAO" },
 ];
 
-// A API só manda CONFIRMADO ou CANCELADO; mudanças chegam pelos avisos
-type Status = "confirmado" | "cancelado";
+// A API só manda CONFIRMADO ou CANCELADO; mudanças chegam pelos avisos.
+// Concluído é o confirmado que já terminou
+type Status = "confirmado" | "cancelado" | "concluido";
 
 const statusConfig: Record<
   Status,
@@ -79,6 +88,12 @@ const statusConfig: Record<
     cor: cores.vermelho,
     corFundo: cores.vermelho20,
     icone: require("@/assets/images/img/xBranco.png"),
+  },
+  concluido: {
+    texto: "Concluído",
+    cor: cores.verde,
+    corFundo: cores.verdeclaro,
+    icone: require("@/assets/images/img/checkBranco.png"),
   },
 };
 
@@ -99,7 +114,13 @@ function cabecalhoPausado(pausaAte: { current: number }) {
   return Date.now() < pausaAte.current;
 }
 
+// Largura de cada dia na faixa e o espaço nas pontas dela
+const LARGURA_DIA_FAIXA = 48;
+const MARGEM_FAIXA = 8;
+
 const SIGLAS_DIAS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
+// O calendário começa na segunda, como a semana da agenda
+const SIGLAS_CALENDARIO = ["S", "T", "Q", "Q", "S", "S", "D"];
 const NOMES_DIAS = [
   "Domingo",
   "Segunda",
@@ -153,38 +174,30 @@ function rotuloDoDia(chave: string, hoje: Date) {
   return `${NOMES_DIAS[diaDaSemana]} · ${chave.slice(8, 10)}/${chave.slice(5, 7)}`;
 }
 
-// Mesma regra da API para "concluído": passou o fim; sem fim, vale o início;
-// sem horário nenhum, só no dia seguinte
-function jaTerminou(evento: Evento, agora: Date) {
-  const referencia = evento.fim ?? evento.inicio;
-  if (referencia) return new Date(referencia) <= agora;
-  return chaveDoEvento(evento) < chaveDoDia(agora);
-}
-
 // "2026-11-03" -> data local do aparelho (sem passar por fuso)
 function dataDaChave(chave: string) {
   const [ano, mes, dia] = chave.split("-").map(Number);
   return new Date(ano, mes - 1, dia);
 }
 
-function segundaDaSemana(data: Date) {
-  return somarDias(data, -((data.getDay() + 6) % 7));
-}
-
-// Segunda a domingo da semana que começa em "segunda"
-function diasDaSemana(segunda: Date) {
-  return Array.from({ length: 7 }, (_, i) => {
-    const dia = somarDias(segunda, i);
+// Do dia 1 ao último dia do mês de "data" (dia 0 do mês seguinte = último deste)
+function diasDoMes(data: Date) {
+  const ano = data.getFullYear();
+  const mes = data.getMonth();
+  const total = new Date(ano, mes + 1, 0).getDate();
+  return Array.from({ length: total }, (_, i) => {
+    const dia = new Date(ano, mes, i + 1);
     return {
       sigla: SIGLAS_DIAS[dia.getDay()],
-      numero: dia.getDate(),
+      numero: i + 1,
       chave: chaveDoDia(dia),
     };
   });
 }
 
-function statusDoEvento(evento: Evento): Status {
-  return evento.situacao === "CANCELADO" ? "cancelado" : "confirmado";
+function statusDoEvento(evento: Evento, passado = false): Status {
+  if (evento.situacao === "CANCELADO") return "cancelado";
+  return passado ? "concluido" : "confirmado";
 }
 
 // Linha de informação de pessoa: o responsável quando a API mandar; até lá, a categoria
@@ -223,36 +236,57 @@ export default function Agenda() {
   const [diaSelecionado, setDiaSelecionado] = useState(() =>
     chaveDoDia(new Date()),
   );
+  // Dia tocado na faixa ou no calendário: a lista mostra só ele; null = lista completa
+  const [diaFiltrado, setDiaFiltrado] = useState<string | null>(null);
+  // Eventos do mês visível (GET /agenda?de=&ate=). Traz os que já passaram, que a
+  // lista completa não tem (só os 3 últimos), e por isso diz quais dias estão vazios
+  const [mesApi, setMesApi] = useState<{
+    inicio: string;
+    eventos: Evento[];
+    erro?: string;
+  } | null>(null);
 
+  const [calendarioAberto, setCalendarioAberto] = useState(false);
+
+  const dataSelecionada = dataDaChave(diaSelecionado);
+  const diasDaFaixa = diasDoMes(dataSelecionada);
+  const primeiroDoMes = diasDaFaixa[0].chave;
+  const ultimoDoMes = diasDaFaixa[diasDaFaixa.length - 1].chave;
+  const chaveHoje = chaveDoDia(agora);
+
+  const { width: larguraTela } = useWindowDimensions();
+  // Onde a faixa fica com o dia selecionado no meio, sem passar das pontas
+  const fimDaFaixa =
+    diasDaFaixa.length * LARGURA_DIA_FAIXA + MARGEM_FAIXA * 2 - larguraTela;
+  const xDoDia = Math.max(
+    0,
+    Math.min(
+      fimDaFaixa,
+      MARGEM_FAIXA +
+        (dataSelecionada.getDate() - 0.5) * LARGURA_DIA_FAIXA -
+        larguraTela / 2,
+    ),
+  );
+
+  const faixaRef = useRef<ScrollView>(null);
   const listaRef = useRef<ScrollView>(null);
-  // Posição (y) de cada linha na lista, para rolar até o dia tocado na semana
+  // Posição (y) de cada linha na lista, para o cabeçalho seguir o dia que está no topo
   const posicoes = useRef<Record<string, number>>({});
-  // Rolagem esperando a lista carregar ou medir: vai para o primeiro dia com
-  // compromisso entre "de" e "ate" assim que ele aparecer
-  const rolagemPendente = useRef<{ de: string; ate: string } | null>(null);
-  // Enquanto a lista rola sozinha (toque na semana, nas setas, no calendário), o
+  // Enquanto a lista rola sozinha (volta para hoje), o
   // cabeçalho não acompanha a rolagem, para não passar pelos dias do caminho
   const ignorarRolagemAte = useRef(0);
 
-  // Guarda onde cada linha ficou e, se havia rolagem pendente para aquele dia, rola agora
-  const registrarPosicao = useCallback(
-    (id: string, chave: string, y: number) => {
-      posicoes.current[id] = y;
-      const pendente = rolagemPendente.current;
-      if (pendente && chave >= pendente.de && chave <= pendente.ate) {
-        rolagemPendente.current = null;
-        setDiaSelecionado(chave);
-        pausarCabecalho(ignorarRolagemAte);
-        listaRef.current?.scrollTo({
-          y: Math.max(y - ESPACO_TOPO_LISTA, 0),
-          animated: true,
-        });
-      }
-    },
-    [],
-  );
+  // Guarda onde cada linha ficou
+  const registrarPosicao = useCallback((id: string, y: number) => {
+    posicoes.current[id] = y;
+  }, []);
   // Evita pedir a mesma página duas vezes enquanto a rolagem dispara vários eventos
   const buscandoMais = useRef(false);
+
+  // A faixa acompanha o dia selecionado, inclusive quando ele muda rolando a lista
+  useEffect(() => {
+    faixaRef.current?.scrollTo({ x: xDoDia, animated: true });
+  }, [xDoDia]);
 
   // Atualiza o horário na virada do minuto: o que termina sai do "próximo" sozinho
   useEffect(() => {
@@ -270,14 +304,17 @@ export default function Agenda() {
     return () => clearTimeout(timeout);
   }, []);
 
-  // Busca uma página da agenda; null quando a sessão acabou ou deu erro
-  async function buscarPagina(numero: number): Promise<RespostaAgenda | null> {
+  // Busca a agenda; null quando a sessão acabou ou deu erro (a mensagem vai para aoFalhar)
+  async function buscarAgenda<T>(
+    consulta: string,
+    aoFalhar: (mensagem: string) => void,
+  ): Promise<T | null> {
     const token = await AsyncStorage.getItem("token");
     if (!token) {
       router.replace("/selecao-perfil");
       return null;
     }
-    const resposta = await fetch(await urlDoAtleta(`/agenda?page=${numero}`), {
+    const resposta = await fetch(await urlDoAtleta(`/agenda?${consulta}`), {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
@@ -293,7 +330,7 @@ export default function Agenda() {
 
     const json = await resposta.json();
     if (!resposta.ok || !json.success) {
-      setErro(json.message ?? "Não foi possível carregar a agenda.");
+      aoFalhar(json.message ?? "Não foi possível carregar a agenda.");
       return null;
     }
     return json.data;
@@ -305,7 +342,7 @@ export default function Agenda() {
       let ativa = true;
       (async () => {
         try {
-          const dados = await buscarPagina(1);
+          const dados = await buscarAgenda<RespostaAgenda>("page=1", setErro);
           if (!ativa || !dados) return;
           setErro("");
           setPassadosApi(dados.passados);
@@ -327,6 +364,33 @@ export default function Agenda() {
     }, []),
   );
 
+  // Busca os eventos do mês visível ao abrir a tela e a cada troca de mês
+  useFocusEffect(
+    useCallback(() => {
+      let ativa = true;
+      const falhar = (erro: string) => {
+        if (ativa) setMesApi({ inicio: primeiroDoMes, eventos: [], erro });
+      };
+      (async () => {
+        try {
+          const dados = await buscarAgenda<{ eventos: Evento[] }>(
+            `de=${primeiroDoMes}&ate=${ultimoDoMes}`,
+            falhar,
+          );
+          if (ativa && dados) {
+            setMesApi({ inicio: primeiroDoMes, eventos: dados.eventos });
+          }
+        } catch (e) {
+          console.log("Erro ao buscar o mês:", e);
+          falhar("Não foi possível conectar ao servidor.");
+        }
+      })();
+      return () => {
+        ativa = false;
+      };
+    }, [primeiroDoMes, ultimoDoMes]),
+  );
+
   // Busca as próximas páginas até ter compromissos até o dia "ate"
   // (a API manda 20 por página, do mais perto ao mais longe), no máximo "limite" páginas
   async function carregarAte(ate: string, limite = Infinity) {
@@ -339,7 +403,10 @@ export default function Agenda() {
     let buscadas = 0;
     try {
       while (ultimoDia < ate && paginaAtual < ultima && buscadas < limite) {
-        const dados = await buscarPagina(paginaAtual + 1);
+        const dados = await buscarAgenda<RespostaAgenda>(
+          `page=${paginaAtual + 1}`,
+          setErro,
+        );
         if (!dados) break;
         buscadas++;
         // Sem repetir evento que já está na lista
@@ -364,13 +431,15 @@ export default function Agenda() {
     }
   }
 
-  // Perto do fim da lista, busca a próxima página. Rolando com o dedo, o mês e a
-  // semana do topo passam a ser os do dia que está no alto da lista
+  // Perto do fim da lista, busca a próxima página. Rolando com o dedo, o mês e o
+  // dia do topo passam a ser os do dia que está no alto da lista
   function aoRolar(e: NativeSyntheticEvent<NativeScrollEvent>) {
+    // A lista de um dia já está completa e o dia selecionado não muda rolando
+    if (diaFiltrado) return;
     const { layoutMeasurement, contentOffset, contentSize } = e.nativeEvent;
-    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - 200) {
-      carregarAte("9999-12-31", 1);
-    }
+    const pertoDoFim =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 200;
+    if (pertoDoFim) carregarAte("9999-12-31", 1);
     if (cabecalhoPausado(ignorarRolagemAte)) return;
 
     // Última linha que já passou do topo (as linhas estão em ordem de posição)
@@ -382,10 +451,9 @@ export default function Agenda() {
       if (y > topo) break;
       chaveNoTopo = chaveDaLinha(linha);
     }
-    if (!chaveNoTopo) return;
-    // Os passados ficam no começo da lista; com eles no topo, o cabeçalho fica em hoje
-    const dia = chaveNoTopo < chaveHoje ? chaveHoje : chaveNoTopo;
-    if (dia !== diaSelecionado) setDiaSelecionado(dia);
+    if (chaveNoTopo && chaveNoTopo !== diaSelecionado) {
+      setDiaSelecionado(chaveNoTopo);
+    }
   }
 
   // O dedo na lista volta a mandar no cabeçalho, mesmo no meio de uma rolagem do app
@@ -403,13 +471,23 @@ export default function Agenda() {
   const terminadosAgora = proximosApi.filter(
     (e) => jaTerminou(e, agora) && e.situacao !== "CANCELADO",
   );
-  // A API manda os passados do mais recente para o mais antigo; aqui ficam em ordem
-  const todosPassados = [...passadosApi].reverse().concat(terminadosAgora);
+  // A API manda os passados do mais recente para o mais antigo; aqui ficam em ordem.
+  // A lista completa começa em hoje: os de dias anteriores só aparecem tocando no dia
+  const todosPassados = [...passadosApi]
+    .reverse()
+    .concat(terminadosAgora)
+    .filter((e) => chaveDoEvento(e) === chaveHoje);
 
   const combinaCom = (tipo: string | null) => (e: Evento) =>
     tipo === null || e.tipo === tipo;
 
   function contarCompromissos(tipo: string | null) {
+    // Com um dia tocado, os contadores são só desse dia
+    if (diaFiltrado) {
+      return (eventosDoMes ?? []).filter(
+        (e) => chaveDoEvento(e) === diaFiltrado && combinaCom(tipo)(e),
+      ).length;
+    }
     const passadosNaTela = todosPassados
       .filter(combinaCom(tipo))
       .slice(-QUANTIDADE_PASSADOS).length;
@@ -428,12 +506,28 @@ export default function Agenda() {
     return passadosNaTela + totalDaApi - terminadosDepois;
   }
 
-  const passados = todosPassados
-    .filter(combinaCom(filtroAtivo))
-    .slice(-QUANTIDADE_PASSADOS);
   const abertos = proximosAbertos.filter(combinaCom(filtroAtivo));
   // Próximo = primeiro que ainda não terminou e não foi cancelado
   const proximo = abertos.find((e) => e.situacao !== "CANCELADO") ?? null;
+
+  // null enquanto o mês não chegou ou se a busca falhou: ainda não se sabe o que é vazio.
+  // A bolinha e o "×" valem para qualquer compromisso, seja qual for o filtro de tipo
+  const eventosDoMes =
+    mesApi?.inicio === primeiroDoMes && !mesApi.erro
+      ? mesApi.eventos
+      : null;
+  const diasComCompromisso = new Set(eventosDoMes?.map(chaveDoEvento));
+  const eventosDoDia = (eventosDoMes ?? []).filter(
+    (e) => chaveDoEvento(e) === diaFiltrado && combinaCom(filtroAtivo)(e),
+  );
+
+  // Com um dia tocado, a lista são só os compromissos dele
+  const passados = diaFiltrado
+    ? eventosDoDia.filter((e) => jaTerminou(e, agora))
+    : todosPassados.filter(combinaCom(filtroAtivo)).slice(-QUANTIDADE_PASSADOS);
+  const pendentes = diaFiltrado
+    ? eventosDoDia.filter((e) => !jaTerminou(e, agora))
+    : abertos;
 
   // Monta a timeline com um cabeçalho a cada dia novo, em ordem de data. Um cancelado
   // antes do próximo fica antes do card; o card do próximo já mostra o dia dele
@@ -446,8 +540,8 @@ export default function Agenda() {
     }
     linhas.push({ tipo: "evento", evento, passado: true });
   }
-  for (const evento of abertos) {
-    if (evento === proximo) {
+  for (const evento of pendentes) {
+    if (evento.id_evento === proximo?.id_evento) {
       linhas.push({ tipo: "proximo", evento });
       diaAnterior = chaveDoEvento(evento);
       continue;
@@ -459,104 +553,77 @@ export default function Agenda() {
     linhas.push({ tipo: "evento", evento, passado: false });
   }
 
-  const diasComCompromisso = new Set(linhas.map(chaveDaLinha));
 
-  // A faixa mostra a semana do dia selecionado; não volta antes da semana de hoje,
-  // porque a API só manda os próximos e os 3 últimos que passaram
-  const chaveHoje = chaveDoDia(agora);
-  const segundaVisivel = segundaDaSemana(dataDaChave(diaSelecionado));
-  const semana = diasDaSemana(segundaVisivel);
-  const podeVoltarSemana =
-    chaveDoDia(segundaVisivel) > chaveDoDia(segundaDaSemana(agora));
-  const podeVoltarMes = diaSelecionado.slice(0, 7) > chaveHoje.slice(0, 7);
-  const dataSelecionada = dataDaChave(diaSelecionado);
-
-  function rolarAte(y: number) {
-    pausarCabecalho(ignorarRolagemAte);
-    listaRef.current?.scrollTo({
-      y: Math.max(y - ESPACO_TOPO_LISTA, 0),
-      animated: true,
-    });
+  // Sai da lista de um dia: a lista completa remonta e as posições são medidas de novo
+  function voltarParaListaCompleta() {
+    if (!diaFiltrado) return;
+    setDiaFiltrado(null);
+    posicoes.current = {};
   }
 
-  // Rola até o primeiro dia com compromisso entre "de" e "ate" e seleciona esse dia.
-  // Se ele ainda não foi carregado ou medido, fica pendente até aparecer
-  function rolarParaPrimeiroDia(de: string, ate: string) {
-    const medidas = linhas
-      .filter((linha) => chaveDaLinha(linha) >= de && chaveDaLinha(linha) <= ate)
-      .map((linha) => ({
-        chave: chaveDaLinha(linha),
-        y: posicoes.current[idDaLinha(linha)],
-      }))
-      .filter((medida) => medida.y !== undefined);
-    if (medidas.length === 0) {
-      rolagemPendente.current = { de, ate };
-      // O período pode estar numa página que ainda não veio
-      if (ultimoCarregado < ate) carregarAte(ate);
-      return;
-    }
-    rolagemPendente.current = null;
-    const primeira = medidas.reduce((a, b) => (b.y < a.y ? b : a));
-    setDiaSelecionado(primeira.chave);
-    rolarAte(primeira.y);
-  }
-
-
-  // Botão do calendário e volta para a semana ou o mês de hoje: a lista volta ao começo
+  // "Voltar para hoje" do calendário e volta para o mês de hoje: a lista volta ao começo
   function irParaHoje() {
-    rolagemPendente.current = null;
+    voltarParaListaCompleta();
     setDiaSelecionado(chaveHoje);
     pausarCabecalho(ignorarRolagemAte);
     listaRef.current?.scrollTo({ y: 0, animated: true });
   }
 
-  // Toque num dia da semana: rola a lista até ele
+  // Toque num dia da faixa: a lista mostra só ele; tocar de novo volta para a completa
   function selecionarDia(chave: string) {
+    if (chave === diaFiltrado) {
+      irParaHoje();
+      return;
+    }
+    posicoes.current = {};
+    setDiaFiltrado(chave);
     setDiaSelecionado(chave);
-    rolarParaPrimeiroDia(chave, chave);
   }
 
-  function trocarSemana(direcao: 1 | -1) {
-    const segunda = somarDias(segundaVisivel, 7 * direcao);
-    const chaveSegunda = chaveDoDia(segunda);
-    const chaveDomingo = chaveDoDia(somarDias(segunda, 6));
-    if (chaveSegunda <= chaveHoje && chaveHoje <= chaveDomingo) {
-      irParaHoje();
-      return;
-    }
-    setDiaSelecionado(chaveSegunda);
-    rolarParaPrimeiroDia(chaveSegunda, chaveDomingo);
-  }
-
+  // Abre o mês no mesmo dia de hoje, tendo compromisso ou não; no mês de hoje, volta para hoje
   function trocarMes(direcao: 1 | -1) {
-    const primeiro = new Date(
-      dataSelecionada.getFullYear(),
-      dataSelecionada.getMonth() + direcao,
-      1,
-    );
-    const chavePrimeiro = chaveDoDia(primeiro);
-    if (chavePrimeiro.slice(0, 7) === chaveHoje.slice(0, 7)) {
+    const ano = dataSelecionada.getFullYear();
+    const mes = dataSelecionada.getMonth() + direcao;
+    if (chaveDoDia(new Date(ano, mes, 1)).slice(0, 7) === chaveHoje.slice(0, 7)) {
       irParaHoje();
       return;
     }
-    // Dia 0 do mês seguinte = último dia deste mês
-    const ultimo = new Date(primeiro.getFullYear(), primeiro.getMonth() + 1, 0);
-    setDiaSelecionado(chavePrimeiro);
-    rolarParaPrimeiroDia(chavePrimeiro, chaveDoDia(ultimo));
+    // Mês mais curto (hoje é 31, mês de 30): dia 0 do mês seguinte = último dia deste
+    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
+    const dia = chaveDoDia(new Date(ano, mes, Math.min(agora.getDate(), ultimoDia)));
+    posicoes.current = {};
+    setDiaFiltrado(dia);
+    setDiaSelecionado(dia);
   }
 
   function trocarFiltro(tipo: string | null) {
     setFiltroAtivo(tipo);
     // A lista remonta com o filtro novo, volta ao começo e as posições são
-    // medidas de novo; a semana e o mês voltam para hoje junto com ela
+    // medidas de novo; o dia e o mês voltam para hoje junto com ela
     posicoes.current = {};
-    rolagemPendente.current = null;
-    setDiaSelecionado(chaveHoje);
+    // Com um dia tocado, o filtro vale dentro dele
+    if (!diaFiltrado) setDiaSelecionado(chaveHoje);
   }
 
   let conteudo;
   if (carregando) {
     conteudo = <Text style={agendaStyle.estadoTexto}>Carregando agenda...</Text>;
+  } else if (diaFiltrado && !eventosDoMes) {
+    conteudo = (
+      <Text style={agendaStyle.estadoTexto}>
+        {mesApi?.inicio === primeiroDoMes
+          ? mesApi.erro
+          : "Carregando agenda..."}
+      </Text>
+    );
+  } else if (diaFiltrado && linhas.length === 0) {
+    conteudo = (
+      <Text style={agendaStyle.estadoTexto}>
+        {filtroAtivo
+          ? "Nenhum compromisso desse tipo neste dia."
+          : "Nenhum compromisso neste dia."}
+      </Text>
+    );
   } else if (erro && linhas.length === 0) {
     conteudo = <Text style={agendaStyle.estadoTexto}>{erro}</Text>;
   } else if (linhas.length === 0) {
@@ -566,7 +633,6 @@ export default function Agenda() {
   } else {
     conteudo = linhas.map((linha, index) => {
       const id = idDaLinha(linha);
-      const chave = chaveDaLinha(linha);
       const temDepois = index < linhas.length - 1;
       const primeira = index === 0;
 
@@ -575,7 +641,6 @@ export default function Agenda() {
           <LinhaMedida
             key={id}
             id={id}
-            chave={chave}
             aoMedir={registrarPosicao}
             style={primeira && { paddingTop: ESPACO_TOPO_LISTA }}
           >
@@ -593,7 +658,6 @@ export default function Agenda() {
           <LinhaMedida
             key={id}
             id={id}
-            chave={chave}
             aoMedir={registrarPosicao}
           >
             {!primeira && <Conector />}
@@ -611,7 +675,6 @@ export default function Agenda() {
         <LinhaMedida
           key={id}
           id={id}
-          chave={chave}
           aoMedir={registrarPosicao}
           style={[
             agendaStyle.timelineSection,
@@ -659,23 +722,15 @@ export default function Agenda() {
           </View>
         </View>
 
-        {/* O mês acompanha o dia selecionado; antes do mês de hoje a seta fica apagada */}
+        {/* O mês acompanha o dia selecionado */}
         <View style={agendaStyle.monthNavRow}>
           <View style={agendaStyle.monthNavLeft}>
             <Pressable
               onPress={() => trocarMes(-1)}
-              disabled={!podeVoltarMes}
               hitSlop={8}
               accessibilityLabel="Mês anterior"
             >
-              <Text
-                style={[
-                  agendaStyle.monthChevron,
-                  !podeVoltarMes && agendaStyle.setaDesativada,
-                ]}
-              >
-                ‹
-              </Text>
+              <Text style={agendaStyle.monthChevron}>‹</Text>
             </Pressable>
             <Text style={agendaStyle.monthText}>
               {MESES[dataSelecionada.getMonth()]} {dataSelecionada.getFullYear()}
@@ -691,8 +746,8 @@ export default function Agenda() {
           <View style={agendaStyle.monthNavRight}>
             <Pressable
               style={agendaStyle.calendarButton}
-              onPress={irParaHoje}
-              accessibilityLabel="Voltar para hoje"
+              onPress={() => setCalendarioAberto(true)}
+              accessibilityLabel="Abrir calendário"
             >
               <Image
                 source={require("@/assets/images/img/agendaBranca.png")}
@@ -704,25 +759,18 @@ export default function Agenda() {
         </View>
       </View>
 
-      {/* Semana do dia selecionado: a bolinha marca os dias com compromisso e o toque rola a lista até o dia */}
-      <View style={agendaStyle.weekStrip}>
-        <Pressable
-          style={agendaStyle.weekSeta}
-          onPress={() => trocarSemana(-1)}
-          disabled={!podeVoltarSemana}
-          hitSlop={8}
-          accessibilityLabel="Semana anterior"
-        >
-          <Text
-            style={[
-              agendaStyle.monthChevron,
-              !podeVoltarSemana && agendaStyle.setaDesativada,
-            ]}
-          >
-            ‹
-          </Text>
-        </Pressable>
-        {semana.map((dia) => {
+      {/* Mês do dia selecionado, do dia 1 ao último: bolinha nos dias com compromisso, "×" nos vazios; o toque mostra só o dia */}
+      <ScrollView
+        ref={faixaRef}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={agendaStyle.weekStrip}
+        contentContainerStyle={agendaStyle.weekStripConteudo}
+        onContentSizeChange={() =>
+          faixaRef.current?.scrollTo({ x: xDoDia, animated: false })
+        }
+      >
+        {diasDaFaixa.map((dia) => {
           const ativo = dia.chave === diaSelecionado;
           const temCompromisso = diasComCompromisso.has(dia.chave);
           return (
@@ -730,7 +778,6 @@ export default function Agenda() {
               key={dia.chave}
               style={agendaStyle.weekDayCol}
               onPress={() => selecionarDia(dia.chave)}
-              disabled={!temCompromisso}
             >
               <Text style={agendaStyle.weekDayLabel}>{dia.sigla}</Text>
               <View
@@ -748,24 +795,20 @@ export default function Agenda() {
                   {dia.numero}
                 </Text>
               </View>
-              <View
-                style={[
-                  agendaStyle.weekDayDot,
-                  !temCompromisso && agendaStyle.weekDayDotVazio,
-                ]}
-              />
+              {eventosDoMes && !temCompromisso ? (
+                <Text style={agendaStyle.weekDayX}>×</Text>
+              ) : (
+                <View
+                  style={[
+                    agendaStyle.weekDayDot,
+                    !temCompromisso && agendaStyle.weekDayDotVazio,
+                  ]}
+                />
+              )}
             </Pressable>
           );
         })}
-        <Pressable
-          style={agendaStyle.weekSeta}
-          onPress={() => trocarSemana(1)}
-          hitSlop={8}
-          accessibilityLabel="Próxima semana"
-        >
-          <Text style={agendaStyle.monthChevron}>›</Text>
-        </Pressable>
-      </View>
+      </ScrollView>
 
       <ScrollView
         horizontal
@@ -794,9 +837,9 @@ export default function Agenda() {
       </ScrollView>
 
       {/* Só a timeline rola; cabeçalho, dias e filtros ficam fixos.
-          A key remonta a lista ao trocar de filtro, voltando ao topo */}
+          A key remonta a lista ao trocar de filtro ou de dia, voltando ao topo */}
       <ScrollView
-        key={filtroAtivo ?? "TODOS"}
+        key={`${filtroAtivo ?? "TODOS"}-${diaFiltrado ?? "TUDO"}`}
         ref={listaRef}
         style={{ flex: 1 }}
         contentContainerStyle={agendaStyle.scrollContent}
@@ -812,28 +855,159 @@ export default function Agenda() {
 
       {/* TabBar unificada */}
       <TabBar abaAtiva="agenda" />
+
+      <CalendarioModal
+        visivel={calendarioAberto}
+        dias={diasDaFaixa}
+        titulo={`${MESES[dataSelecionada.getMonth()]} ${dataSelecionada.getFullYear()}`}
+        diasComCompromisso={diasComCompromisso}
+        mesCarregado={eventosDoMes !== null}
+        diaFiltrado={diaFiltrado}
+        chaveHoje={chaveHoje}
+        aoTrocarMes={trocarMes}
+        aoEscolher={(chave) => {
+          setCalendarioAberto(false);
+          if (chave !== diaFiltrado) selecionarDia(chave);
+        }}
+        aoVoltarParaHoje={() => {
+          setCalendarioAberto(false);
+          irParaHoje();
+        }}
+        aoFechar={() => setCalendarioAberto(false)}
+      />
     </View>
   );
 }
 
-// Linha da lista que avisa onde ficou (y), para a faixa da semana rolar até ela
+// Calendário do mês aberto pelo botão da agenda; as setas trocam o mês da tela junto
+function CalendarioModal({
+  visivel,
+  dias,
+  titulo,
+  diasComCompromisso,
+  mesCarregado,
+  diaFiltrado,
+  chaveHoje,
+  aoTrocarMes,
+  aoEscolher,
+  aoVoltarParaHoje,
+  aoFechar,
+}: {
+  visivel: boolean;
+  dias: { numero: number; chave: string }[];
+  titulo: string;
+  diasComCompromisso: Set<string>;
+  mesCarregado: boolean;
+  diaFiltrado: string | null;
+  chaveHoje: string;
+  aoTrocarMes: (direcao: 1 | -1) => void;
+  aoEscolher: (chave: string) => void;
+  aoVoltarParaHoje: () => void;
+  aoFechar: () => void;
+}) {
+  // Casas vazias antes do dia 1, para ele cair na coluna do dia da semana certo
+  const vazios = (dataDaChave(dias[0].chave).getDay() + 6) % 7;
+
+  return (
+    <Modal
+      visible={visivel}
+      transparent
+      animationType="fade"
+      onRequestClose={aoFechar}
+    >
+      <View style={agendaStyle.calendarioContainer}>
+        <Pressable style={agendaStyle.calendarioFundo} onPress={aoFechar} />
+
+        <View style={agendaStyle.calendarioCard}>
+          <View style={agendaStyle.calendarioTopo}>
+            <Pressable
+              onPress={() => aoTrocarMes(-1)}
+              hitSlop={8}
+              accessibilityLabel="Mês anterior"
+            >
+              <Text style={agendaStyle.monthChevron}>‹</Text>
+            </Pressable>
+            <Text style={agendaStyle.monthText}>{titulo}</Text>
+            <Pressable
+              onPress={() => aoTrocarMes(1)}
+              hitSlop={8}
+              accessibilityLabel="Próximo mês"
+            >
+              <Text style={agendaStyle.monthChevron}>›</Text>
+            </Pressable>
+          </View>
+
+          <View style={agendaStyle.calendarioGrade}>
+            {SIGLAS_CALENDARIO.map((sigla, index) => (
+              <Text key={index} style={agendaStyle.calendarioSigla}>
+                {sigla}
+              </Text>
+            ))}
+            {Array.from({ length: vazios }, (_, index) => (
+              <View key={index} style={agendaStyle.calendarioCasa} />
+            ))}
+            {dias.map((dia) => {
+              const ativo = dia.chave === diaFiltrado;
+              const temCompromisso = diasComCompromisso.has(dia.chave);
+              return (
+                <Pressable
+                  key={dia.chave}
+                  style={agendaStyle.calendarioCasa}
+                  onPress={() => aoEscolher(dia.chave)}
+                  accessibilityLabel={`Dia ${dia.numero}`}
+                >
+                  <View
+                    style={[
+                      agendaStyle.calendarioDia,
+                      dia.chave === chaveHoje && agendaStyle.calendarioDiaHoje,
+                      ativo && agendaStyle.weekDayCircleActive,
+                    ]}
+                  >
+                    <Text style={agendaStyle.calendarioNumero}>{dia.numero}</Text>
+                  </View>
+                  {mesCarregado && !temCompromisso ? (
+                    <Text style={agendaStyle.calendarioX}>×</Text>
+                  ) : (
+                    <View
+                      style={[
+                        agendaStyle.calendarioBolinha,
+                        !temCompromisso && agendaStyle.weekDayDotVazio,
+                      ]}
+                    />
+                  )}
+                </Pressable>
+              );
+            })}
+          </View>
+
+          <Pressable
+            style={agendaStyle.calendarioHoje}
+            onPress={aoVoltarParaHoje}
+          >
+            <Text style={agendaStyle.calendarioHojeTexto}>Voltar para hoje</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+// Linha da lista que avisa onde ficou (y), para o cabeçalho seguir o dia do topo
 function LinhaMedida({
   id,
-  chave,
   aoMedir,
   style,
   children,
 }: {
   id: string;
-  chave: string;
-  aoMedir: (id: string, chave: string, y: number) => void;
+  aoMedir: (id: string, y: number) => void;
   style?: StyleProp<ViewStyle>;
   children: ReactNode;
 }) {
   return (
     <View
       style={style}
-      onLayout={(e) => aoMedir(id, chave, e.nativeEvent.layout.y)}
+      onLayout={(e) => aoMedir(id, e.nativeEvent.layout.y)}
     >
       {children}
     </View>
@@ -1019,7 +1193,7 @@ function ItemTimeline({
   passado?: boolean;
 }) {
   const visual = visualDoTipo(evento.tipo);
-  const status = statusConfig[statusDoEvento(evento)];
+  const status = statusConfig[statusDoEvento(evento, passado)];
   const pessoa = pessoaOuCategoria(evento);
   const chegada = evento.jogo?.horario_chegada;
 
@@ -1114,7 +1288,13 @@ function ItemTimeline({
           )}
         </View>
         <View style={agendaStyle.timelineStatusCol}>
-          <View style={[agendaStyle.statusPill, { borderColor: status.cor }]}>
+          <View
+            style={[
+              agendaStyle.statusPill,
+              { borderColor: status.cor },
+              passado && agendaStyle.statusPillPassado,
+            ]}
+          >
             <View
               style={[
                 agendaStyle.statusIconCircle,
