@@ -328,7 +328,12 @@ export default function Campeonatos() {
 
         {campeonatos !== null && !semNenhum && erro === "" && (
           <>
-            <View style={campeonatosStyle.filterRow}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={campeonatosStyle.filterScroll}
+              contentContainerStyle={campeonatosStyle.filterScrollRow}
+            >
               {FILTROS.map((filtro) => {
                 const ativo = filtroAtivo === filtro.valor;
                 return (
@@ -351,7 +356,7 @@ export default function Campeonatos() {
                   </Pressable>
                 );
               })}
-            </View>
+            </ScrollView>
 
             {lista.length === 0 && (
               <Text style={campeonatosStyle.estadoTexto}>

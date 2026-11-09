@@ -21,8 +21,12 @@ import {
 } from "@/utils/campeonatos";
 import { abrirDetalhe } from "@/utils/eventos";
 import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+// Altura de cada jogo antes de medir (a mesma do minHeight do item)
+const ALTURA_MINIMA = 88;
 
 // Todos os jogos com placar da categoria (?id=&categoria=), do mais recente ao mais antigo
 export default function UltimosResultados() {
@@ -42,6 +46,14 @@ export default function UltimosResultados() {
   const resultados = campeonato
     ? jogosDaCategoria(campeonato, idCategoria).filter(jogado).reverse()
     : [];
+  // Altura medida de cada jogo do cartão (o texto quebra linha, então varia): a data
+  // ao lado usa a mesma altura para continuar alinhada
+  const [alturas, setAlturas] = useState<Record<number, number>>({});
+  function medirJogo(idJogo: number, altura: number) {
+    setAlturas((atual) =>
+      atual[idJogo] === altura ? atual : { ...atual, [idJogo]: altura },
+    );
+  }
 
   let conteudo;
   if (erro) {
@@ -62,18 +74,26 @@ export default function UltimosResultados() {
         {/* Datas à esquerda, alinhadas com os jogos do cartão */}
         <View>
           {resultados.map((j, index) => (
-            <View key={j.id_jogo} style={ultimosResultadosStyle.resultRow}>
+            <View
+              key={j.id_jogo}
+              style={[
+                ultimosResultadosStyle.resultRow,
+                { height: alturas[j.id_jogo] ?? ALTURA_MINIMA },
+              ]}
+            >
               <View style={ultimosResultadosStyle.dateCol}>
                 <Text style={ultimosResultadosStyle.dateDay}>{diaMes(j.data_jogo)}</Text>
                 <Text style={ultimosResultadosStyle.dateWeekday}>
                   {diaDaSemana(j.data_jogo).slice(0, 3)}
                 </Text>
               </View>
+              {/* Linha do tempo: metade de cima liga ao jogo anterior, a de baixo ao próximo */}
               <View style={ultimosResultadosStyle.lineCol}>
-                <View style={ultimosResultadosStyle.lineDot} />
+                {index > 0 && <View style={ultimosResultadosStyle.lineConnectorTop} />}
                 {index < resultados.length - 1 && (
-                  <View style={ultimosResultadosStyle.lineConnector} />
+                  <View style={ultimosResultadosStyle.lineConnectorBottom} />
                 )}
+                <View style={ultimosResultadosStyle.lineDot} />
               </View>
             </View>
           ))}
@@ -113,6 +133,7 @@ export default function UltimosResultados() {
                 ]}
                 onPress={() => abrirDetalhe(j.id_evento)}
                 disabled={!temDetalhe}
+                onLayout={(e) => medirJogo(j.id_jogo, e.nativeEvent.layout.height)}
               >
                 <Image
                   source={escudoDoTime(escudo)}
@@ -120,19 +141,15 @@ export default function UltimosResultados() {
                   resizeMode="contain"
                 />
                 <View style={ultimosResultadosStyle.resultTextCol}>
-                  <Text
-                    style={ultimosResultadosStyle.resultScore}
-                    numberOfLines={2}
-                  >
+                  {/* Sem limite de linhas: o texto quebra em vez de ser cortado com "..." */}
+                  <Text style={ultimosResultadosStyle.resultScore}>
                     {j.time_casa.nome_time}  {placarTexto(j)}  {j.time_visitante.nome_time}
                   </Text>
-                  <Text style={ultimosResultadosStyle.resultCompeticao} numberOfLines={1}>
+                  <Text style={ultimosResultadosStyle.resultCompeticao}>
                     {faseDoJogo(j) || campeonato.nome_campeonato}
                   </Text>
                   {j.local_jogo && (
-                    <Text style={ultimosResultadosStyle.resultLocal} numberOfLines={1}>
-                      {j.local_jogo}
-                    </Text>
+                    <Text style={ultimosResultadosStyle.resultLocal}>{j.local_jogo}</Text>
                   )}
                 </View>
                 {/* Vitória/Empate/Derrota só nos jogos da AACJ */}

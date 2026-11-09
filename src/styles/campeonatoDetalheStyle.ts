@@ -79,22 +79,110 @@ const campeonatoDetalheStyle = StyleSheet.create({
   infoCard: {
     marginTop: 16,
     marginHorizontal: 20,
-    padding: 16,
     borderRadius: 16,
+    overflow: "hidden",
     backgroundColor: cores.branco,
   },
 
-  infoTopo: {
+  // Banner (o do campeonato ou o padrão) escurecido, com o status no canto
+  infoBanner: {
+    height: 92,
+    backgroundColor: cores.preto,
+  },
+
+  infoBannerImagem: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+  },
+
+  infoBannerOverlay: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: "rgba(0,0,0,0.35)",
+  },
+
+  statusPillNoBanner: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    maxWidth: "70%",
+  },
+
+  // Logo num círculo branco, metade sobre o banner; formato e organizador ao lado
+  infoIdentidade: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-end",
     columnGap: 12,
+    paddingHorizontal: 16,
+    marginTop: -32,
+  },
+
+  // Quadrado de cantos arredondados (não círculo): o logo pode ser quadrado ou retangular
+  // e aparece inteiro (contain), com uma margem branca em volta
+  infoLogoCaixa: {
+    width: 68,
+    height: 68,
+    borderRadius: 14,
+    padding: 6,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: cores.branco,
+    shadowColor: "#000",
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
   },
 
   campeonatoLogo: {
-    flexShrink: 0,
-    width: 56,
-    height: 56,
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
+  },
+
+  campeonatoLogoPadrao: {
+    width: 32,
+    height: 32,
+  },
+
+  infoIdentidadeTexto: {
+    flex: 1,
+    minWidth: 0,
+    paddingBottom: 2,
+    rowGap: 4,
+  },
+
+  formatoPill: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 10,
+    backgroundColor: cores.vermelho,
+  },
+
+  formatoPillText: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.apoio,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
+  organizadorTexto: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.apoio,
+    color: cores.cinza,
+  },
+
+  organizadorNome: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontWeight: "700",
+    color: cores.preto,
   },
 
   statusPill: {
@@ -114,33 +202,132 @@ const campeonatoDetalheStyle = StyleSheet.create({
     color: cores.verde,
   },
 
+  // Informações com ícone vermelho numa caixinha rosada, rótulo pequeno em cima do valor
   infoRows: {
-    marginTop: 12,
+    marginTop: 14,
+    marginHorizontal: 16,
     paddingTop: 12,
-    rowGap: 8,
+    paddingBottom: 16,
+    rowGap: 10,
     borderTopWidth: 1,
     borderTopColor: "rgba(0,0,0,0.08)",
   },
 
   infoRow: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    columnGap: 8,
+    alignItems: "center",
+    columnGap: 10,
+  },
+
+  infoIconeCaixa: {
+    width: 32,
+    height: 32,
+    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(215,25,32,0.08)",
+  },
+
+  infoIcone: {
+    width: 16,
+    height: 16,
+  },
+
+  infoTextoCol: {
+    flex: 1,
+    minWidth: 0,
   },
 
   infoLabel: {
-    width: 84,
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.corpoMedio,
+    fontSize: fontSizes.legenda,
     color: cores.cinza,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
   },
 
   infoValue: {
-    flex: 1,
-    minWidth: 0,
     fontFamily: fontes.OpenSans_SemiBold,
     fontSize: fontSizes.corpoMedio,
     color: cores.preto,
+    marginTop: 1,
+  },
+
+  /* AACJ ELIMINADA */
+
+  eliminadaCard: {
+    marginTop: 12,
+    marginHorizontal: 20,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: cores.vermelho,
+    backgroundColor: cores.vermelho20,
+  },
+
+  eliminadaTopo: {
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 12,
+  },
+
+  eliminadaEscudo: {
+    width: 40,
+    height: 40,
+    opacity: 0.6,
+  },
+
+  eliminadaPill: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+    overflow: "hidden",
+    backgroundColor: cores.vermelho,
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.legenda,
+    fontWeight: "700",
+    color: cores.branco,
+  },
+
+  eliminadaTitulo: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontSize: fontSizes.titulo,
+    fontWeight: "800",
+    color: cores.branco,
+    marginTop: 3,
+  },
+
+  eliminadaMotivoBloco: {
+    marginTop: 10,
+  },
+
+  eliminadaMotivo: {
+    fontFamily: fontes.OpenSans_SemiBold,
+    fontSize: fontSizes.corpoMedio,
+    color: cores.branco,
+  },
+
+  eliminadaNome: {
+    fontFamily: fontes.OpenSans_Bold,
+    fontWeight: "700",
+  },
+
+  eliminadaDetalhe: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.apoio,
+    color: cores.branco70,
+    marginTop: 2,
+  },
+
+  eliminadaRodape: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.apoio,
+    color: cores.branco80,
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255,255,255,0.14)",
   },
 
   /* SEÇÕES */
@@ -260,6 +447,14 @@ const campeonatoDetalheStyle = StyleSheet.create({
   },
 
   /* ESTATÍSTICAS */
+
+  statsLegenda: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.apoio,
+    color: cores.branco70,
+    marginTop: -5,
+    marginBottom: 8,
+  },
 
   statsGrid: {
     flexDirection: "row",
@@ -523,15 +718,27 @@ const campeonatoDetalheStyle = StyleSheet.create({
     color: cores.branco,
   },
 
-  resultRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    minHeight: 25,
-    width: "100%",
+  // Mini placar de cada resultado: um time por linha, com os gols à direita
+  resultBloco: {
+    paddingVertical: 5,
+    rowGap: 2,
   },
 
+  resultBlocoDivisor: {
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.10)",
+  },
+
+  resultLinhaTime: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    columnGap: 6,
+  },
+
+  // Sem numberOfLines: nome comprido quebra a linha em vez de virar "..."
   resultTeams: {
-    flexShrink: 1,
+    flex: 1,
+    minWidth: 0,
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.legenda,
     fontWeight: "700",
@@ -540,11 +747,34 @@ const campeonatoDetalheStyle = StyleSheet.create({
 
   resultScore: {
     flexShrink: 0,
+    minWidth: 12,
+    textAlign: "right",
     fontFamily: fontes.OpenSans_Bold,
     fontSize: fontSizes.legenda,
     fontWeight: "700",
     color: cores.branco,
-    marginHorizontal: 4,
+  },
+
+  // Quem perdeu fica mais apagado
+  resultPerdedor: {
+    color: cores.branco70,
+    fontFamily: fontes.OpenSans_Regular,
+    fontWeight: "400",
+  },
+
+  resultRodape: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    columnGap: 6,
+    rowGap: 3,
+    marginTop: 2,
+  },
+
+  resultExtras: {
+    fontFamily: fontes.OpenSans_Regular,
+    fontSize: fontSizes.minusculo,
+    color: cores.branco70,
   },
 
   resultWin: {

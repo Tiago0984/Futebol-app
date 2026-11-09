@@ -65,6 +65,16 @@ const campeonatosStyle = StyleSheet.create({
     rowGap: 10,
     columnGap: 10,
   },
+  // Filtros da lista: uma linha só, com rolagem horizontal (como na Agenda)
+  filterScroll: {
+    marginTop: 18,
+    flexGrow: 0,
+  },
+  filterScrollRow: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    columnGap: 10,
+  },
   filterPill: {
     paddingHorizontal: 16,
     height: 34,

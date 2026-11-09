@@ -8,10 +8,32 @@ import {
   gruposDaCategoria,
   useCampeonato,
   voltarParaCampeonatos,
+  type LinhaTabela,
 } from "@/utils/campeonatos";
 import { useLocalSearchParams } from "expo-router";
 import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+// Colunas da tabela, na mesma ordem do site; o nome vai para a legenda
+const COLUNAS: {
+  sigla: string;
+  nome: string;
+  valor: (l: LinhaTabela) => number | string;
+  destaque?: boolean;
+}[] = [
+  { sigla: "PTS", nome: "Pontos", valor: (l) => l.pontos, destaque: true },
+  { sigla: "PJ", nome: "Partidas Jogadas", valor: (l) => l.jogos },
+  { sigla: "V", nome: "Vitórias", valor: (l) => l.vitorias },
+  { sigla: "E", nome: "Empates", valor: (l) => l.empates },
+  { sigla: "D", nome: "Derrotas", valor: (l) => l.derrotas },
+  { sigla: "GM", nome: "Gols Marcados", valor: (l) => l.gols_marcados },
+  { sigla: "GC", nome: "Gols Contra", valor: (l) => l.gols_sofridos },
+  {
+    sigla: "SG",
+    nome: "Saldo de Gols",
+    valor: (l) => (l.saldo > 0 ? `+${l.saldo}` : l.saldo),
+  },
+];
 
 // Classificação completa da categoria (?id=&categoria=), uma tabela por grupo
 export default function Classificacao() {
@@ -50,22 +72,19 @@ export default function Classificacao() {
         )}
         <View style={classificacaoStyle.tableHeaderRow}>
           <View style={classificacaoStyle.colPos}>
-            <Text style={classificacaoStyle.tableHeaderText}>POS</Text>
+            <Text style={classificacaoStyle.tableHeaderText}>#</Text>
           </View>
           <View style={classificacaoStyle.colEquipe}>
             <Text style={classificacaoStyle.tableHeaderText}>Equipe</Text>
           </View>
-          {["PJ", "V", "E", "D"].map((sigla) => (
-            <View key={sigla} style={classificacaoStyle.colNumero}>
-              <Text style={classificacaoStyle.tableHeaderText}>{sigla}</Text>
+          {COLUNAS.map((col) => (
+            <View
+              key={col.sigla}
+              style={col.destaque ? classificacaoStyle.colDestaque : classificacaoStyle.colNumero}
+            >
+              <Text style={classificacaoStyle.tableHeaderText}>{col.sigla}</Text>
             </View>
           ))}
-          <View style={classificacaoStyle.colDestaque}>
-            <Text style={classificacaoStyle.tableHeaderText}>SG</Text>
-          </View>
-          <View style={classificacaoStyle.colDestaque}>
-            <Text style={classificacaoStyle.tableHeaderText}>PTS</Text>
-          </View>
         </View>
 
         {grupo.tabela.map((linha) => (
@@ -101,26 +120,27 @@ export default function Classificacao() {
                   classificacaoStyle.equipeNome,
                   linha.da_aacj && classificacaoStyle.equipeNomeAacj,
                 ]}
-                numberOfLines={1}
+                numberOfLines={2}
               >
                 {linha.time}
               </Text>
             </View>
-            {[linha.jogos, linha.vitorias, linha.empates, linha.derrotas].map(
-              (valor, i) => (
-                <View key={i} style={classificacaoStyle.colNumero}>
-                  <Text style={classificacaoStyle.colNumeroTexto}>{valor}</Text>
-                </View>
-              ),
-            )}
-            <View style={classificacaoStyle.colDestaque}>
-              <Text style={classificacaoStyle.colDestaqueTexto}>
-                {linha.saldo > 0 ? `+${linha.saldo}` : linha.saldo}
-              </Text>
-            </View>
-            <View style={classificacaoStyle.colDestaque}>
-              <Text style={classificacaoStyle.colDestaqueTexto}>{linha.pontos}</Text>
-            </View>
+            {COLUNAS.map((col) => (
+              <View
+                key={col.sigla}
+                style={col.destaque ? classificacaoStyle.colDestaque : classificacaoStyle.colNumero}
+              >
+                <Text
+                  style={
+                    col.destaque
+                      ? classificacaoStyle.colDestaqueTexto
+                      : classificacaoStyle.colNumeroTexto
+                  }
+                >
+                  {col.valor(linha)}
+                </Text>
+              </View>
+            ))}
           </View>
         ))}
       </View>
@@ -175,27 +195,12 @@ export default function Classificacao() {
           <View style={[classificacaoStyle.tableCard, classificacaoStyle.legendaCard]}>
             <View style={classificacaoStyle.legenda}>
               <View style={classificacaoStyle.legendaLinha}>
-                {[
-                  ["PJ", "Jogos"],
-                  ["V", "Vitórias"],
-                  ["E", "Empates"],
-                  ["D", "Derrotas"],
-                ].map(([sigla, nome]) => (
-                  <Text key={sigla} style={classificacaoStyle.legendaItem}>
-                    <Text style={classificacaoStyle.legendaSigla}>{sigla}: </Text>
-                    {nome}
+                {COLUNAS.map((col) => (
+                  <Text key={col.sigla} style={classificacaoStyle.legendaItem}>
+                    <Text style={classificacaoStyle.legendaSigla}>{col.sigla}: </Text>
+                    {col.nome}
                   </Text>
                 ))}
-              </View>
-              <View style={classificacaoStyle.legendaLinha}>
-                <Text style={classificacaoStyle.legendaItem}>
-                  <Text style={classificacaoStyle.legendaSigla}>SG: </Text>
-                  Saldo de gols
-                </Text>
-                <Text style={classificacaoStyle.legendaItem}>
-                  <Text style={classificacaoStyle.legendaSigla}>PTS: </Text>
-                  Pontos
-                </Text>
                 {temClassificado && (
                   <Text style={classificacaoStyle.legendaItem}>
                     <Text style={classificacaoStyle.posClassificado}>1 </Text>

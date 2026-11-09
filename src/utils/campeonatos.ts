@@ -142,16 +142,29 @@ export type Time = {
   da_aacj?: boolean | null;
 };
 
+// Mata-mata decidido: id_time de quem passou (null fora do mata-mata, na ida e sem vencedor)
+export type Confronto = {
+  id_time: number;
+  como: string;
+  texto: string;
+};
+
 export type Jogo = {
   id_jogo: number;
   id_evento: number;
   id_categoria: number | null;
+  // GRUPOS, REPESCAGEM, OITAVAS, ..., TERCEIRO, FINAL; fase é o rótulo
+  fase_jogo?: string | null;
   fase: string | null;
   rodada_jogo: number | null;
   placar_time_casa_jogos: number | null;
   placar_time_visitante_jogos: number | null;
+  // Só no mata-mata: gols da prorrogação (jogo único empatado). Servidor antigo não manda
+  prorrogacao_time_casa_jogos?: number | null;
+  prorrogacao_time_visitante_jogos?: number | null;
   penaltis_time_casa_jogos: number | null;
   penaltis_time_visitante_jogos: number | null;
+  confronto?: Confronto | null;
   data_jogo: string;
   horario_jogo: string | null;
   local_jogo: string | null;
@@ -173,13 +186,21 @@ export type LinhaTabela = {
   gols_sofridos: number;
   saldo: number;
   classificado?: boolean;
+  // Empatado com outro em todos os critérios: a ordem pode sair por sorteio
+  empate_sorteio?: boolean;
   da_aacj?: boolean | null;
 };
 
+// classificados: quantos passam de cada grupo (null sem essa regra)
 export type ClassificacaoCategoria = {
   id_categoria: number;
   categoria: string;
-  grupos: { grupo: string; tabela: LinhaTabela[] }[];
+  classificados?: number | null;
+  grupos: {
+    grupo: string | null;
+    classificados?: number | null;
+    tabela: LinhaTabela[];
+  }[];
 };
 
 // Só os campos usados nas telas do app
@@ -191,6 +212,7 @@ export type DadosCampeonato = {
   tipo_label?: string;
   local_evento: string | null;
   logo_url: string | null;
+  banner_url?: string | null;
   data_inicio_campeonato: string;
   data_fim_campeonato: string;
   categorias: Categoria[];
@@ -214,10 +236,17 @@ export function diaDaSemana(data: string) {
 export const jogado = (j: Jogo) =>
   j.placar_time_casa_jogos !== null && j.placar_time_visitante_jogos !== null;
 
-// Quem ganhou o jogo com placar (nos pênaltis, quem passou); null no empate
+// Gols do jogo com placar: tempo normal mais a prorrogação (pênaltis não contam)
+export function golsDoJogo(j: Jogo) {
+  return {
+    casa: j.placar_time_casa_jogos! + (j.prorrogacao_time_casa_jogos ?? 0),
+    fora: j.placar_time_visitante_jogos! + (j.prorrogacao_time_visitante_jogos ?? 0),
+  };
+}
+
+// Quem ganhou o jogo com placar (na prorrogação ou nos pênaltis, quem passou); null no empate
 export function vencedorDoJogo(j: Jogo) {
-  let casa = j.placar_time_casa_jogos!;
-  let fora = j.placar_time_visitante_jogos!;
+  let { casa, fora } = golsDoJogo(j);
   if (
     casa === fora &&
     j.penaltis_time_casa_jogos != null &&
@@ -247,11 +276,175 @@ export const ROTULO_RESULTADO = {
   DERROTA: "Derrota",
 } as const;
 
+// Prorrogação e pênaltis do jogo ("prorr. 1-0 · pên. 4-3"); null quando não houve
+export function extrasDoPlacar(j: Jogo) {
+  const extras = [];
+  if (j.prorrogacao_time_casa_jogos != null && j.prorrogacao_time_visitante_jogos != null) {
+    extras.push(`prorr. ${j.prorrogacao_time_casa_jogos}-${j.prorrogacao_time_visitante_jogos}`);
+  }
+  if (j.penaltis_time_casa_jogos != null && j.penaltis_time_visitante_jogos != null) {
+    extras.push(`pên. ${j.penaltis_time_casa_jogos}-${j.penaltis_time_visitante_jogos}`);
+  }
+  return extras.length > 0 ? extras.join(" · ") : null;
+}
+
+// "1 x 1 (prorr. 1-0)", "2 x 2 (pên. 4-3)"
 export function placarTexto(j: Jogo) {
   const placar = `${j.placar_time_casa_jogos} x ${j.placar_time_visitante_jogos}`;
-  return j.penaltis_time_casa_jogos !== null
-    ? `${placar} (${j.penaltis_time_casa_jogos}-${j.penaltis_time_visitante_jogos} pên.)`
-    : placar;
+  const extras = extrasDoPlacar(j);
+  return extras ? `${placar} (${extras})` : placar;
+}
+
+/**
+ * Campanha da AACJ nos jogos com placar da categoria (fase de grupos e mata-mata). Vitória e
+ * derrota como em resultadoDaAacj (na prorrogação ou nos pênaltis, conta quem passou); gols
+ * do tempo normal mais a prorrogação. Jogo entre dois times da AACJ fica fora. null quando
+ * não há jogo da AACJ com placar (ou o servidor não diz qual time é da AACJ)
+ */
+export function campanhaDaAacj(jogos: Jogo[]) {
+  const t = { jogos: 0, v: 0, e: 0, d: 0, pro: 0, contra: 0 };
+  for (const j of jogos) {
+    const r = resultadoDaAacj(j);
+    if (r === null) continue;
+    const { casa, fora } = golsDoJogo(j);
+    const aacjEmCasa = j.time_casa.da_aacj === true;
+    t.jogos++;
+    t.pro += aacjEmCasa ? casa : fora;
+    t.contra += aacjEmCasa ? fora : casa;
+    if (r === "VITORIA") t.v++;
+    else if (r === "EMPATE") t.e++;
+    else t.d++;
+  }
+  if (t.jogos === 0) return null;
+  const pontos = t.v * 3 + t.e;
+  return {
+    ...t,
+    pontos,
+    saldo: t.pro - t.contra,
+    aproveitamento: Math.round((pontos / (t.jogos * 3)) * 100),
+  };
+}
+
+// Fases que não eliminam: quem perde a final é vice; a do 3º lugar é de quem já caiu
+const FASES_SEM_ELIMINACAO = ["GRUPOS", "FINAL", "TERCEIRO"];
+
+// "Caiu nas quartas de final para..."
+const NA_FASE: Record<string, string> = {
+  REPESCAGEM: "na repescagem",
+  DEZESSEIS_AVOS: "nos dezesseis avos de final",
+  OITAVAS: "nas oitavas de final",
+  QUARTAS: "nas quartas de final",
+  SEMIFINAL: "na semifinal",
+};
+
+export type Eliminacao = {
+  id_time: number;
+  time: string;
+  logo_url: string | null;
+  // "Caiu nas Quartas de final para Rival FC."
+  motivo: string;
+  // O texto do confronto ("Rival FC passa nos pênaltis (4 × 3)..."), quando há
+  detalhe: string | null;
+  // Caiu na semifinal e ainda joga a disputa do 3º lugar
+  disputaTerceiro: boolean;
+};
+
+/**
+ * Times da AACJ que já estão fora da disputa do título na categoria (o campeonato continua
+ * para os outros). Caiu no mata-mata: perdeu um confronto decidido (jogos[].confronto) antes
+ * da final. Caiu nos grupos: com a regra "classificam N por grupo", a fase de grupos acabou
+ * (todos os jogos dela com placar e o mata-mata já começou a ser montado), a linha do time
+ * diz classificado = false, sem empate para sorteio, e ele não está em nenhum jogo do
+ * mata-mata. Servidor antigo (sem fase_jogo/confronto) não elimina ninguém
+ */
+export function eliminacaoDaAacj(
+  c: DadosCampeonato,
+  idCategoria: number | null,
+  jogos: Jogo[],
+) {
+  // Times da AACJ na categoria, pelos jogos e pela tabela
+  const timesAacj = new Map<number, { nome: string; logo_url: string | null }>();
+  for (const j of jogos) {
+    for (const t of [j.time_casa, j.time_visitante]) {
+      if (t.da_aacj === true) timesAacj.set(t.id_time, { nome: t.nome_time, logo_url: t.logo_url });
+    }
+  }
+  const classificacao = c.classificacao.find((cl) => cl.id_categoria === idCategoria);
+  for (const g of classificacao?.grupos ?? []) {
+    for (const l of g.tabela) {
+      if (l.da_aacj === true && !timesAacj.has(l.id_time)) {
+        timesAacj.set(l.id_time, { nome: l.time, logo_url: l.logo_url });
+      }
+    }
+  }
+
+  const doMataMata = jogos.filter((j) => j.fase_jogo && j.fase_jogo !== "GRUPOS");
+  const gruposAcabaram =
+    doMataMata.length > 0 &&
+    jogos.filter((j) => j.fase_jogo === "GRUPOS").every(jogado);
+  const joga = (j: Jogo, id: number) =>
+    j.time_casa.id_time === id || j.time_visitante.id_time === id;
+  const adversario = (j: Jogo, id: number) =>
+    j.time_casa.id_time === id ? j.time_visitante : j.time_casa;
+
+  const eliminados: Eliminacao[] = [];
+  for (const [id, time] of timesAacj) {
+    const base = { id_time: id, time: time.nome, logo_url: time.logo_url };
+
+    // Mata-mata: o confronto perdido mais recente (os jogos estão em ordem de data)
+    const perdido = doMataMata
+      .filter(
+        (j) =>
+          joga(j, id) &&
+          !FASES_SEM_ELIMINACAO.includes(j.fase_jogo!) &&
+          j.confronto != null &&
+          j.confronto.id_time !== id,
+      )
+      .pop();
+    if (perdido) {
+      const fase =
+        NA_FASE[perdido.fase_jogo!] ??
+        (perdido.fase ? `na fase ${perdido.fase.toLowerCase()}` : "no mata-mata");
+      eliminados.push({
+        ...base,
+        motivo: `Caiu ${fase} para ${adversario(perdido, id).nome_time}.`,
+        detalhe: perdido.confronto!.texto || null,
+        disputaTerceiro: doMataMata.some(
+          (j) => j.fase_jogo === "TERCEIRO" && joga(j, id) && !j.confronto,
+        ),
+      });
+      continue;
+    }
+
+    // Fase de grupos
+    if (!gruposAcabaram || doMataMata.some((j) => joga(j, id))) continue;
+    for (const g of classificacao?.grupos ?? []) {
+      const linha = g.tabela.find((l) => l.id_time === id);
+      const regra = g.classificados ?? classificacao?.classificados ?? null;
+      if (
+        linha &&
+        linha.jogos > 0 &&
+        regra != null &&
+        linha.classificado === false &&
+        !linha.empate_sorteio
+      ) {
+        // "Chave A" ou "Grupo A": entre parênteses, sem depender do gênero do nome
+        const noGrupo =
+          g.grupo && g.grupo !== "Sem grupo" ? ` (${g.grupo})` : "";
+        eliminados.push({
+          ...base,
+          motivo: `Não passou da fase de grupos: terminou em ${linha.posicao}º lugar${noGrupo}.`,
+          detalhe: null,
+          disputaTerceiro: false,
+        });
+        break;
+      }
+    }
+  }
+
+  if (eliminados.length === 0) return null;
+  // todos: nenhum time da AACJ segue na disputa do título nesta categoria
+  return { eliminados, todos: eliminados.length === timesAacj.size, varios: timesAacj.size > 1 };
 }
 
 // "Fase de grupos · Rodada 4"

@@ -13,11 +13,15 @@ import {
   jogado,
   jogosDaCategoria,
   jogosFuturos,
-  placarTexto,
+  extrasDoPlacar,
   resultadoDaAacj,
+  vencedorDoJogo,
   useCampeonato,
   voltarParaCampeonatos,
   andamentoDoCampeonato,
+  campanhaDaAacj,
+  eliminacaoDaAacj,
+  type Eliminacao,
   type Resumo,
   type Situacao,
 } from "@/utils/campeonatos";
@@ -110,48 +114,39 @@ export default function CampeonatoDetalhe() {
       jogos.flatMap((j) => [j.time_casa.id_time, j.time_visitante.id_time]),
     ).size;
 
-    // Campanha da AACJ pelos jogos dela com placar (vale também no mata-mata; nos pênaltis
-    // conta quem passou). Gols só do tempo normal. Sem time marcado da_aacj, não aparece
-    const jogosDaAacj = realizados.filter(
-      (j) =>
-        (j.time_casa.da_aacj === true) !== (j.time_visitante.da_aacj === true) &&
-        resultadoDaAacj(j) !== null,
-    );
-    const campanha = jogosDaAacj.reduce(
-      (t, j) => {
-        const casa = j.time_casa.da_aacj === true;
-        t.pro += casa ? j.placar_time_casa_jogos! : j.placar_time_visitante_jogos!;
-        t.contra += casa ? j.placar_time_visitante_jogos! : j.placar_time_casa_jogos!;
-        const r = resultadoDaAacj(j);
-        if (r === "VITORIA") t.v++;
-        else if (r === "EMPATE") t.e++;
-        else if (r === "DERROTA") t.d++;
-        return t;
-      },
-      { v: 0, e: 0, d: 0, pro: 0, contra: 0 },
-    );
-    const pontos = campanha.v * 3 + campanha.e;
-    const saldo = campanha.pro - campanha.contra;
-    const estatisticas = jogosDaAacj.length > 0 && [
+    // Campanha da AACJ nesta categoria (grupos e mata-mata). Sem time marcado da_aacj, não aparece
+    const campanha = campanhaDaAacj(realizados);
+    const estatisticas = campanha && [
       { rotulo: "Vitórias", valor: campanha.v },
       { rotulo: "Empates", valor: campanha.e },
       { rotulo: "Derrotas", valor: campanha.d },
-      { rotulo: "Pontos", valor: pontos },
-      { rotulo: "Saldo", valor: saldo > 0 ? `+${saldo}` : saldo },
+      { rotulo: "Pontos", valor: campanha.pontos },
+      { rotulo: "Saldo", valor: campanha.saldo > 0 ? `+${campanha.saldo}` : campanha.saldo },
       { rotulo: "Gols Pró", valor: campanha.pro },
       { rotulo: "Gols Contra", valor: campanha.contra },
-      {
-        rotulo: "Aproveitamento",
-        valor: `${Math.round((pontos / (jogosDaAacj.length * 3)) * 100)}%`,
-      },
+      { rotulo: "Aproveitamento", valor: `${campanha.aproveitamento}%` },
     ];
 
+    // AACJ fora da disputa do título nesta categoria (o campeonato segue para os outros)
+    const eliminacao = eliminacaoDaAacj(c, idCategoria, jogos);
+    const categoriaEncerrada = categoria?.encerrada ?? c.encerrado ?? false;
+
     const linhasInfo = [
-      { rotulo: "Organizador", valor: c.organizador_campeonato },
-      { rotulo: "Formato", valor: c.tipo_label },
-      { rotulo: "Local", valor: c.local_evento },
-      { rotulo: "Equipes", valor: equipes ? String(equipes) : null },
-      { rotulo: "Período", valor: `${dataCompleta(inicio)} a ${dataCompleta(fim)}` },
+      {
+        icone: require("@/assets/images/img/agendaVermelha.png"),
+        rotulo: "Período",
+        valor: `${dataCompleta(inicio)} a ${dataCompleta(fim)}`,
+      },
+      {
+        icone: require("@/assets/images/img/localizacaoVermelho.png"),
+        rotulo: "Local",
+        valor: c.local_evento,
+      },
+      {
+        icone: require("@/assets/images/img/grupoPessoasVermelho.png"),
+        rotulo: "Equipes",
+        valor: equipes ? `${equipes} ${equipes === 1 ? "equipe" : "equipes"}` : null,
+      },
     ].filter((l) => l.valor);
 
     const escudo = escudoDoTime;
@@ -205,11 +200,24 @@ export default function CampeonatoDetalhe() {
 
         {/* INFORMAÇÕES DO CAMPEONATO */}
         <InfoCampeonato
+          bannerUrl={c.banner_url ?? null}
           logoUrl={c.logo_url}
+          formato={c.tipo_label ?? null}
+          organizador={c.organizador_campeonato}
           selo={andamento.selo}
           situacao={situacao}
           linhas={linhasInfo}
         />
+
+        {/* AACJ ELIMINADA: o campeonato continua, mas sem ela na disputa */}
+        {eliminacao && (
+          <AvisoEliminacao
+            eliminados={eliminacao.eliminados}
+            todos={eliminacao.todos}
+            varios={eliminacao.varios}
+            encerrada={categoriaEncerrada}
+          />
+        )}
 
         {c.descricao_campeonato && (
           <Text style={campeonatoDetalheStyle.descricao}>
@@ -331,6 +339,10 @@ export default function CampeonatoDetalhe() {
           <View style={campeonatoDetalheStyle.section}>
             <Text style={campeonatoDetalheStyle.sectionTitle}>
               Estatísticas da campanha
+            </Text>
+            <Text style={campeonatoDetalheStyle.statsLegenda}>
+              {campanha.jogos === 1 ? "1 jogo" : `${campanha.jogos} jogos`} da AACJ
+              {eliminacao?.todos ? " · campanha encerrada" : ""}
             </Text>
             <View style={campeonatoDetalheStyle.statsGrid}>
               {estatisticas.map((s) => (
@@ -472,32 +484,65 @@ export default function CampeonatoDetalhe() {
                   </Pressable>
                 </View>
                 <View style={campeonatoDetalheStyle.tableRows}>
-                  {ultimos.map((j) => {
+                  {/* Mini placar: cada time numa linha com os gols; o nome quebra a linha
+                      em vez de ser cortado com "..." */}
+                  {ultimos.map((j, i) => {
                     const resultado = resultadoDaAacj(j);
+                    const extras = extrasDoPlacar(j);
+                    const vencedor = vencedorDoJogo(j);
                     return (
-                      <View key={j.id_jogo} style={campeonatoDetalheStyle.resultRow}>
-                        <Text style={campeonatoDetalheStyle.resultTeams} numberOfLines={1}>
-                          {j.time_casa.nome_time}
-                        </Text>
-                        <Text style={campeonatoDetalheStyle.resultScore}>
-                          {placarTexto(j)}
-                        </Text>
-                        <Text style={campeonatoDetalheStyle.resultTeams} numberOfLines={1}>
-                          {j.time_visitante.nome_time}
-                        </Text>
-                        {resultado === "VITORIA" && (
-                          <View style={campeonatoDetalheStyle.resultWin}>
-                            <Text style={campeonatoDetalheStyle.resultWinText}>Vitória</Text>
+                      <View
+                        key={j.id_jogo}
+                        style={[
+                          campeonatoDetalheStyle.resultBloco,
+                          i < ultimos.length - 1 && campeonatoDetalheStyle.resultBlocoDivisor,
+                        ]}
+                      >
+                        {[
+                          { time: j.time_casa, gols: j.placar_time_casa_jogos },
+                          { time: j.time_visitante, gols: j.placar_time_visitante_jogos },
+                        ].map(({ time, gols }) => (
+                          <View key={time.id_time} style={campeonatoDetalheStyle.resultLinhaTime}>
+                            <Text
+                              style={[
+                                campeonatoDetalheStyle.resultTeams,
+                                vencedor && vencedor.id_time !== time.id_time &&
+                                  campeonatoDetalheStyle.resultPerdedor,
+                              ]}
+                            >
+                              {time.nome_time}
+                            </Text>
+                            <Text
+                              style={[
+                                campeonatoDetalheStyle.resultScore,
+                                vencedor && vencedor.id_time !== time.id_time &&
+                                  campeonatoDetalheStyle.resultPerdedor,
+                              ]}
+                            >
+                              {gols}
+                            </Text>
                           </View>
-                        )}
-                        {resultado === "EMPATE" && (
-                          <View style={campeonatoDetalheStyle.resultDraw}>
-                            <Text style={campeonatoDetalheStyle.resultDrawText}>Empate</Text>
-                          </View>
-                        )}
-                        {resultado === "DERROTA" && (
-                          <View style={campeonatoDetalheStyle.resultLoss}>
-                            <Text style={campeonatoDetalheStyle.resultLossText}>Derrota</Text>
+                        ))}
+                        {(extras || resultado) && (
+                          <View style={campeonatoDetalheStyle.resultRodape}>
+                            {extras && (
+                              <Text style={campeonatoDetalheStyle.resultExtras}>{extras}</Text>
+                            )}
+                            {resultado === "VITORIA" && (
+                              <View style={campeonatoDetalheStyle.resultWin}>
+                                <Text style={campeonatoDetalheStyle.resultWinText}>Vitória</Text>
+                              </View>
+                            )}
+                            {resultado === "EMPATE" && (
+                              <View style={campeonatoDetalheStyle.resultDraw}>
+                                <Text style={campeonatoDetalheStyle.resultDrawText}>Empate</Text>
+                              </View>
+                            )}
+                            {resultado === "DERROTA" && (
+                              <View style={campeonatoDetalheStyle.resultLoss}>
+                                <Text style={campeonatoDetalheStyle.resultLossText}>Derrota</Text>
+                              </View>
+                            )}
                           </View>
                         )}
                       </View>
@@ -620,33 +665,107 @@ export default function CampeonatoDetalhe() {
   );
 }
 
-// Card branco do topo: o logo com o status e, embaixo, as informações em linhas
+// Aviso vermelho da eliminação: por que caiu e que o campeonato segue sem a AACJ
+function AvisoEliminacao({
+  eliminados,
+  todos,
+  varios,
+  encerrada,
+}: {
+  eliminados: Eliminacao[];
+  todos: boolean;
+  varios: boolean;
+  encerrada: boolean;
+}) {
+  const um = eliminados.length === 1 ? eliminados[0] : null;
+  const titulo = todos
+    ? "AACJ eliminada"
+    : um
+      ? `${um.time} eliminado`
+      : "Times da AACJ eliminados";
+  return (
+    <View style={campeonatoDetalheStyle.eliminadaCard}>
+      <View style={campeonatoDetalheStyle.eliminadaTopo}>
+        {um && (
+          <Image
+            source={escudoDoTime({
+              id_time: um.id_time,
+              nome_time: um.time,
+              logo_url: um.logo_url,
+            })}
+            style={campeonatoDetalheStyle.eliminadaEscudo}
+            resizeMode="contain"
+          />
+        )}
+        <View style={{ flex: 1 }}>
+          <Text style={campeonatoDetalheStyle.eliminadaPill}>FORA DA DISPUTA</Text>
+          <Text style={campeonatoDetalheStyle.eliminadaTitulo}>{titulo}</Text>
+        </View>
+      </View>
+
+      {eliminados.map((e) => (
+        <View key={e.id_time} style={campeonatoDetalheStyle.eliminadaMotivoBloco}>
+          <Text style={campeonatoDetalheStyle.eliminadaMotivo}>
+            {varios && <Text style={campeonatoDetalheStyle.eliminadaNome}>{e.time}: </Text>}
+            {e.motivo}
+          </Text>
+          {e.detalhe && (
+            <Text style={campeonatoDetalheStyle.eliminadaDetalhe}>{e.detalhe}</Text>
+          )}
+          {e.disputaTerceiro && (
+            <Text style={campeonatoDetalheStyle.eliminadaDetalhe}>
+              Ainda disputa o 3º lugar.
+            </Text>
+          )}
+        </View>
+      ))}
+
+      {!encerrada && (
+        <Text style={campeonatoDetalheStyle.eliminadaRodape}>
+          O campeonato continua até sair o campeão. Os jogos dos outros times seguem
+          aparecendo aqui.
+        </Text>
+      )}
+    </View>
+  );
+}
+
+// Card do topo: banner com o status, o logo sobreposto com formato e organizador ao lado
+// e, embaixo, as informações com ícone
 function InfoCampeonato({
+  bannerUrl,
   logoUrl,
+  formato,
+  organizador,
   selo,
   situacao,
   linhas,
 }: {
+  bannerUrl: string | null;
   logoUrl: string | null;
+  formato: string | null;
+  organizador: string | null;
   selo: string;
   situacao: Situacao;
-  linhas: { rotulo: string; valor: string | null | undefined }[];
+  linhas: { icone: number; rotulo: string; valor: string | null | undefined }[];
 }) {
   return (
     <View style={campeonatoDetalheStyle.infoCard}>
-      <View style={campeonatoDetalheStyle.infoTopo}>
+      <View style={campeonatoDetalheStyle.infoBanner}>
         <Image
           source={
-            logoUrl
-              ? { uri: logoUrl }
-              : require("@/assets/images/img/campeonatosVermelho.png")
+            bannerUrl
+              ? { uri: bannerUrl }
+              : require("@/assets/images/img/fundoCardCampeonatos2.png")
           }
-          style={campeonatoDetalheStyle.campeonatoLogo}
-          resizeMode="contain"
+          style={campeonatoDetalheStyle.infoBannerImagem}
+          resizeMode="cover"
         />
+        <View style={campeonatoDetalheStyle.infoBannerOverlay} />
         <View
           style={[
             campeonatoDetalheStyle.statusPill,
+            campeonatoDetalheStyle.statusPillNoBanner,
             situacao === "EM_BREVE" && campeonatoDetalheStyle.statusPillEmBreve,
             situacao === "ENCERRADO" &&
               campeonatoDetalheStyle.statusPillEncerrado,
@@ -667,11 +786,51 @@ function InfoCampeonato({
         </View>
       </View>
 
+      <View style={campeonatoDetalheStyle.infoIdentidade}>
+        <View style={campeonatoDetalheStyle.infoLogoCaixa}>
+          <Image
+            source={
+              logoUrl
+                ? { uri: logoUrl }
+                : require("@/assets/images/img/campeonatosVermelho.png")
+            }
+            style={
+              logoUrl
+                ? campeonatoDetalheStyle.campeonatoLogo
+                : campeonatoDetalheStyle.campeonatoLogoPadrao
+            }
+            resizeMode="contain"
+          />
+        </View>
+        <View style={campeonatoDetalheStyle.infoIdentidadeTexto}>
+          {formato && (
+            <View style={campeonatoDetalheStyle.formatoPill}>
+              <Text style={campeonatoDetalheStyle.formatoPillText}>{formato}</Text>
+            </View>
+          )}
+          {organizador && (
+            <Text style={campeonatoDetalheStyle.organizadorTexto} numberOfLines={2}>
+              Organizado por{" "}
+              <Text style={campeonatoDetalheStyle.organizadorNome}>{organizador}</Text>
+            </Text>
+          )}
+        </View>
+      </View>
+
       <View style={campeonatoDetalheStyle.infoRows}>
         {linhas.map((linha) => (
           <View key={linha.rotulo} style={campeonatoDetalheStyle.infoRow}>
-            <Text style={campeonatoDetalheStyle.infoLabel}>{linha.rotulo}</Text>
-            <Text style={campeonatoDetalheStyle.infoValue}>{linha.valor}</Text>
+            <View style={campeonatoDetalheStyle.infoIconeCaixa}>
+              <Image
+                source={linha.icone}
+                style={campeonatoDetalheStyle.infoIcone}
+                resizeMode="contain"
+              />
+            </View>
+            <View style={campeonatoDetalheStyle.infoTextoCol}>
+              <Text style={campeonatoDetalheStyle.infoLabel}>{linha.rotulo}</Text>
+              <Text style={campeonatoDetalheStyle.infoValue}>{linha.valor}</Text>
+            </View>
           </View>
         ))}
       </View>

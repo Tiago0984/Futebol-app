@@ -58,8 +58,10 @@ const classificacaoStyle = StyleSheet.create({
     borderRadius: 18,
     marginHorizontal: 20,
     marginTop: 20,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     paddingTop: 6,
+    // O fundo da linha da AACJ não passa dos cantos arredondados
+    overflow: "hidden",
   },
 
   tableHeaderRow: {
@@ -71,20 +73,25 @@ const classificacaoStyle = StyleSheet.create({
   },
   tableHeaderText: {
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.corpo,
+    fontSize: fontSizes.apoio,
     fontWeight: "700",
     color: cores.cinza,
   },
 
+  // Vai de borda a borda do card (anula o paddingHorizontal dele), para o fundo da
+  // linha da AACJ cobrir a largura toda; o conteúdo continua no mesmo lugar
   linhaRow: {
     flexDirection: "row",
     alignItems: "center",
+    marginHorizontal: -10,
+    paddingHorizontal: 10,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "rgba(0,0,0,0.06)",
   },
+  // Larguras para as 8 colunas de números caberem na tela do celular
   colPos: {
-    width: 24,
+    width: 20,
   },
   colPosText: {
     fontFamily: fontes.OpenSans_Bold,
@@ -99,22 +106,23 @@ const classificacaoStyle = StyleSheet.create({
     alignItems: "center",
   },
   equipeBadge: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: "#D9D9D9",
-    marginRight: 8,
+    marginRight: 6,
   },
   equipeEscudo: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
+    width: 18,
+    height: 18,
+    marginRight: 6,
   },
   equipeNome: {
     flex: 1,
     minWidth: 0,
+    marginRight: 4,
     fontFamily: fontes.OpenSans_Bold,
-    fontSize: fontSizes.corpoMedio,
+    fontSize: fontSizes.corpo,
     fontWeight: "700",
     color: cores.preto,
   },
@@ -147,11 +155,12 @@ const classificacaoStyle = StyleSheet.create({
   },
   colNumeroTexto: {
     fontFamily: fontes.OpenSans_Regular,
-    fontSize: fontSizes.corpoMedio,
+    fontSize: fontSizes.corpo,
     color: cores.preto,
   },
+  // PTS, em negrito e um pouco mais larga
   colDestaque: {
-    width: 28,
+    width: 26,
     alignItems: "center",
   },
   colDestaqueTexto: {
@@ -173,7 +182,8 @@ const classificacaoStyle = StyleSheet.create({
     fontFamily: fontes.OpenSans_Regular,
     fontSize: fontSizes.corpo,
     color: cores.cinza,
-    marginRight: 16,
+    marginRight: 14,
+    marginBottom: 4,
   },
   legendaSigla: {
     fontFamily: fontes.OpenSans_Bold,

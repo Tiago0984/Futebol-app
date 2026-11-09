@@ -69,9 +69,9 @@ const ultimosResultadosStyle = StyleSheet.create({
     borderRadius: 18,
     paddingHorizontal: 12,
   },
+  // Data e linha do tempo acompanham a altura medida do jogo (centralizadas nela)
   dateCol: {
     width: 40,
-    height: 88,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -88,20 +88,26 @@ const ultimosResultadosStyle = StyleSheet.create({
   },
   lineCol: {
     width: 20,
-    height: 88,
     alignItems: "center",
+    justifyContent: "center",
   },
   lineDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: cores.verde,
-    marginTop: 33,
   },
-  lineConnector: {
+  lineConnectorTop: {
     position: "absolute",
-    top: 48,
-    bottom: -40,
+    top: 0,
+    height: "50%",
+    width: 2,
+    backgroundColor: "rgba(255,255,255,0.15)",
+  },
+  lineConnectorBottom: {
+    position: "absolute",
+    top: "50%",
+    bottom: 0,
     width: 2,
     backgroundColor: "rgba(255,255,255,0.15)",
   },
@@ -109,7 +115,8 @@ const ultimosResultadosStyle = StyleSheet.create({
   resultItem: {
     flexDirection: "row",
     alignItems: "center",
-    height: 88,
+    minHeight: 88,
+    paddingVertical: 10,
   },
   resultItemDivider: {
     borderBottomWidth: 1,
